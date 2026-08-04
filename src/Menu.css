@@ -1,0 +1,143 @@
+.menupagem{
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+.menubannerm{
+    background: linear-gradient(135deg,#28a745,#ff9800);
+    color: #fff;
+    text-align: center;
+    padding: 70px 20px;
+}
+.menubannerm h1{
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+.menubannerm p{
+    font-size: 18px;
+}
+.searchsectionm{
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+.searchsectionm input{
+    width: 450px;
+    padding: 14px 20px ;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    outline: none;
+    font-size: 16px;
+}
+.categorysectionm{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+.categorysectionm button{
+    padding: 12px 22px;
+    border: none;
+    border-radius: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.categorysectionm button:hover{
+    background-color: #28a745;
+    color: white;
+}
+.foodcontainerm{
+    width: 90%;
+    margin: auto;
+    padding-bottom: 60px;
+}
+.foodcontainerm h2{
+    text-align: center;
+    color: #333;
+    margin-bottom: 35px;
+    font-size: 35px;
+}
+.cardsm{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 30px;
+}
+.foodcardm{
+    background-color: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transition: 0.3s;
+    text-align: center;
+    padding-bottom: 20px;
+}
+.foodcardm:hover{
+    transform: translateY(-8px);
+}
+.foodcardm img{
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+.foodcardm h3{
+    margin-top: 15px;
+    color: #333;
+}
+.categorym{
+    color: #777;
+    margin: 8px 0;
+}
+.pricem{
+    color:#28a745;
+    font-size: 22px;
+    font-weight: bold;
+}
+.ratingm{
+    color: #ff9800;
+    margin: 10px 0;
+}
+.foodcardm button{
+    padding: 12px 28px;
+    background-color:#ff9800;
+    border: none;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.foodcardm button:hover{
+    background-color: #28a745;
+}
+
+@media(max-width:992px){
+    .cardsm{
+        grid-template-columns: repeat(2,1fr);
+    }
+    .searchsectionm input{
+        width: 350px;
+    }
+}
+
+@media(max-width:768px){
+    .cardsm{
+        grid-template-columns:1fr;
+    }
+    .searchsectionm input{
+        width: 90%;
+    }
+    .menubannerm h1{
+        font-size: 32px;
+    }
+    .menubannerm p{
+        font-size: 16px;
+    }
+    .categorysectionm{
+        padding: 0 15px;
+    }
+}
