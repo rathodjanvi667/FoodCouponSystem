@@ -11,8 +11,8 @@ export default function Hero() {
                <p>Buy Food Coupons Online,Save time,and enjoy your favorite food at affordable prices.</p>
 
                <div className='herobtn'>
-                     <button className='buycoupon'><Link href='Coupon.js'>Buy Coupon</Link></button>
-                     <button className='menubtn' ><Link href='Menu.js'>View Menu</Link></button>
+                     <button className='buycoupon'><Link to='Coupon'>Buy Coupon</Link></button>
+                     <button className='menubtn' ><Link to='Menu'>View Menu</Link></button>
                </div>
           </div>
 
