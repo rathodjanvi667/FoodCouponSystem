@@ -1,0 +1,440 @@
+* {
+  box-sizing: border-box;
+}
+
+.admin-dashboard {
+  min-height: 100vh;
+  display: flex;
+  background: #fff8f1;
+  color: #333;
+}
+
+/* =====================
+   SIDEBAR
+===================== */
+
+.admin-sidebar {
+  width: 230px;
+  min-height: 100vh;
+
+  background: #ffffff;
+
+  border-right: 1px solid #eee;
+
+  padding: 30px 20px;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.admin-sidebar h2 {
+  color: #ff5722;
+  margin: 0;
+  font-size: 22px;
+}
+
+.admin-name {
+  color: #999;
+  font-size: 13px;
+
+  padding-bottom: 25px;
+
+  border-bottom: 1px solid #eee;
+}
+
+/* Navigation */
+
+.admin-sidebar nav {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-top: 20px;
+}
+
+.admin-sidebar nav a {
+  text-decoration: none;
+
+  color: #555;
+
+  padding: 12px;
+
+  border-radius: 7px;
+
+  font-size: 14px;
+}
+
+.admin-sidebar nav a:hover {
+  background: #fff0e8;
+  color: #ff5722;
+}
+
+/* Logout */
+
+.logout-btn {
+  position: absolute;
+
+  bottom: 25px;
+  left: 20px;
+  right: 20px;
+
+  height: 42px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #fff0e8;
+
+  color: #ff5722;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+/* =====================
+   MAIN CONTENT
+===================== */
+
+.admin-content {
+  margin-left: 230px;
+
+  width: calc(100% - 230px);
+
+  padding: 35px;
+}
+
+/* Header */
+
+.admin-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 30px;
+}
+
+.admin-header h1 {
+  margin: 0 0 5px;
+
+  font-size: 28px;
+}
+
+.admin-header p {
+  margin: 0;
+
+  color: #999;
+
+  font-size: 14px;
+}
+
+.add-food-btn {
+  background: #ff5722;
+
+  color: white;
+
+  border: none;
+
+  padding: 12px 20px;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+}
+
+.add-food-btn:hover {
+  background: #e64a19;
+}
+
+/* =====================
+   STATISTICS
+===================== */
+
+.stats {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 18px;
+
+  margin-bottom: 25px;
+}
+
+.stat-box {
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 10px;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+
+  border-left: 4px solid #ff5722;
+}
+
+.stat-box p {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 13px;
+}
+
+.stat-box h2 {
+  margin: 8px 0 3px;
+
+  font-size: 27px;
+}
+
+.stat-box span {
+  color: #aaa;
+
+  font-size: 11px;
+}
+
+/* =====================
+   DASHBOARD SECTIONS
+===================== */
+
+.dashboard-sections {
+  display: grid;
+
+  grid-template-columns: 1.5fr 1fr;
+
+  gap: 20px;
+}
+
+.dashboard-box {
+  background: white;
+
+  border-radius: 10px;
+
+  padding: 22px;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+
+  margin-bottom: 20px;
+}
+
+/* Box Header */
+
+.box-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.box-header h2,
+.dashboard-box > h2 {
+  margin: 0;
+
+  font-size: 18px;
+}
+
+.box-header a {
+  color: #ff5722;
+
+  text-decoration: none;
+
+  font-size: 12px;
+}
+
+/* =====================
+   TABLE
+===================== */
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+
+  color: #999;
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+  padding: 10px;
+
+  border-bottom: 1px solid #eee;
+}
+
+td {
+  padding: 13px 10px;
+
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.delivered,
+.pending,
+.preparing {
+  padding: 5px 8px;
+
+  border-radius: 5px;
+
+  font-size: 10px;
+}
+
+.delivered {
+  background: #eaf7ee;
+
+  color: #229954;
+}
+
+.pending {
+  background: #fff0f0;
+
+  color: #e74c3c;
+}
+
+.preparing {
+  background: #fff5df;
+
+  color: #d68910;
+}
+
+/* =====================
+   CATEGORIES
+===================== */
+
+.categories {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 12px;
+}
+
+.categories div {
+  border: 1px solid #eee;
+
+  border-radius: 8px;
+
+  padding: 15px;
+}
+
+.categories h3 {
+  margin: 0 0 5px;
+
+  font-size: 14px;
+}
+
+.categories p {
+  margin: 0;
+
+  color: #999;
+
+  font-size: 11px;
+}
+
+/* =====================
+   SUMMARY
+===================== */
+
+.bottom-section {
+  margin-top: 0;
+}
+
+.summary {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 15px;
+
+  margin-top: 20px;
+}
+
+.summary div {
+  background: #fff8f1;
+
+  padding: 18px;
+
+  border-radius: 8px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.summary span {
+  color: #999;
+
+  font-size: 12px;
+}
+
+.summary strong {
+  color: #ff5722;
+
+  font-size: 22px;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+
+@media (max-width: 1100px) {
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .admin-sidebar {
+    width: 180px;
+  }
+
+  .admin-content {
+    margin-left: 180px;
+
+    width: calc(100% - 180px);
+
+    padding: 20px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 11px;
+  }
+}
