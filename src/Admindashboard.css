@@ -4,65 +4,100 @@
 
 .admin-dashboard {
   min-height: 100vh;
-  background: #fff7ed;
   display: flex;
+  background: #fff8f2;
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
-/* Sidebar */
+
 
 .admin-sidebar {
-  width: 220px;
+  width: 235px;
   min-height: 100vh;
 
-  background: white;
+  background: #ffffff;
 
-  padding: 30px 20px;
+  border-right: 1px solid #f0e4dc;
+
+  padding: 28px 18px;
 
   position: fixed;
   left: 0;
   top: 0;
+  bottom: 0;
+
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03);
 }
 
+/* Logo */
+
 .admin-sidebar h2 {
-  color: #ff5722;
-  margin: 0 0 5px;
+  color: #f4511e;
+
+  font-size: 23px;
+
+  margin: 0;
+
+  font-weight: 700;
 }
 
 .admin-sidebar p {
   color: #999;
-  font-size: 13px;
+
+  font-size: 12px;
+
+  margin: 6px 0 25px;
 
   padding-bottom: 20px;
 
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #f1e8e2;
 }
 
 /* Navigation */
 
 .admin-sidebar nav {
   display: flex;
+
   flex-direction: column;
 
-  gap: 8px;
-
-  margin-top: 20px;
+  gap: 7px;
 }
 
 .admin-sidebar nav a {
   text-decoration: none;
 
-  color: #444;
-
-  padding: 12px;
-
-  border-radius: 6px;
+  color: #555;
 
   font-size: 14px;
+
+  font-weight: 500;
+
+  padding: 12px 14px;
+
+  border-radius: 8px;
+
+  transition: all 0.2s ease;
 }
 
+/* Hover */
+
 .admin-sidebar nav a:hover {
-  background: #fff0e8;
-  color: #ff5722;
+  background: #fff1e8;
+
+  color: #f4511e;
+
+  padding-left: 18px;
+}
+
+/* Active Dashboard */
+
+.admin-sidebar nav a:first-child {
+  background: #f4511e;
+
+  color: white;
+
+  font-weight: 600;
 }
 
 /* Logout */
@@ -70,47 +105,68 @@
 .logout-btn {
   position: absolute;
 
+  left: 18px;
+
+  right: 18px;
+
   bottom: 25px;
 
-  left: 20px;
-  right: 20px;
+  height: 42px;
 
-  height: 40px;
+  border: 1px solid #ffd5c2;
 
-  border: none;
+  background: #fff5ef;
 
-  background: #ff5722;
+  color: #f4511e;
 
-  color: white;
+  border-radius: 8px;
 
-  border-radius: 6px;
+  font-weight: 600;
 
   cursor: pointer;
+
+  transition: 0.2s;
 }
 
-/* Main Content */
+.logout-btn:hover {
+  background: #f4511e;
+
+  color: white;
+}
+
+
 
 .admin-content {
-  margin-left: 220px;
+  margin-left: 235px;
 
-  width: calc(100% - 220px);
+  width: calc(100% - 235px);
 
-  padding: 40px;
+  padding: 38px 42px;
 }
+
+/* Header */
 
 .admin-content h1 {
   margin: 0;
 
-  font-size: 28px;
+  font-size: 29px;
+
+  color: #292929;
+
+  font-weight: 700;
 }
 
 .welcome {
-  color: #888;
+  margin-top: 7px;
 
-  margin-top: 5px;
+  color: #999;
+
+  font-size: 14px;
 }
 
-/* Cards */
+/* =========================
+   DASHBOARD CARDS
+========================= */
 
 .admin-cards {
   display: grid;
@@ -123,15 +179,23 @@
 }
 
 .admin-card {
-  background: white;
+  background: #ffffff;
 
-  padding: 25px;
+  padding: 23px;
 
-  border-radius: 10px;
+  border-radius: 12px;
 
-  border-top: 4px solid #ff5722;
+  border: 1px solid #f1e6df;
 
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 5px 18px rgba(90, 55, 35, 0.05);
+
+  transition: 0.2s;
+}
+
+.admin-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 8px 22px rgba(90, 55, 35, 0.08);
 }
 
 .admin-card h3 {
@@ -139,105 +203,151 @@
 
   color: #777;
 
-  font-size: 14px;
+  font-size: 13px;
+
+  font-weight: 500;
 }
 
 .admin-card h2 {
   margin: 10px 0 0;
 
-  color: #ff5722;
+  color: #f4511e;
 
-  font-size: 28px;
+  font-size: 30px;
 }
 
-/* Section */
+/* =========================
+   SECTIONS
+========================= */
 
 .admin-section {
-  background: white;
+  background: #ffffff;
 
   margin-top: 25px;
 
   padding: 25px;
 
-  border-radius: 10px;
+  border-radius: 12px;
 
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1e6df;
+
+  box-shadow: 0 5px 18px rgba(90, 55, 35, 0.04);
 }
 
 .admin-section h2 {
-  margin-top: 0;
+  margin: 0 0 20px;
 
   font-size: 19px;
+
+  color: #333;
 }
 
-/* Buttons */
+/* =========================
+   QUICK ACTION BUTTONS
+========================= */
 
 .admin-buttons {
   display: flex;
 
   gap: 15px;
+
+  flex-wrap: wrap;
 }
 
 .admin-buttons a {
-  background: #ff5722;
+  background: #f4511e;
 
   color: white;
 
   text-decoration: none;
 
-  padding: 12px 18px;
+  padding: 11px 18px;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   font-size: 13px;
+
+  font-weight: 600;
+
+  transition: 0.2s;
 }
 
 .admin-buttons a:hover {
-  background: #e64a19;
+  background: #d84315;
+
+  transform: translateY(-2px);
 }
 
-/* Table */
+/* =========================
+   TABLE
+========================= */
 
 table {
   width: 100%;
 
   border-collapse: collapse;
 
-  margin-top: 15px;
+  margin-top: 5px;
+}
+
+thead {
+  background: #fff6f0;
 }
 
 th {
   text-align: left;
 
-  background: #fff7ed;
+  color: #666;
 
-  color: #555;
+  font-size: 12px;
 
-  padding: 12px;
+  font-weight: 600;
 
-  font-size: 13px;
+  padding: 13px;
+
+  border-bottom: 1px solid #f0e4dc;
 }
 
 td {
-  padding: 12px;
-
-  border-bottom: 1px solid #eee;
+  padding: 14px 13px;
 
   font-size: 13px;
+
+  color: #555;
+
+  border-bottom: 1px solid #f4eee9;
 }
 
-/* Responsive */
+tbody tr {
+  transition: 0.2s;
+}
 
-@media (max-width: 800px) {
+tbody tr:hover {
+  background: #fffaf7;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+  .admin-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 750px) {
 
   .admin-sidebar {
-    width: 180px;
+    width: 190px;
   }
 
   .admin-content {
-    margin-left: 180px;
+    margin-left: 190px;
 
-    width: calc(100% - 180px);
+    width: calc(100% - 190px);
 
     padding: 25px;
   }
@@ -246,7 +356,69 @@ td {
     grid-template-columns: 1fr;
   }
 
-  .admin-buttons {
-    flex-direction: column;
+}
+
+@media (max-width: 550px) {
+
+  .admin-sidebar {
+    width: 70px;
+
+    padding: 25px 10px;
+  }
+
+  .admin-sidebar h2 {
+    font-size: 0;
+  }
+
+  .admin-sidebar h2::after {
+    content: "FC";
+
+    font-size: 20px;
+
+    color: #f4511e;
+  }
+
+  .admin-sidebar p {
+    display: none;
+  }
+
+  .admin-sidebar nav a {
+    font-size: 0;
+
+    text-align: center;
+  }
+
+  .admin-sidebar nav a::first-letter {
+    font-size: 18px;
+  }
+
+  .logout-btn {
+    font-size: 0;
+  }
+
+  .logout-btn::after {
+    content: "Logout";
+
+    font-size: 10px;
+  }
+
+  .admin-content {
+    margin-left: 70px;
+
+    width: calc(100% - 70px);
+
+    padding: 20px 15px;
+  }
+
+  .admin-content h1 {
+    font-size: 23px;
+  }
+
+  table {
+    min-width: 600px;
+  }
+
+  .admin-section {
+    overflow-x: auto;
   }
 }
