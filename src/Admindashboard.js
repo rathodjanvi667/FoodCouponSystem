@@ -14,9 +14,9 @@ export default function Admindashboard() {
 
         <nav>
           <a href="/Admindashboard">Dashboard</a>
-          <a href="/admin/food">Manage Food</a>
-          <a href="/admin/coupon">Coupons</a>
-          <a href="/admin/orders">Orders</a>
+          <a href="/Admindashboard/food">Manage Food</a>
+          <a href="/Admindashboard/coupon">Coupons</a>
+          <a href="/Admindashboard/orders">Orders</a>
         </nav>
 
         <button className="logout-btn">
