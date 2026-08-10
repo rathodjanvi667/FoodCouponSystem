@@ -1,51 +1,258 @@
-.features{
-    padding: 80px 60px;
-    background-color: #ffffff;
-}
-.featurehanding{
-    text-align: center;
-    font-size: 38px;
-    color: #333;
-    margin-bottom: 50px;
-}
-.featurecontainer{
-    display: grid;
+.features {
+  padding: 80px 60px;
 
-    grid-template-columns: repeat(4,1fr);
-    gap: 30px;
+  background: #fff8f2;
+
+  text-align: center;
 }
-.featurecard{
-    background-color: #f8f8f8;
+
+
+.featurehanding {
+  text-align: center;
+
+  font-size: 38px;
+
+  font-weight: 700;
+
+  color: #333;
+
+  margin-bottom: 50px;
+
+  position: relative;
+}
+
+/* Small orange line under heading */
+
+.featurehanding::after {
+  content: "";
+
+  display: block;
+
+  width: 60px;
+
+  height: 4px;
+
+  background: #f4511e;
+
+  border-radius: 10px;
+
+  margin: 12px auto 0;
+}
+
+
+/* =========================
+   FEATURE CONTAINER
+========================= */
+
+.featurecontainer {
+  max-width: 1200px;
+
+  margin: auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 25px;
+}
+
+
+/* =========================
+   FEATURE CARD
+========================= */
+
+.featurecard {
+  background: #ffffff;
+
+  padding: 35px 22px;
+
+  border-radius: 15px;
+
+  text-align: center;
+
+  border: 1px solid #f1e6df;
+
+  box-shadow: 0 5px 20px rgba(90, 55, 35, 0.06);
+
+  transition: all 0.3s ease;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+/* Orange top line */
+
+.featurecard::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 4px;
+
+  background: #f4511e;
+
+  transform: scaleX(0);
+
+  transform-origin: left;
+
+  transition: 0.3s ease;
+}
+
+
+/* Hover */
+
+.featurecard:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 12px 30px rgba(90, 55, 35, 0.12);
+
+  border-color: #ffd6c4;
+}
+
+.featurecard:hover::before {
+  transform: scaleX(1);
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.icon {
+  width: 70px;
+
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background: #fff0e8;
+
+  color: #f4511e;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 30px;
+
+  transition: all 0.3s ease;
+}
+
+
+/* Icon hover */
+
+.featurecard:hover .icon {
+  background: #f4511e;
+
+  color: #ffffff;
+
+  transform: scale(1.08);
+}
+
+
+/* =========================
+   CARD HEADING
+========================= */
+
+.featurecard h3 {
+  color: #333;
+
+  font-size: 19px;
+
+  font-weight: 600;
+
+  margin: 0 0 12px;
+}
+
+
+/* =========================
+   CARD DESCRIPTION
+========================= */
+
+.featurecard p {
+  color: #777;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  margin: 0;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+
+  .features {
+    padding: 70px 35px;
+  }
+
+  .featurecontainer {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+  }
+
+  .featurehanding {
+    font-size: 34px;
+  }
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .features {
+    padding: 60px 20px;
+  }
+
+  .featurehanding {
+    font-size: 28px;
+
+    margin-bottom: 35px;
+  }
+
+  .featurecontainer {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  .featurecard {
     padding: 30px 20px;
-    border-radius: 15px;
-    text-align: center;
-    transition: 0.3s;
-    box-shadow: 0 5px 15px rgba(0,0,0,20);
-}
-.featurecard:hover{
-    transform: translateX(-10px);
-}
-.icon{
-    font-size: 50px;
-    margin-bottom: 20px;
-}
-.featurecard h3{
-    color: #28a745;
-    margin-bottom: 15px;
-}
-.featurecard p{
-    color: #666;
-    line-height: 1.6;
-}
+  }
 
-@media(max-width:768px){
-    .featurecontainer{
-        grid-template-columns: 1fr;
-    }
-    .features{
-        padding: 60px 20px;
-    }
-    .featurehanding{
-        font-size: 30px;
-    }
+  .icon {
+    width: 60px;
+
+    height: 60px;
+
+    font-size: 26px;
+  }
+
+  .featurecard h3 {
+    font-size: 18px;
+  }
+
+  .featurecard p {
+    font-size: 13px;
+  }
 }
