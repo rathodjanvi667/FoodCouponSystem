@@ -183,6 +183,12 @@
   transform: translateY(-1px);
 }
 
+.login-box button:disabled {
+  background: #ffab91;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Mobile */
 
 @media (max-width: 500px) {
