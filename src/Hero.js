@@ -8,7 +8,7 @@ export default function Hero() {
     <section className='hero'>
           <div className='heroleft'>
                <h1>Delicious Food <br></br>At Your Fingertips</h1>
-               <p>Buy The Food Coupons Online,Save time,and enjoy your favorite food at affordable prices.</p>
+               <p>Buy Food Coupons Online,Save time,and enjoy your favorite food at affordable prices.</p>
 
                <div className='herobtn'>
                      <button className='buycoupon'><Link to='Coupon'>Buy Coupon</Link></button>
