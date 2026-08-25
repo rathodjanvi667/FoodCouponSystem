@@ -1,0 +1,439 @@
+<<<<<<< HEAD
+.manage-food {
+  min-height: 100vh;
+
+  background: #fff7ed;
+
+  padding: 40px;
+}
+
+/* Header */
+
+.manage-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 30px;
+}
+
+.manage-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+}
+
+.manage-header p {
+  color: #888;
+
+  margin-top: 5px;
+}
+
+.manage-header a {
+  background: #ff5722;
+
+  color: white;
+
+  text-decoration: none;
+
+  padding: 10px 15px;
+
+  border-radius: 6px;
+
+  font-size: 13px;
+}
+
+/* Form Box */
+
+.food-form-box,
+.food-list-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 10px;
+
+  margin-bottom: 25px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.food-form-box h2,
+.food-list-box h2 {
+  margin-top: 0;
+
+  font-size: 19px;
+}
+
+/* Form */
+
+.food-form-box form {
+  display: flex;
+
+  gap: 15px;
+
+  align-items: center;
+}
+
+.food-form-box input,
+.food-form-box select {
+  height: 45px;
+
+  padding: 0 12px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 6px;
+
+  outline: none;
+
+  font-size: 13px;
+
+  flex: 1;
+}
+
+.food-form-box input:focus,
+.food-form-box select:focus {
+  border-color: #ff5722;
+}
+
+.food-form-box button {
+  height: 45px;
+
+  padding: 0 20px;
+
+  background: #ff5722;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+}
+
+.food-form-box button:hover {
+  background: #e64a19;
+}
+
+/* Table */
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+
+  background: #fff7ed;
+
+  padding: 12px;
+
+  font-size: 13px;
+
+  color: #555;
+}
+
+td {
+  padding: 12px;
+
+  border-bottom: 1px solid #eee;
+
+  font-size: 13px;
+}
+
+
+/* Edit Button */
+
+.edit-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 8px;
+  transition: 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Delete Button */
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+
+  .manage-food {
+    padding: 20px;
+  }
+
+  .manage-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .food-form-box form {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .food-form-box input,
+  .food-form-box select,
+  .food-form-box button {
+    width: 100%;
+  }
+
+  .food-list-box {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 600px;
+  }
+=======
+.manage-food {
+  min-height: 100vh;
+
+  background: #fff7ed;
+
+  padding: 40px;
+}
+
+/* Header */
+
+.manage-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 30px;
+}
+
+.manage-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+}
+
+.manage-header p {
+  color: #888;
+
+  margin-top: 5px;
+}
+
+.manage-header a {
+  background: #ff5722;
+
+  color: white;
+
+  text-decoration: none;
+
+  padding: 10px 15px;
+
+  border-radius: 6px;
+
+  font-size: 13px;
+}
+
+/* Form Box */
+
+.food-form-box,
+.food-list-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 10px;
+
+  margin-bottom: 25px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.food-form-box h2,
+.food-list-box h2 {
+  margin-top: 0;
+
+  font-size: 19px;
+}
+
+/* Form */
+
+.food-form-box form {
+  display: flex;
+
+  gap: 15px;
+
+  align-items: center;
+}
+
+.food-form-box input,
+.food-form-box select {
+  height: 45px;
+
+  padding: 0 12px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 6px;
+
+  outline: none;
+
+  font-size: 13px;
+
+  flex: 1;
+}
+
+.food-form-box input:focus,
+.food-form-box select:focus {
+  border-color: #ff5722;
+}
+
+.food-form-box button {
+  height: 45px;
+
+  padding: 0 20px;
+
+  background: #ff5722;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+}
+
+.food-form-box button:hover {
+  background: #e64a19;
+}
+
+/* Table */
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+
+  background: #fff7ed;
+
+  padding: 12px;
+
+  font-size: 13px;
+
+  color: #555;
+}
+
+td {
+  padding: 12px;
+
+  border-bottom: 1px solid #eee;
+
+  font-size: 13px;
+}
+
+/* Delete */
+
+.delete-btn {
+  background: #e74c3c;
+
+  color: white;
+
+  border: none;
+
+  padding: 7px 12px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+
+  .manage-food {
+    padding: 20px;
+  }
+
+  .manage-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .food-form-box form {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .food-form-box input,
+  .food-form-box select,
+  .food-form-box button {
+    width: 100%;
+  }
+
+  .food-list-box {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 600px;
+  }
+>>>>>>> d7d75d0c97c1411ad7577eb2a6a19c4a9078d035
+}

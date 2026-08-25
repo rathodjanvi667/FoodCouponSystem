@@ -1,0 +1,397 @@
+<<<<<<< HEAD
+* {
+  box-sizing: border-box;
+}
+
+.orders-page {
+  min-height: 100vh;
+
+  background: #fff8f2;
+
+  padding: 40px;
+}
+/* Search */
+
+.orders-list-header input {
+  width: 220px;
+  font-size: 14px;
+}
+
+
+/* Order Status */
+
+.orders-box select {
+  padding: 7px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  background: white;
+}
+
+
+/* Delete Button */
+
+.order-delete-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.order-delete-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Customer Phone */
+
+.orders-box small {
+  color: #777;
+  font-size: 12px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.orders-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+}
+
+.orders-header p {
+  margin-top: 6px;
+
+  color: #999;
+
+  font-size: 14px;
+}
+
+.orders-header a {
+  text-decoration: none;
+
+  background: #f4511e;
+
+  color: white;
+
+  padding: 10px 16px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.orders-header a:hover {
+  background: #d84315;
+}
+
+
+/* =========================
+   ORDERS BOX
+========================= */
+
+.orders-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 12px;
+
+  border: 1px solid #f1e6df;
+
+  box-shadow: 0 5px 18px rgba(90, 55, 35, 0.05);
+}
+
+.orders-box h2 {
+  margin: 0 0 20px;
+
+  font-size: 19px;
+
+  color: #333;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.orders-box table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.orders-box th {
+  background: #fff6f0;
+
+  color: #666;
+
+  font-size: 12px;
+
+  text-align: left;
+
+  padding: 13px;
+
+  border-bottom: 1px solid #f0e4dc;
+}
+
+.orders-box td {
+  padding: 14px 13px;
+
+  font-size: 13px;
+
+  color: #555;
+
+  border-bottom: 1px solid #f4eee9;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.orders-box select {
+  padding: 7px 10px;
+
+  border-radius: 6px;
+
+  border: 1px solid #ddd;
+
+  background: white;
+
+  color: #555;
+
+  cursor: pointer;
+
+  outline: none;
+
+  font-size: 12px;
+}
+
+.orders-box select:focus {
+  border-color: #f4511e;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+
+  .orders-page {
+    padding: 25px 20px;
+  }
+
+  .orders-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .orders-box {
+    overflow-x: auto;
+  }
+
+  .orders-box table {
+    min-width: 700px;
+  }
+=======
+* {
+  box-sizing: border-box;
+}
+
+.orders-page {
+  min-height: 100vh;
+
+  background: #fff8f2;
+
+  padding: 40px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.orders-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 30px;
+}
+
+.orders-header h1 {
+  margin: 0;
+
+  font-size: 28px;
+
+  color: #333;
+}
+
+.orders-header p {
+  margin-top: 6px;
+
+  color: #999;
+
+  font-size: 14px;
+}
+
+.orders-header a {
+  text-decoration: none;
+
+  background: #f4511e;
+
+  color: white;
+
+  padding: 10px 16px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.orders-header a:hover {
+  background: #d84315;
+}
+
+
+/* =========================
+   ORDERS BOX
+========================= */
+
+.orders-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 12px;
+
+  border: 1px solid #f1e6df;
+
+  box-shadow: 0 5px 18px rgba(90, 55, 35, 0.05);
+}
+
+.orders-box h2 {
+  margin: 0 0 20px;
+
+  font-size: 19px;
+
+  color: #333;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.orders-box table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.orders-box th {
+  background: #fff6f0;
+
+  color: #666;
+
+  font-size: 12px;
+
+  text-align: left;
+
+  padding: 13px;
+
+  border-bottom: 1px solid #f0e4dc;
+}
+
+.orders-box td {
+  padding: 14px 13px;
+
+  font-size: 13px;
+
+  color: #555;
+
+  border-bottom: 1px solid #f4eee9;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.orders-box select {
+  padding: 7px 10px;
+
+  border-radius: 6px;
+
+  border: 1px solid #ddd;
+
+  background: white;
+
+  color: #555;
+
+  cursor: pointer;
+
+  outline: none;
+
+  font-size: 12px;
+}
+
+.orders-box select:focus {
+  border-color: #f4511e;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+
+  .orders-page {
+    padding: 25px 20px;
+  }
+
+  .orders-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .orders-box {
+    overflow-x: auto;
+  }
+
+  .orders-box table {
+    min-width: 700px;
+  }
+>>>>>>> d7d75d0c97c1411ad7577eb2a6a19c4a9078d035
+}

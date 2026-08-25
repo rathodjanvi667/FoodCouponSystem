@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+.navbar {
+    width: 100%;
+    height: 75px;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 60px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+
+
+.logo {
+    font-size: 30px;
+    font-weight: bold;
+    color: #ff5a5f;
+    cursor: pointer;
+}
+
+
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 35px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 17px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.nav-links a:hover {
+    color: #ff5a5f;
+}
+
+
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+
+.searchbox {
+    width: 250px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 0 15px;
+    outline: none;
+    font-size: 15px;
+}
+
+.searchbox:focus {
+    border-color: #ff5a5f;
+}
+
+.loginbtn{
+    background:#28a745;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.loginbtn:hover{
+    background:#218838;
+    transform:translateY(-2px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+}
+
+.cartbtn{
+    background:#ff6b00;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.cartbtn:hover{
+    background:#e65c00;
+    transform:translateY(-2px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+}
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-name {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.logoutbtn {
+  border: none;
+  background: #ff5722;
+  color: white;
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logoutbtn:hover {
+  background: #e64a19;
+}

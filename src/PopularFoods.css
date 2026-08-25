@@ -1,0 +1,62 @@
+.foodcontainer{
+    width: 90%;
+    margin: auto;
+    display: grid;
+
+    grid-template-columns: repeat(3,1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+.foodcard{
+    background-color: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,1);
+    transition: 3s;
+    text-align: center;
+    padding-bottom: 20px;
+}
+.foodcard:hover{
+    transform: translatex(-20px);
+}
+.foodcard img{
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+.foodcard h3{
+    margin-top: 15px;
+    font-size: 24px;
+    color: #333;
+}
+.foodcard p{
+    color: #28a745;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.foodcard button{
+    padding: 12px 28px;
+    background-color: #ff9800;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+.foodcard button:hover{
+    background-color: #28a245;
+}
+
+@media(max-width:992px){
+    .foodcontainer{
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .foodcontainer{
+        grid-template-columns: 1fr;
+    }
+}

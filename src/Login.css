@@ -1,0 +1,223 @@
+.food-sticker {
+  position: absolute;
+  font-size: 55px;
+  filter: drop-shadow(
+    0 8px 8px rgba(0, 0, 0, 0.12)
+  );
+
+  animation: stickerFloat 4s ease-in-out infinite;
+  z-index: 1;
+}
+
+/* Sticker Positions */
+
+.sticker-1 {
+  top: 12%;
+  left: 12%;
+  transform: rotate(-15deg);
+}
+
+.sticker-2 {
+  top: 18%;
+  right: 13%;
+  transform: rotate(15deg);
+  animation-delay: 1s;
+}
+
+.sticker-3 {
+  bottom: 15%;
+  left: 15%;
+  transform: rotate(10deg);
+  animation-delay: 2s;
+}
+
+.sticker-4 {
+  bottom: 12%;
+  right: 12%;
+  transform: rotate(-12deg);
+  animation-delay: 3s;
+}
+
+.sticker-5 {
+  top: 48%;
+  left: 5%;
+  font-size: 42px;
+  animation-delay: 1.5s;
+}
+
+/* Animation */
+
+@keyframes stickerFloat {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-10deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(8deg);
+  }
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff7ed;
+  padding: 20px;
+}
+
+/* Login Box */
+
+.login-box {
+  width: 400px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Heading */
+
+.login-box h1 {
+  text-align: center;
+  color: #333;
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.login-box > p {
+  text-align: center;
+  color: #888;
+  margin: 0 0 30px;
+  font-size: 14px;
+}
+
+/* Select + Inputs */
+
+.login-box select,
+.login-box input[type="email"],
+.login-box input[type="password"] {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  margin-bottom: 16px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  outline: none;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+
+  transition: 0.3s;
+}
+
+.login-box select:focus,
+.login-box input[type="email"]:focus,
+.login-box input[type="password"]:focus {
+  border-color: #ff5722;
+  box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+}
+
+/* Login Options */
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 2px 0 22px;
+
+  font-size: 13px;
+}
+
+.login-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+}
+
+.login-options label input {
+  width: auto;
+  height: auto;
+  margin: 0;
+  accent-color: #ff5722;
+}
+
+.login-options a {
+  color: #ff5722;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-options a:hover {
+  text-decoration: underline;
+}
+
+/* Login Button */
+
+.login-box button {
+  width: 100%;
+  height: 50px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #ff5722;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.login-box button:hover {
+  background: #e64a19;
+  transform: translateY(-1px);
+}
+
+.login-box button:disabled {
+  background: #ffab91;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mobile */
+
+@media (max-width: 500px) {
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-box {
+    width: 100%;
+    padding: 30px 25px;
+  }
+
+  .login-box h1 {
+    font-size: 26px;
+  }
+}
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.register-link a {
+  color: #ff5722;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}

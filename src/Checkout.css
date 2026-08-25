@@ -1,0 +1,504 @@
+<<<<<<< HEAD
+.checkout-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.checkout-header {
+  background: linear-gradient(
+    135deg,
+    #28a745,
+    #ff9800
+  );
+
+  color: white;
+
+  text-align: center;
+
+  padding: 55px 20px;
+}
+
+.checkout-header h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.checkout-header p {
+  font-size: 17px;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.checkout-container {
+  width: 90%;
+
+  margin: 40px auto;
+
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 30px;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.checkout-form {
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-form h2 {
+  margin-bottom: 25px;
+
+  color: #333;
+}
+
+.checkout-form form {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.checkout-form label {
+  margin-bottom: 7px;
+
+  color: #555;
+
+  font-weight: bold;
+
+  font-size: 14px;
+}
+
+.checkout-form input,
+.checkout-form textarea {
+  padding: 13px;
+
+  margin-bottom: 20px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 15px;
+}
+
+.checkout-form textarea {
+  height: 120px;
+
+  resize: none;
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus {
+  border-color: #ff9800;
+}
+
+
+/* =========================
+   PLACE ORDER BUTTON
+========================= */
+
+.checkout-form button {
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #ff9800;
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.checkout-form button:hover {
+  background: #f57c00;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.checkout-summary {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 15px;
+
+  height: fit-content;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-summary h2 {
+  color: #333;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================
+   ITEM
+========================= */
+
+.checkout-item {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.checkout-item h3 {
+  margin: 0 0 6px;
+
+  color: #333;
+
+  font-size: 16px;
+}
+
+.checkout-item p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.checkout-item span {
+  color: #28a745;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   TOTAL
+========================= */
+
+.checkout-total {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 20px;
+
+  font-size: 20px;
+
+  font-weight: bold;
+}
+
+.checkout-total span:last-child {
+  color: #28a745;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .checkout-container {
+    width: 95%;
+  }
+
+  .checkout-header h1 {
+    font-size: 30px;
+  }
+
+=======
+.checkout-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.checkout-header {
+  background: linear-gradient(
+    135deg,
+    #28a745,
+    #ff9800
+  );
+
+  color: white;
+
+  text-align: center;
+
+  padding: 55px 20px;
+}
+
+.checkout-header h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.checkout-header p {
+  font-size: 17px;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.checkout-container {
+  width: 90%;
+
+  margin: 40px auto;
+
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 30px;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.checkout-form {
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-form h2 {
+  margin-bottom: 25px;
+
+  color: #333;
+}
+
+.checkout-form form {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.checkout-form label {
+  margin-bottom: 7px;
+
+  color: #555;
+
+  font-weight: bold;
+
+  font-size: 14px;
+}
+
+.checkout-form input,
+.checkout-form textarea {
+  padding: 13px;
+
+  margin-bottom: 20px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 15px;
+}
+
+.checkout-form textarea {
+  height: 120px;
+
+  resize: none;
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus {
+  border-color: #ff9800;
+}
+
+
+/* =========================
+   PLACE ORDER BUTTON
+========================= */
+
+.checkout-form button {
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #ff9800;
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.checkout-form button:hover {
+  background: #f57c00;
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.checkout-summary {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 15px;
+
+  height: fit-content;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-summary h2 {
+  color: #333;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================
+   ITEM
+========================= */
+
+.checkout-item {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #eee;
+}
+
+.checkout-item h3 {
+  margin: 0 0 6px;
+
+  color: #333;
+
+  font-size: 16px;
+}
+
+.checkout-item p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.checkout-item span {
+  color: #28a745;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   TOTAL
+========================= */
+
+.checkout-total {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 20px;
+
+  font-size: 20px;
+
+  font-weight: bold;
+}
+
+.checkout-total span:last-child {
+  color: #28a745;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .checkout-container {
+    width: 95%;
+  }
+
+  .checkout-header h1 {
+    font-size: 30px;
+  }
+
+>>>>>>> d7d75d0c97c1411ad7577eb2a6a19c4a9078d035
+}
