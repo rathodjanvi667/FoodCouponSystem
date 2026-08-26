@@ -1,156 +1,349 @@
-import React from 'react'
-import "./Coupon.css"
-import Navbar from './Navbar'
-import Footer from './Footer'
-import mixfood from "./Images/mixfood.jpg";
+import React, { useEffect, useState } from "react";
+import "./Coupon.css";
 
-
+const API_URL = "http://localhost:5000/api/coupons";
 
 export default function Coupon() {
+  const [coupons, setCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // =====================================
+  // LOAD COUPONS FROM DATABASE
+  // =====================================
+
+  const loadCoupons = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(API_URL);
+
+      if (!response.ok) {
+        throw new Error("Failed to load coupons");
+      }
+
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setCoupons(data);
+      } else {
+        setCoupons([]);
+      }
+    } catch (error) {
+      console.error("Coupon loading error:", error);
+      setCoupons([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =====================================
+  // LOAD COUPONS WHEN PAGE OPENS
+  // =====================================
+
+  useEffect(() => {
+    loadCoupons();
+  }, []);
+
+  // =====================================
+  // GET TODAY'S DATE
+  // =====================================
+
+  const getToday = () => {
+    return new Date().toISOString().split("T")[0];
+  };
+
+  // =====================================
+  // CHECK COUPON STATUS
+  // =====================================
+
+  const getCouponStatus = (coupon) => {
+    const today = getToday();
+
+    if (today < coupon.validFrom) {
+      return "Upcoming";
+    }
+
+    if (today > coupon.validUntil) {
+      return "Expired";
+    }
+
+    return "Valid";
+  };
+
+  // =====================================
+  // APPLY COUPON
+  // =====================================
+
+  const applyCoupon = (coupon) => {
+    localStorage.setItem(
+      "selectedCoupon",
+      JSON.stringify(coupon)
+    );
+
+    alert(
+      `Coupon ${coupon.code} applied successfully! 🎉`
+    );
+  };
+
+  // =====================================
+  // LOADING
+  // =====================================
+
+  if (loading) {
+    return (
+      <div className="coupon-page">
+        <div className="coupon-loading">
+          <p>Loading coupons...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // =====================================
+  // JSX
+  // =====================================
+
   return (
-    <div className='couponpage'>
-      <Navbar></Navbar>
+    <div className="coupon-page">
 
-      <section className='couponhero'>
-        <div className='couponleft'>
-          <h1>Save More,<span>Eat More!</span></h1>
-          <p>Exclusive Food Coupons & Amazing Discounts.Save money on your favourite meals with exciting offers.</p>
+      {/* =================================
+          PAGE HEADER
+      ================================= */}
 
-          <div className='couponfeature'>
-            <span>🎟 Best Coupons</span>
-            <span>⭐ Top Restaurants</span>
-            <span>💰 Great Savings</span>
+      <div className="coupon-page-header">
+
+        <h1>Food Coupons</h1>
+
+        <p>
+          Get exciting discounts on your favourite food
+        </p>
+
+      </div>
+
+
+      {/* =================================
+          NO COUPONS
+      ================================= */}
+
+      {coupons.length === 0 ? (
+
+        <div className="no-coupons">
+
+          <div className="no-coupon-icon">
+            🎟️
           </div>
+
+          <h2>
+            No Coupons Available
+          </h2>
+
+          <p>
+            New food coupons will appear here soon.
+          </p>
+
         </div>
 
-        <div className='couponright'>
-          <img src={mixfood} alt="Food Combo" ></img>
+      ) : (
 
-          <div className="badge badge1">20% OFF</div>
-          <div className="badge badge2">Flat ₹100 OFF</div>
-          <div className="badge badge3">BUY 1 GET 1</div>
+        /* =================================
+           COUPON CONTAINER
+        ================================= */
+
+        <div className="coupon-container">
+
+          {coupons.map((coupon) => {
+
+            const status =
+              getCouponStatus(coupon);
+
+            const isValid =
+              status === "Valid";
+
+            return (
+
+              <div
+                className={`coupon-card ${
+                  !isValid
+                    ? "coupon-expired"
+                    : ""
+                }`}
+                key={coupon._id}
+              >
+
+                {/* =================================
+                    COUPON TOP
+                ================================= */}
+
+                <div className="coupon-top">
+
+                  <div className="coupon-discount">
+
+                    <span>
+                      {coupon.discount}%
+                    </span>
+
+                    <small>
+                      OFF
+                    </small>
+
+                  </div>
+
+
+                  <div className="coupon-code">
+
+                    <span>
+                      CODE
+                    </span>
+
+                    <strong>
+                      {coupon.code}
+                    </strong>
+
+                  </div>
+
+                </div>
+
+
+                {/* =================================
+                    COUPON CONTENT
+                ================================= */}
+
+                <div className="coupon-content">
+
+                  <h3>
+                    {coupon.store}
+                  </h3>
+
+                  <p>
+                    {coupon.description ||
+                      `Get ${coupon.discount}% OFF on your food order.`}
+                  </p>
+
+
+                  {/* =================================
+                      MINIMUM ORDER
+                  ================================= */}
+
+                  <div className="coupon-info">
+
+                    <span>
+                      Minimum Order
+                    </span>
+
+                    <strong>
+                      ₹{coupon.minOrderAmount || 0}
+                    </strong>
+
+                  </div>
+
+
+                  {/* =================================
+                      VALID FROM
+                  ================================= */}
+
+                  <div className="coupon-info">
+
+                    <span>
+                      Valid From
+                    </span>
+
+                    <strong>
+                      {coupon.validFrom}
+                    </strong>
+
+                  </div>
+
+
+                  {/* =================================
+                      VALID UNTIL
+                  ================================= */}
+
+                  <div className="coupon-info">
+
+                    <span>
+                      Valid Until
+                    </span>
+
+                    <strong>
+                      {coupon.validUntil}
+                    </strong>
+
+                  </div>
+
+
+                  {/* =================================
+                      LOCATION
+                  ================================= */}
+
+                  <div className="coupon-location">
+
+                    <span>
+                      📍
+                    </span>
+
+                    <span>
+                      Valid at
+                    </span>
+
+                    <strong>
+                      {coupon.store}
+                    </strong>
+
+                  </div>
+
+
+                  {/* =================================
+                      STATUS
+                  ================================= */}
+
+                  <div className="coupon-status">
+
+                    {status}
+
+                  </div>
+
+
+                  {/* =================================
+                      APPLY BUTTON
+                  ================================= */}
+
+                  {isValid ? (
+
+                    <button
+                      type="button"
+                      className="apply-coupon-btn"
+                      onClick={() =>
+                        applyCoupon(coupon)
+                      }
+                    >
+                      Apply Coupon
+                    </button>
+
+                  ) : (
+
+                    <button
+                      type="button"
+                      className="apply-coupon-btn disabled"
+                      disabled
+                    >
+                      {status === "Upcoming"
+                        ? "Coming Soon"
+                        : "Coupon Expired"}
+                    </button>
+
+                  )}
+
+                </div>
+
+              </div>
+
+            );
+          })}
+
         </div>
 
-      </section>
+      )}
 
-      <section className='couponcategory'>
-        <h2>Browse by Category</h2>
-
-        <div className='categorycontainer'>
-          <div className='categorycard'>
-            🍕
-            <h3>Pizza</h3>
-          </div>
-          <div className='categorycard'>
-            🍔
-            <h3>Burger</h3>
-          </div>
-          <div className='categorycard'>
-            🍔
-            <h3>Pasta</h3>
-          </div>
-          <div className='categorycard'>
-            🍰
-            <h3>Dessert</h3>
-          </div>
-          <div className='categorycard'>
-            🥤
-            <h3>Drink</h3>
-          </div>
-        </div>
-      </section>
-
-      <section className='couponcards'>
-        <h2>Popular Coupons</h2>
-        <div className='couponcontainer'>
-
-          <div className='couponcard'>
-            <h3>20% OFF</h3>
-            <p>On Pizza Orders Above ₹499</p>
-            <h4>Code : PIZZA20</h4>
-            <button>Copy Code</button>
-          </div>
-
-          <div className="couponcard">
-            <h3>Flat ₹100 OFF</h3>
-            <p>Minimum Order ₹699</p>
-            <h4>Code : SAVE100</h4>
-            <button>Copy Code</button>
-          </div>
-
-          <div className="couponcard">
-            <h3>BUY 1 GET 1</h3>
-            <p>Applicable on Burgers</p>
-            <h4>Code : BOGO</h4>
-            <button>Copy Code</button>
-          </div>
-
-          <div className="couponcard">
-            <h3>FREE DELIVERY</h3>
-            <p>On All Orders Above ₹299</p>
-            <h4>Code : FREEDEL</h4>
-            <button>Copy Code</button>
-          </div>
-        </div>
-      </section>
-
-      <section className='todaydeals'>
-        <h2>Today's Special Deal</h2>
-        <div className="dealbox">
-          <h1>🔥 40% OFF</h1>
-          <p>Only for Today</p>
-          <button>Claim Offer</button>
-        </div>
-      </section>
-
-      <section className='howitworks'>
-        <h2>How It's Works</h2>
-        <div className='workcontainer'>
-          <div className='workcard'>
-            <h1>1</h1>
-            <h3>Select Coupon</h3>
-            <p>Browse and choose your favourite coupon.</p>
-          </div>
-
-          <div className="workcard">
-            <h1>2</h1>
-            <h3>Copy Code</h3>
-            <p>Click Copy to save the coupon code.</p>
-          </div>
-
-          <div className="workcard">
-            <h1>3</h1>
-            <h3>Enjoy Discount</h3>
-            <p>Apply the code during checkout and save money.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="benefits">
-        <h2>Why Choose Our Coupons?</h2>
-        <div className="benefitcontainer">
-
-          <div className="benefitcard">
-            💰
-            <h3>Save Money</h3>
-            <p>Get exciting discounts every day.</p>
-          </div>
-
-          <div className="benefitcard">
-            🍴
-            <h3>Top Restaurants</h3>
-            <p>Offers from your favourite restaurants.</p>
-          </div>
-
-          <div className="benefitcard">
-            ⚡
-            <h3>Instant Discounts</h3>
-            <p>Copy the code and use it instantly.</p>
-          </div>
-        </div>
-      </section>
-
-      <Footer></Footer>
     </div>
-  )
+  );
 }

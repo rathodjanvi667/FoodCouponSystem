@@ -131,7 +131,7 @@ export default function PopularFoods() {
           <button
             onClick={() => addToCart(food)}
           >
-            Add to Cart
+            Buy Coupon
           </button>
 
         </div>

@@ -1,37 +1,41 @@
+/* =========================================
+   FEATURES SECTION
+========================================= */
+
 .features {
-<<<<<<< HEAD
   width: 100%;
-
-  padding: 70px 50px;
-
-=======
-  padding: 80px 60px;
-
->>>>>>> d7d75d0c97c1411ad7577eb2a6a19c4a9078d035
-  background: #fff8f2;
-
-  text-align: center;
+  padding: 75px 60px;
+  background: #f8f9fb;
+  box-sizing: border-box;
 }
-<<<<<<< HEAD
 
 
-/* =========================
-   HEADING
-========================= */
+/* =========================================
+   SECTION HEADING
+========================================= */
 
 .featureheading {
-  text-align: center;
+  display: block !important;
+  width: 100% !important;
 
-  font-size: 36px;
+  margin: 0 0 45px 0 !important;
+  padding: 0 !important;
 
+  text-align: center !important;
+
+  font-size: 34px;
   font-weight: 700;
+  line-height: 1.2;
 
-  color: #333;
+  color: #222222;
 
-  margin: 0 0 45px;
+  position: relative;
 }
 
-/* Orange line */
+
+/* =========================================
+   HEADING UNDERLINE
+========================================= */
 
 .featureheading::after {
   content: "";
@@ -39,263 +43,77 @@
   display: block;
 
   width: 55px;
-
   height: 4px;
 
-  background: #f4511e;
+  margin: 13px auto 0;
+
+  background: #ff6b35;
 
   border-radius: 10px;
-
-  margin: 12px auto 0;
 }
 
 
-/* =========================
-   FEATURE CONTAINER
-========================= */
+/* =========================================
+   CARDS CONTAINER
+========================================= */
 
 .featurecontainer {
-  max-width: 1150px;
+  width: 100%;
+  max-width: 1280px;
 
   margin: 0 auto;
 
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
-  gap: 25px;
+  gap: 28px;
 
-  justify-content: center;
+  box-sizing: border-box;
 }
 
 
-/* =========================
+/* =========================================
    FEATURE CARD
-========================= */
+========================================= */
 
 .featurecard {
+  width: 100%;
+  height: 285px;
+
+  padding: 35px 28px;
+
   background: #ffffff;
 
-  padding: 32px 22px;
+  border: 1px solid #e9e9e9;
 
-  border-radius: 14px;
+  border-radius: 20px;
 
-  text-align: center;
-
-  border: 1px solid #f1e6df;
-
-  box-shadow: 0 5px 18px rgba(90, 55, 35, 0.06);
-
-  transition: all 0.3s ease;
-}
-
-
-/* Card Hover */
-
-.featurecard:hover {
-  transform: translateY(-8px);
-
-  border-color: #ffd2bf;
-
-  box-shadow: 0 10px 25px rgba(90, 55, 35, 0.12);
-}
-
-
-/* =========================
-   ICON
-========================= */
-
-.icon {
-  width: 65px;
-
-  height: 65px;
-
-  margin: 0 auto 18px;
+  box-sizing: border-box;
 
   display: flex;
+  flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
-  border-radius: 50%;
-
-  background: #fff0e8;
-
-  color: #f4511e;
-
-  font-size: 28px;
-
-  transition: 0.3s;
-}
-
-
-/* Icon Hover */
-
-.featurecard:hover .icon {
-  background: #f4511e;
-
-  color: white;
-
-  transform: scale(1.08);
-}
-
-
-/* =========================
-   CARD TITLE
-========================= */
-
-.featurecard h3 {
-  color: #333;
-
-  font-size: 18px;
-
-  margin: 0 0 12px;
-
-  font-weight: 600;
-}
-
-
-/* =========================
-   CARD TEXT
-========================= */
-
-.featurecard p {
-  color: #777;
-
-  font-size: 14px;
-
-  line-height: 1.6;
-
-  margin: 0;
-}
-
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 992px) {
-
-  .features {
-    padding: 60px 35px;
-  }
-
-  .featurecontainer {
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 20px;
-  }
-
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 600px) {
-
-  .features {
-    padding: 55px 20px;
-  }
-
-  .featureheading {
-    font-size: 30px;
-
-    margin-bottom: 35px;
-  }
-
-  .featurecontainer {
-    grid-template-columns: 1fr;
-
-    max-width: 400px;
-  }
-
-  .featurecard {
-    padding: 28px 20px;
-  }
-
-}
-=======
-
-
-.featurehanding {
   text-align: center;
-
-  font-size: 38px;
-
-  font-weight: 700;
-
-  color: #333;
-
-  margin-bottom: 50px;
-
-  position: relative;
-}
-
-/* Small orange line under heading */
-
-.featurehanding::after {
-  content: "";
-
-  display: block;
-
-  width: 60px;
-
-  height: 4px;
-
-  background: #f4511e;
-
-  border-radius: 10px;
-
-  margin: 12px auto 0;
-}
-
-
-/* =========================
-   FEATURE CONTAINER
-========================= */
-
-.featurecontainer {
-  max-width: 1200px;
-
-  margin: auto;
-
-  display: grid;
-
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 25px;
-}
-
-
-/* =========================
-   FEATURE CARD
-========================= */
-
-.featurecard {
-  background: #ffffff;
-
-  padding: 35px 22px;
-
-  border-radius: 15px;
-
-  text-align: center;
-
-  border: 1px solid #f1e6df;
-
-  box-shadow: 0 5px 20px rgba(90, 55, 35, 0.06);
-
-  transition: all 0.3s ease;
 
   position: relative;
 
   overflow: hidden;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
 }
 
 
-/* Orange top line */
+/* =========================================
+   CARD TOP BORDER
+========================================= */
 
 .featurecard::before {
   content: "";
@@ -303,31 +121,29 @@
   position: absolute;
 
   top: 0;
-
   left: 0;
 
   width: 100%;
-
   height: 4px;
 
-  background: #f4511e;
+  background: #ff6b35;
 
   transform: scaleX(0);
 
-  transform-origin: left;
-
-  transition: 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 
-/* Hover */
+/* =========================================
+   CARD HOVER
+========================================= */
 
 .featurecard:hover {
   transform: translateY(-8px);
 
-  box-shadow: 0 12px 30px rgba(90, 55, 35, 0.12);
+  border-color: #ffd5c6;
 
-  border-color: #ffd6c4;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.10);
 }
 
 .featurecard:hover::before {
@@ -335,138 +151,131 @@
 }
 
 
-/* =========================
+/* =========================================
    ICON
-========================= */
+========================================= */
 
 .icon {
-  width: 70px;
+  width: 76px;
+  height: 76px;
 
-  height: 70px;
-
-  margin: 0 auto 20px;
+  margin: 0 0 22px 0;
 
   border-radius: 50%;
 
-  background: #fff0e8;
-
-  color: #f4511e;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   font-size: 30px;
+
+  flex-shrink: 0;
 
   transition: all 0.3s ease;
 }
 
 
-/* Icon hover */
+/* =========================================
+   CARD 1 ICON
+========================================= */
 
-.featurecard:hover .icon {
-  background: #f4511e;
+.featurecard:nth-child(1) .icon {
+  background: #fff0e9;
+  color: #ff6b35;
+}
 
+.featurecard:nth-child(1):hover .icon {
+  background: #ff6b35;
   color: #ffffff;
 
   transform: scale(1.08);
 }
 
 
-/* =========================
-   CARD HEADING
-========================= */
+/* =========================================
+   CARD 2 ICON
+========================================= */
+
+.featurecard:nth-child(2) .icon {
+  background: #fff7df;
+  color: #e3a900;
+}
+
+.featurecard:nth-child(2):hover .icon {
+  background: #e3a900;
+  color: #ffffff;
+
+  transform: scale(1.08);
+}
+
+
+/* =========================================
+   CARD 3 ICON
+========================================= */
+
+.featurecard:nth-child(3) .icon {
+  background: #eaf6ff;
+  color: #1688d8;
+}
+
+.featurecard:nth-child(3):hover .icon {
+  background: #1688d8;
+  color: #ffffff;
+
+  transform: scale(1.08);
+}
+
+
+/* =========================================
+   CARD 4 ICON
+========================================= */
+
+.featurecard:nth-child(4) .icon {
+  background: #eaf8ee;
+  color: #2d9a4b;
+}
+
+.featurecard:nth-child(4):hover .icon {
+  background: #2d9a4b;
+  color: #ffffff;
+
+  transform: scale(1.08);
+}
+
+
+/* =========================================
+   CARD TITLE
+========================================= */
 
 .featurecard h3 {
-  color: #333;
+  margin: 0 0 12px 0;
 
-  font-size: 19px;
+  padding: 0;
 
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
 
-  margin: 0 0 12px;
+  line-height: 1.3;
+
+  color: #222222;
 }
 
 
-/* =========================
+/* =========================================
    CARD DESCRIPTION
-========================= */
+========================================= */
 
 .featurecard p {
-  color: #777;
-
-  font-size: 14px;
-
-  line-height: 1.6;
+  width: 100%;
+  max-width: 250px;
 
   margin: 0;
+  padding: 0;
+
+  font-size: 14px;
+  font-weight: 400;
+
+  line-height: 1.7;
+
+  color: #737373;
 }
-
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-/* Tablet */
-
-@media (max-width: 1000px) {
-
-  .features {
-    padding: 70px 35px;
-  }
-
-  .featurecontainer {
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 20px;
-  }
-
-  .featurehanding {
-    font-size: 34px;
-  }
-}
-
-
-/* Mobile */
-
-@media (max-width: 600px) {
-
-  .features {
-    padding: 60px 20px;
-  }
-
-  .featurehanding {
-    font-size: 28px;
-
-    margin-bottom: 35px;
-  }
-
-  .featurecontainer {
-    grid-template-columns: 1fr;
-
-    gap: 18px;
-  }
-
-  .featurecard {
-    padding: 30px 20px;
-  }
-
-  .icon {
-    width: 60px;
-
-    height: 60px;
-
-    font-size: 26px;
-  }
-
-  .featurecard h3 {
-    font-size: 18px;
-  }
-
-  .featurecard p {
-    font-size: 13px;
-  }
-}
->>>>>>> d7d75d0c97c1411ad7577eb2a6a19c4a9078d035

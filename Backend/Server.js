@@ -4,7 +4,8 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
-const Food = require("./models/Food");
+const Food = require("./Models/Food");
+const Coupon = require("./Models/Coupon");
 
 const app = express();
 
@@ -153,8 +154,6 @@ app.post(
 
     try {
 
-      // Check received data
-
       console.log(
         "BODY:",
         req.body
@@ -165,8 +164,6 @@ app.post(
         req.file
       );
 
-
-      // Check image
 
       if (!req.file) {
 
@@ -180,26 +177,23 @@ app.post(
       }
 
 
-      // Create Food
+      const newFood =
+        new Food({
 
-      const newFood = new Food({
+          name:
+            req.body.name,
 
-        name:
-          req.body.name,
+          category:
+            req.body.category,
 
-        category:
-          req.body.category,
+          price:
+            Number(req.body.price),
 
-        price:
-          Number(req.body.price),
+          image:
+            `/uploads/${req.file.filename}`
 
-        image:
-          `/uploads/${req.file.filename}`
+        });
 
-      });
-
-
-      // Save to MongoDB
 
       const savedFood =
         await newFood.save();
@@ -210,8 +204,6 @@ app.post(
         savedFood
       );
 
-
-      // Send response
 
       res.status(201).json(
         savedFood
@@ -290,6 +282,230 @@ app.delete(
 
         message:
           "Failed to delete food"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// GET ALL COUPONS
+// =====================================
+
+app.get(
+  "/api/coupons",
+
+  async (req, res) => {
+
+    try {
+
+      const coupons =
+        await Coupon
+          .find()
+          .sort({
+            createdAt: -1
+          });
+
+
+      res.json(
+        coupons
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "GET COUPON ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to get coupons"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// ADD COUPON
+// =====================================
+
+app.post(
+  "/api/coupons",
+
+  async (req, res) => {
+
+    try {
+
+      console.log(
+        "COUPON DATA:",
+        req.body
+      );
+
+
+      const {
+        code,
+        discount,
+        minOrderAmount,
+        validFrom,
+        validUntil,
+        store,
+        description
+      } = req.body;
+
+
+      // Check duplicate coupon
+
+      const existingCoupon =
+        await Coupon.findOne({
+
+          code:
+            code.toUpperCase()
+
+        });
+
+
+      if (existingCoupon) {
+
+        return res.status(400).json({
+
+          message:
+            "Coupon code already exists"
+
+        });
+
+      }
+
+
+      // Create coupon
+
+      const newCoupon =
+        new Coupon({
+
+          code:
+            code.toUpperCase(),
+
+          discount:
+            Number(discount),
+
+          minOrderAmount:
+            Number(minOrderAmount),
+
+          validFrom:
+            validFrom,
+
+          validUntil:
+            validUntil,
+
+          store:
+            store,
+
+          description:
+            description
+
+        });
+
+
+      // Save permanently
+
+      const savedCoupon =
+        await newCoupon.save();
+
+
+      console.log(
+        "Coupon saved:",
+        savedCoupon
+      );
+
+
+      res.status(201).json(
+        savedCoupon
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "ADD COUPON ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// DELETE COUPON
+// =====================================
+
+app.delete(
+  "/api/coupons/:id",
+
+  async (req, res) => {
+
+    try {
+
+      const deletedCoupon =
+        await Coupon.findByIdAndDelete(
+          req.params.id
+        );
+
+
+      if (!deletedCoupon) {
+
+        return res.status(404).json({
+
+          message:
+            "Coupon not found"
+
+        });
+
+      }
+
+
+      res.json({
+
+        message:
+          "Coupon deleted successfully"
+
+      });
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "DELETE COUPON ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to delete coupon"
 
       });
 

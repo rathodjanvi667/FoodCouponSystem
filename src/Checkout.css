@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 .checkout-page {
   min-height: 100vh;
   background: #f8f9fa;
@@ -249,12 +248,11 @@
     font-size: 30px;
   }
 
-=======
 .checkout-page {
   min-height: 100vh;
   background: #f8f9fa;
 }
-
+}
 
 /* =========================
    HEADER
@@ -500,5 +498,5 @@
     font-size: 30px;
   }
 
->>>>>>> d7d75d0c97c1411ad7577eb2a6a19c4a9078d035
+
 }

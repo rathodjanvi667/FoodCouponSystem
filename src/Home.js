@@ -23,13 +23,13 @@ export default function Home() {
         <Features></Features>
        
 
-       <section className='offer'>
+       {/* <section className='offer'>
          <div className='offercontent'>
             <h2>Today's Special Offer</h2>
             <p>Get <strong>20% OFF</strong> On Your First Food Coupon Purchase.</p>
             <button className='offerbtn'>Buy Coupon</button>
          </div>
-       </section>
+       </section> */}
 
        <Footer></Footer>
     </div>
