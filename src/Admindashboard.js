@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Admindashboard.css";
 
+const FOOD_API = "http://localhost:5000/api/foods";
+const COUPON_API = "http://localhost:5000/api/coupons";
+
 export default function Admindashboard() {
-
   const navigate = useNavigate();
-
 
   // =====================================
   // DASHBOARD COUNTS
@@ -16,69 +16,111 @@ export default function Admindashboard() {
   const [orderCount, setOrderCount] = useState(0);
   const [couponCount, setCouponCount] = useState(0);
 
-
   // =====================================
-  // LOAD DATA FROM LOCAL STORAGE
+  // LOAD DASHBOARD DATA
   // =====================================
 
-  const loadDashboardData = () => {
+  const loadDashboardData = async () => {
+    try {
+      // =================================
+      // LOAD FOOD COUNT FROM DATABASE
+      // =================================
 
-    // Food
-    const foods =
-      JSON.parse(
-        localStorage.getItem("foods")
-      ) || [];
+      const foodResponse = await fetch(FOOD_API);
 
-    // Orders
-    const orders =
-      JSON.parse(
-        localStorage.getItem("orders")
-      ) || [];
+      if (foodResponse.ok) {
+        const foods = await foodResponse.json();
 
-    // Coupons
-    const coupons =
-      JSON.parse(
-        localStorage.getItem("myCoupons")
-      ) || [];
+        setFoodCount(
+          Array.isArray(foods) ? foods.length : 0
+        );
+      }
 
+      // =================================
+      // LOAD COUPON COUNT FROM DATABASE
+      // =================================
 
-    setFoodCount(foods.length);
-    setOrderCount(orders.length);
-    setCouponCount(coupons.length);
+      const couponResponse = await fetch(COUPON_API);
+
+      if (couponResponse.ok) {
+        const coupons = await couponResponse.json();
+
+        setCouponCount(
+          Array.isArray(coupons) ? coupons.length : 0
+        );
+      }
+
+      // =================================
+      // LOAD ORDERS FROM LOCAL STORAGE
+      // =================================
+
+      const savedOrders =
+        JSON.parse(
+          localStorage.getItem("orders")
+        ) || [];
+
+      setOrderCount(savedOrders.length);
+
+    } catch (error) {
+      console.error(
+        "DASHBOARD LOAD ERROR:",
+        error
+      );
+
+      // Orders can still be loaded even
+      // if backend is unavailable
+
+      const savedOrders =
+        JSON.parse(
+          localStorage.getItem("orders")
+        ) || [];
+
+      setOrderCount(savedOrders.length);
+    }
   };
 
-
   // =====================================
-  // LOAD WHEN DASHBOARD OPENS
+  // LOAD DATA WHEN PAGE OPENS
   // =====================================
 
   useEffect(() => {
-
     loadDashboardData();
-
   }, []);
-
 
   // =====================================
   // LOGOUT
   // =====================================
 
   const handleLogout = () => {
-
-    localStorage.removeItem(
-      "foodCouponUser"
-    );
+    localStorage.removeItem("foodCouponUser");
+    localStorage.removeItem("foodCouponLogin");
 
     alert("Logout Successful!");
 
     navigate("/Login");
   };
 
+  // =====================================
+  // GET RECENT ORDERS
+  // =====================================
+
+  const getRecentOrders = () => {
+    const orders =
+      JSON.parse(
+        localStorage.getItem("orders")
+      ) || [];
+
+    return orders.slice(-3).reverse();
+  };
+
+  const recentOrders = getRecentOrders();
+
+  // =====================================
+  // RETURN UI
+  // =====================================
 
   return (
-
     <div className="admin-dashboard">
-
 
       {/* =================================
           SIDEBAR
@@ -94,27 +136,25 @@ export default function Admindashboard() {
           Admin Panel
         </p>
 
-
         <nav>
 
-          <a href="/Admindashboard">
+          <Link to="/Admindashboard">
             Dashboard
-          </a>
+          </Link>
 
-          <a href="/Admindashboard/Managefood">
+          <Link to="/Admindashboard/Managefood">
             Manage Food
-          </a>
+          </Link>
 
-          <a href="/Admindashboard/Managecoupon">
+          <Link to="/Admindashboard/Managecoupon">
             Coupons
-          </a>
+          </Link>
 
-          <a href="/Admindashboard/Manageorder">
+          <Link to="/Admindashboard/Manageorder">
             Orders
-          </a>
+          </Link>
 
         </nav>
-
 
         {/* Logout */}
 
@@ -134,7 +174,6 @@ export default function Admindashboard() {
 
       <div className="admin-content">
 
-
         <h1>
           Admin Dashboard
         </h1>
@@ -149,7 +188,6 @@ export default function Admindashboard() {
         ================================== */}
 
         <div className="admin-cards">
-
 
           {/* Total Food */}
 
@@ -208,20 +246,19 @@ export default function Admindashboard() {
             Quick Actions
           </h2>
 
-
           <div className="admin-buttons">
 
-            <a href="/Admindashboard/Managefood">
+            <Link to="/Admindashboard/Managefood">
               Manage Food
-            </a>
+            </Link>
 
-            <a href="/Admindashboard/Managecoupon">
+            <Link to="/Admindashboard/Managecoupon">
               Manage Coupons
-            </a>
+            </Link>
 
-            <a href="/Admindashboard/Manageorder">
+            <Link to="/Admindashboard/Manageorder">
               View Orders
-            </a>
+            </Link>
 
           </div>
 
@@ -238,123 +275,103 @@ export default function Admindashboard() {
             Recent Orders
           </h2>
 
+          {recentOrders.length === 0 ? (
 
-          {(() => {
+            <p>
+              No orders available.
+            </p>
 
-            const orders =
-              JSON.parse(
-                localStorage.getItem("orders")
-              ) || [];
+          ) : (
 
+            <table>
 
-            if (orders.length === 0) {
+              <thead>
 
-              return (
+                <tr>
 
-                <p>
-                  No orders available.
-                </p>
+                  <th>
+                    Order ID
+                  </th>
 
-              );
+                  <th>
+                    Customer
+                  </th>
 
-            }
+                  <th>
+                    Items
+                  </th>
 
+                  <th>
+                    Amount
+                  </th>
 
-            // Last 3 orders
+                  <th>
+                    Status
+                  </th>
 
-            const recentOrders =
-              orders.slice(-3).reverse();
+                </tr>
 
+              </thead>
 
-            return (
+              <tbody>
 
-              <table>
+                {recentOrders.map((order) => (
 
-                <thead>
+                  <tr
+                    key={order.id}
+                  >
 
-                  <tr>
+                    <td>
+                      #{order.id}
+                    </td>
 
-                    <th>
-                      Order ID
-                    </th>
+                    <td>
+                      {order.customer}
+                    </td>
 
-                    <th>
-                      Customer
-                    </th>
+                    <td>
 
-                    <th>
-                      Items
-                    </th>
+                      {Array.isArray(order.items) &&
+                        order.items.map((item) => (
 
-                    <th>
-                      Amount
-                    </th>
-
-                    <th>
-                      Status
-                    </th>
-
-                  </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                  {recentOrders.map((order) => (
-
-                    <tr key={order.id}>
-
-                      <td>
-                        #{order.id}
-                      </td>
-
-                      <td>
-                        {order.customer}
-                      </td>
-
-                      <td>
-
-                        {order.items.map((item) => (
-
-                          <div key={item.id}>
-
+                          <div
+                            key={
+                              item._id ||
+                              item.id ||
+                              item.name
+                            }
+                          >
                             {item.name}
                             {" x "}
                             {item.quantity}
-
                           </div>
 
                         ))}
 
-                      </td>
+                    </td>
 
-                      <td>
-                        ₹{order.total}
-                      </td>
+                    <td>
+                      ₹{order.total}
+                    </td>
 
-                      <td>
-                        {order.status}
-                      </td>
+                    <td>
+                      {order.status}
+                    </td>
 
-                    </tr>
+                  </tr>
 
-                  ))}
+                ))}
 
-                </tbody>
+              </tbody>
 
-              </table>
+            </table>
 
-            );
-
-          })()}
+          )}
 
         </div>
-
 
       </div>
 
     </div>
-
   );
 }

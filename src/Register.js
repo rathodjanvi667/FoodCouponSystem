@@ -11,14 +11,26 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // =====================================
+  // REGISTER USER
+  // =====================================
   const handleRegister = (e) => {
     e.preventDefault();
 
-    // Empty field validation
+    // =====================================
+    // CLEAN INPUT VALUES
+    // =====================================
+    const cleanName = name.trim();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPhone = phone.trim();
+
+    // =====================================
+    // EMPTY FIELD VALIDATION
+    // =====================================
     if (
-      name.trim() === "" ||
-      email.trim() === "" ||
-      phone.trim() === "" ||
+      cleanName === "" ||
+      cleanEmail === "" ||
+      cleanPhone === "" ||
       password === "" ||
       confirmPassword === ""
     ) {
@@ -26,57 +38,112 @@ export default function Register() {
       return;
     }
 
-    // Email validation
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // =====================================
+    // NAME VALIDATION
+    // =====================================
+    if (cleanName.length < 2) {
+      alert("Please enter a valid name");
+      return;
+    }
 
-    if (!emailPattern.test(email)) {
+    // =====================================
+    // EMAIL VALIDATION
+    // =====================================
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(cleanEmail)) {
       alert("Please enter a valid email");
       return;
     }
 
-    // Phone validation
-    if (!/^\d{10}$/.test(phone)) {
-      alert("Please enter a valid 10 digit phone number");
+    // =====================================
+    // PHONE VALIDATION
+    // =====================================
+    if (!/^\d{10}$/.test(cleanPhone)) {
+      alert(
+        "Please enter a valid 10 digit phone number"
+      );
       return;
     }
 
-    // Password validation
+    // =====================================
+    // PASSWORD VALIDATION
+    // =====================================
     if (password.length < 6) {
-      alert("Password must be at least 6 characters");
+      alert(
+        "Password must be at least 6 characters"
+      );
       return;
     }
 
-    // Confirm password
+    // =====================================
+    // CONFIRM PASSWORD
+    // =====================================
     if (password !== confirmPassword) {
-      alert("Password and Confirm Password do not match");
+      alert(
+        "Password and Confirm Password do not match"
+      );
       return;
     }
 
-    // Existing customers
-    const existingUsers =
-      JSON.parse(localStorage.getItem("foodCouponUsers")) || [];
+    // =====================================
+    // GET EXISTING CUSTOMERS
+    // =====================================
+    let existingUsers = [];
 
-    // Check email already registered
+    try {
+      existingUsers =
+        JSON.parse(
+          localStorage.getItem(
+            "foodCouponUsers"
+          )
+        ) || [];
+
+      if (!Array.isArray(existingUsers)) {
+        existingUsers = [];
+      }
+    } catch (error) {
+      console.error(
+        "User data error:",
+        error
+      );
+
+      existingUsers = [];
+    }
+
+    // =====================================
+    // CHECK EMAIL ALREADY REGISTERED
+    // =====================================
     const userExists = existingUsers.some(
-      (user) => user.email.toLowerCase() === email.toLowerCase()
+      (user) =>
+        user.email &&
+        user.email.toLowerCase() ===
+          cleanEmail
     );
 
     if (userExists) {
-      alert("Email is already registered");
+      alert(
+        "Email is already registered"
+      );
       return;
     }
 
-    // New customer
+    // =====================================
+    // CREATE NEW CUSTOMER
+    // =====================================
     const newUser = {
       id: Date.now(),
-      name: name,
-      email: email,
-      phone: phone,
+      name: cleanName,
+      email: cleanEmail,
+      phone: cleanPhone,
       password: password,
-      role: "customer",
+      role: "customer"
     };
 
-    // Save customer
+    // =====================================
+    // SAVE CUSTOMER
+    // =====================================
     existingUsers.push(newUser);
 
     localStorage.setItem(
@@ -84,17 +151,33 @@ export default function Register() {
       JSON.stringify(existingUsers)
     );
 
-    alert("Registration Successful!");
+    // =====================================
+    // SUCCESS MESSAGE
+    // =====================================
+    alert(
+      "Registration Successful!"
+    );
 
+    // =====================================
+    // GO TO LOGIN
+    // =====================================
     navigate("/Login");
   };
 
+  // =====================================
+  // RETURN UI
+  // =====================================
   return (
     <div className="register-container">
 
+      {/* =================================
+          REGISTER BOX
+      ================================= */}
       <div className="register-box">
 
-        <h1>Create Account 🎉</h1>
+        <h1>
+          Create Account 🎉
+        </h1>
 
         <p>
           Register to start using Smart Food Coupon
@@ -102,63 +185,75 @@ export default function Register() {
 
         <form onSubmit={handleRegister}>
 
-          {/* Name */}
+          {/* NAME */}
           <input
             type="text"
             placeholder="Enter Full Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
           />
 
-          {/* Email */}
+          {/* EMAIL */}
           <input
             type="email"
             placeholder="Enter Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
           />
 
-          {/* Phone */}
+          {/* PHONE */}
           <input
             type="tel"
             placeholder="Enter Phone Number"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) =>
+              setPhone(e.target.value)
+            }
           />
 
-          {/* Password */}
+          {/* PASSWORD */}
           <input
             type="password"
             placeholder="Enter Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
           />
 
-          {/* Confirm Password */}
+          {/* CONFIRM PASSWORD */}
           <input
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) =>
-              setConfirmPassword(e.target.value)
+              setConfirmPassword(
+                e.target.value
+              )
             }
           />
 
+          {/* REGISTER BUTTON */}
           <button type="submit">
             Register
           </button>
 
         </form>
 
+        {/* LOGIN LINK */}
         <div className="login-link">
           Already have an account?{" "}
+
           <Link to="/Login">
             Login
           </Link>
         </div>
 
       </div>
-
     </div>
   );
 }

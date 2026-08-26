@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./Managecoupon.css";
 
 const API_URL = "http://localhost:5000/api/coupons";
@@ -7,14 +8,14 @@ export default function ManageCoupon() {
   // =====================================
   // COUPON LIST
   // =====================================
-
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   // =====================================
   // FORM DATA
   // =====================================
-
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState("");
   const [minOrderAmount, setMinOrderAmount] = useState("");
@@ -26,7 +27,6 @@ export default function ManageCoupon() {
   // =====================================
   // LOAD COUPONS
   // =====================================
-
   const loadCoupons = async () => {
     try {
       setLoading(true);
@@ -39,10 +39,18 @@ export default function ManageCoupon() {
 
       const data = await response.json();
 
-      setCoupons(Array.isArray(data) ? data : []);
+      setCoupons(
+        Array.isArray(data) ? data : []
+      );
     } catch (error) {
-      console.error("LOAD COUPON ERROR:", error);
-      alert("Unable to load coupons from database.");
+      console.error(
+        "LOAD COUPON ERROR:",
+        error
+      );
+
+      alert(
+        "Unable to load coupons from database."
+      );
     } finally {
       setLoading(false);
     }
@@ -51,7 +59,6 @@ export default function ManageCoupon() {
   // =====================================
   // PAGE LOAD
   // =====================================
-
   useEffect(() => {
     loadCoupons();
   }, []);
@@ -59,129 +66,166 @@ export default function ManageCoupon() {
   // =====================================
   // ADD COUPON
   // =====================================
-
   const addCoupon = async (e) => {
     e.preventDefault();
 
     // =================================
+    // CLEAN VALUES
+    // =================================
+    const couponCode =
+      code.trim().toUpperCase();
+
+    const couponDescription =
+      description.trim();
+
+    // =================================
     // BASIC VALIDATION
     // =================================
-
     if (
-      code.trim() === "" ||
+      couponCode === "" ||
       discount === "" ||
       minOrderAmount === "" ||
       validFrom === "" ||
       validUntil === "" ||
       store.trim() === "" ||
-      description.trim() === ""
+      couponDescription === ""
     ) {
-      alert("Please fill all coupon fields.");
+      alert(
+        "Please fill all coupon fields."
+      );
       return;
     }
 
     // =================================
     // DISCOUNT VALIDATION
     // =================================
-
-    const discountNumber = Number(discount);
+    const discountNumber =
+      Number(discount);
 
     if (
       Number.isNaN(discountNumber) ||
       discountNumber < 1 ||
       discountNumber > 100
     ) {
-      alert("Discount must be between 1% and 100%.");
+      alert(
+        "Discount must be between 1% and 100%."
+      );
       return;
     }
 
     // =================================
     // MINIMUM ORDER VALIDATION
     // =================================
-
-    const minOrderNumber = Number(minOrderAmount);
+    const minOrderNumber =
+      Number(minOrderAmount);
 
     if (
       Number.isNaN(minOrderNumber) ||
       minOrderNumber < 0
     ) {
-      alert("Minimum Order Amount must be a valid number.");
+      alert(
+        "Minimum Order Amount must be a valid number."
+      );
       return;
     }
 
     // =================================
     // DATE VALIDATION
     // =================================
-
     if (validUntil < validFrom) {
-      alert("Valid Until date cannot be before Valid From date.");
+      alert(
+        "Valid Until date cannot be before Valid From date."
+      );
+      return;
+    }
+
+    // =================================
+    // CHECK DUPLICATE CODE
+    // =================================
+    const duplicateCoupon =
+      coupons.some(
+        (coupon) =>
+          coupon.code &&
+          coupon.code.toUpperCase() ===
+            couponCode
+      );
+
+    if (duplicateCoupon) {
+      alert(
+        "This coupon code already exists."
+      );
       return;
     }
 
     try {
+      setSaving(true);
+
       // =================================
       // DATA SENT TO BACKEND
       // =================================
-
       const couponData = {
-        code: code.trim().toUpperCase(),
-
+        code: couponCode,
         discount: discountNumber,
-
-        // IMPORTANT:
-        // Backend expects minOrderAmount
         minOrderAmount: minOrderNumber,
-
         validFrom: validFrom,
-
         validUntil: validUntil,
-
-        store: store,
-
-        description: description.trim(),
+        store: store.trim(),
+        description: couponDescription
       };
 
-      console.log("COUPON DATA:", couponData);
+      console.log(
+        "COUPON DATA:",
+        couponData
+      );
 
       // =================================
       // POST REQUEST
       // =================================
-
-      const response = await fetch(API_URL, {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify(couponData),
-      });
+      const response = await fetch(
+        API_URL,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify(
+            couponData
+          )
+        }
+      );
 
       // =================================
-      // RESPONSE DATA
+      // READ RESPONSE SAFELY
       // =================================
+      let data = {};
 
-      const data = await response.json();
+      try {
+        data = await response.json();
+      } catch (error) {
+        data = {};
+      }
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to add coupon"
+          data.message ||
+            "Failed to add coupon"
         );
       }
 
       // =================================
-      // ADD TO LIST
+      // ADD NEW COUPON TO LIST
       // =================================
-
-      setCoupons((previousCoupons) => [
-        data,
-        ...previousCoupons,
-      ]);
+      setCoupons(
+        (previousCoupons) => [
+          data,
+          ...previousCoupons
+        ]
+      );
 
       // =================================
       // CLEAR FORM
       // =================================
-
       setCode("");
       setDiscount("");
       setMinOrderAmount("");
@@ -190,125 +234,157 @@ export default function ManageCoupon() {
       setStore("La Pino'z");
       setDescription("");
 
-      alert("Coupon Added Successfully! 🎉");
+      alert(
+        "Coupon Added Successfully! 🎉"
+      );
     } catch (error) {
-      console.error("ADD COUPON ERROR:", error);
+      console.error(
+        "ADD COUPON ERROR:",
+        error
+      );
 
       alert(
-        error.message || "Failed to add coupon"
+        error.message ||
+          "Failed to add coupon"
       );
+    } finally {
+      setSaving(false);
     }
   };
 
   // =====================================
   // DELETE COUPON
   // =====================================
-
   const deleteCoupon = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this coupon?"
-    );
+    const confirmDelete =
+      window.confirm(
+        "Are you sure you want to delete this coupon?"
+      );
 
     if (!confirmDelete) {
       return;
     }
 
     try {
+      setDeletingId(id);
+
       const response = await fetch(
         `${API_URL}/${id}`,
         {
-          method: "DELETE",
+          method: "DELETE"
         }
       );
 
-      const data = await response.json();
+      let data = {};
+
+      try {
+        data = await response.json();
+      } catch (error) {
+        data = {};
+      }
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to delete coupon"
+          data.message ||
+            "Failed to delete coupon"
         );
       }
 
-      setCoupons((previousCoupons) =>
-        previousCoupons.filter(
-          (coupon) => coupon._id !== id
-        )
+      // =================================
+      // REMOVE FROM UI
+      // =================================
+      setCoupons(
+        (previousCoupons) =>
+          previousCoupons.filter(
+            (coupon) =>
+              coupon._id !== id
+          )
       );
-
-      alert("Coupon Deleted Successfully!");
-    } catch (error) {
-      console.error("DELETE COUPON ERROR:", error);
 
       alert(
-        error.message || "Failed to delete coupon"
+        "Coupon Deleted Successfully!"
       );
+    } catch (error) {
+      console.error(
+        "DELETE COUPON ERROR:",
+        error
+      );
+
+      alert(
+        error.message ||
+          "Failed to delete coupon"
+      );
+    } finally {
+      setDeletingId(null);
     }
   };
 
   // =====================================
   // FORMAT DATE
   // =====================================
-
   const formatDate = (date) => {
     if (!date) {
       return "-";
     }
 
-    const newDate = new Date(date);
+    const newDate =
+      new Date(date);
 
-    if (Number.isNaN(newDate.getTime())) {
+    if (
+      Number.isNaN(
+        newDate.getTime()
+      )
+    ) {
       return date;
     }
 
-    return newDate.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return newDate.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      }
+    );
   };
 
   // =====================================
-  // JSX
+  // RETURN UI
   // =====================================
-
   return (
     <div className="manage-coupon">
 
       {/* =================================
           HEADER
-      ================================== */}
-
+      ================================= */}
       <div className="manage-header">
-
         <div>
-          <h1>Manage Coupons</h1>
+          <h1>
+            Manage Coupons
+          </h1>
 
           <p>
             Add and manage discount coupons
           </p>
         </div>
 
-        <a href="/Admindashboard">
+        <Link to="/Admindashboard">
           Back to Dashboard
-        </a>
-
+        </Link>
       </div>
-
 
       {/* =================================
           ADD COUPON FORM
-      ================================== */}
-
+      ================================= */}
       <div className="coupon-form-box">
-
-        <h2>Add New Coupon</h2>
+        <h2>
+          Add New Coupon
+        </h2>
 
         <form onSubmit={addCoupon}>
 
-          {/* Coupon Code */}
-
+          {/* COUPON CODE */}
           <div className="form-group">
-
             <label>
               Coupon Code
             </label>
@@ -318,17 +394,15 @@ export default function ManageCoupon() {
               placeholder="Example: DRK10"
               value={code}
               onChange={(e) =>
-                setCode(e.target.value.toUpperCase())
+                setCode(
+                  e.target.value.toUpperCase()
+                )
               }
             />
-
           </div>
 
-
-          {/* Discount */}
-
+          {/* DISCOUNT */}
           <div className="form-group">
-
             <label>
               Discount (%)
             </label>
@@ -340,17 +414,15 @@ export default function ManageCoupon() {
               placeholder="Example: 10"
               value={discount}
               onChange={(e) =>
-                setDiscount(e.target.value)
+                setDiscount(
+                  e.target.value
+                )
               }
             />
-
           </div>
 
-
-          {/* Minimum Order Amount */}
-
+          {/* MINIMUM ORDER */}
           <div className="form-group">
-
             <label>
               Minimum Order Amount (₹)
             </label>
@@ -361,17 +433,15 @@ export default function ManageCoupon() {
               placeholder="Example: 250"
               value={minOrderAmount}
               onChange={(e) =>
-                setMinOrderAmount(e.target.value)
+                setMinOrderAmount(
+                  e.target.value
+                )
               }
             />
-
           </div>
 
-
-          {/* Valid From */}
-
+          {/* VALID FROM */}
           <div className="form-group">
-
             <label>
               Valid From
             </label>
@@ -380,36 +450,33 @@ export default function ManageCoupon() {
               type="date"
               value={validFrom}
               onChange={(e) =>
-                setValidFrom(e.target.value)
+                setValidFrom(
+                  e.target.value
+                )
               }
             />
-
           </div>
 
-
-          {/* Valid Until */}
-
+          {/* VALID UNTIL */}
           <div className="form-group">
-
             <label>
               Valid Until
             </label>
 
             <input
               type="date"
+              min={validFrom || undefined}
               value={validUntil}
               onChange={(e) =>
-                setValidUntil(e.target.value)
+                setValidUntil(
+                  e.target.value
+                )
               }
             />
-
           </div>
 
-
-          {/* Store */}
-
+          {/* STORE */}
           <div className="form-group">
-
             <label>
               Store
             </label>
@@ -417,10 +484,11 @@ export default function ManageCoupon() {
             <select
               value={store}
               onChange={(e) =>
-                setStore(e.target.value)
+                setStore(
+                  e.target.value
+                )
               }
             >
-
               <option value="La Pino'z">
                 La Pino'z
               </option>
@@ -436,16 +504,11 @@ export default function ManageCoupon() {
               <option value="Domino's">
                 Domino's
               </option>
-
             </select>
-
           </div>
 
-
-          {/* Description */}
-
+          {/* DESCRIPTION */}
           <div className="form-group full-width">
-
             <label>
               Coupon Description
             </label>
@@ -454,60 +517,48 @@ export default function ManageCoupon() {
               placeholder="Example: Get 10% OFF on orders above ₹250"
               value={description}
               onChange={(e) =>
-                setDescription(e.target.value)
+                setDescription(
+                  e.target.value
+                )
               }
             />
-
           </div>
 
-
-          {/* Submit */}
-
+          {/* SUBMIT */}
           <button
             type="submit"
             className="add-coupon-btn"
+            disabled={saving}
           >
-            Add Coupon
+            {saving
+              ? "Adding Coupon..."
+              : "Add Coupon"}
           </button>
 
         </form>
-
       </div>
-
 
       {/* =================================
           COUPON LIST
-      ================================== */}
-
+      ================================= */}
       <div className="coupon-list-box">
-
         <h2>
           Coupon List
         </h2>
 
-
         {loading ? (
-
           <p className="empty-message">
             Loading coupons...
           </p>
-
         ) : coupons.length === 0 ? (
-
           <p className="empty-message">
             No coupons available.
           </p>
-
         ) : (
-
           <div className="table-container">
-
             <table>
-
               <thead>
-
                 <tr>
-
                   <th>
                     Coupon Code
                   </th>
@@ -539,109 +590,86 @@ export default function ManageCoupon() {
                   <th>
                     Action
                   </th>
-
                 </tr>
-
               </thead>
 
-
               <tbody>
+                {coupons.map(
+                  (coupon) => (
+                    <tr
+                      key={coupon._id}
+                    >
+                      {/* CODE */}
+                      <td>
+                        <span className="coupon-code">
+                          {coupon.code}
+                        </span>
+                      </td>
 
-                {coupons.map((coupon) => (
+                      {/* DISCOUNT */}
+                      <td>
+                        {coupon.discount}%
+                      </td>
 
-                  <tr
-                    key={coupon._id}
-                  >
+                      {/* MINIMUM ORDER */}
+                      <td>
+                        ₹
+                        {coupon.minOrderAmount}
+                      </td>
 
-                    {/* Code */}
+                      {/* VALID FROM */}
+                      <td>
+                        {formatDate(
+                          coupon.validFrom
+                        )}
+                      </td>
 
-                    <td>
+                      {/* VALID UNTIL */}
+                      <td>
+                        {formatDate(
+                          coupon.validUntil
+                        )}
+                      </td>
 
-                      <span className="coupon-code">
-                        {coupon.code}
-                      </span>
+                      {/* STORE */}
+                      <td>
+                        {coupon.store}
+                      </td>
 
-                    </td>
+                      {/* DESCRIPTION */}
+                      <td>
+                        {coupon.description}
+                      </td>
 
-
-                    {/* Discount */}
-
-                    <td>
-                      {coupon.discount}%
-                    </td>
-
-
-                    {/* Minimum Order */}
-
-                    <td>
-                      ₹{coupon.minOrderAmount}
-                    </td>
-
-
-                    {/* Valid From */}
-
-                    <td>
-                      {formatDate(
-                        coupon.validFrom
-                      )}
-                    </td>
-
-
-                    {/* Valid Until */}
-
-                    <td>
-                      {formatDate(
-                        coupon.validUntil
-                      )}
-                    </td>
-
-
-                    {/* Store */}
-
-                    <td>
-                      {coupon.store}
-                    </td>
-
-
-                    {/* Description */}
-
-                    <td>
-                      {coupon.description}
-                    </td>
-
-
-                    {/* Delete */}
-
-                    <td>
-
-                      <button
-                        type="button"
-                        className="delete-coupon-btn"
-                        onClick={() =>
-                          deleteCoupon(
+                      {/* DELETE */}
+                      <td>
+                        <button
+                          type="button"
+                          className="delete-coupon-btn"
+                          disabled={
+                            deletingId ===
                             coupon._id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
-
-                    </td>
-
-                  </tr>
-
-                ))}
-
+                          }
+                          onClick={() =>
+                            deleteCoupon(
+                              coupon._id
+                            )
+                          }
+                        >
+                          {deletingId ===
+                          coupon._id
+                            ? "Deleting..."
+                            : "Delete"}
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )}
               </tbody>
-
             </table>
-
           </div>
-
         )}
-
       </div>
-
     </div>
   );
 }

@@ -3,416 +3,418 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import "./Menu.css";
 
-
-// =====================================
-// BACKEND URL
-// =====================================
-
 const API_URL = "http://localhost:5000/api/foods";
 const SERVER_URL = "http://localhost:5000";
-
 
 export default function Menu() {
 
   // =====================================
-  // STATES
+  // FOOD LIST
   // =====================================
 
   const [foods, setFoods] = useState([]);
-
-  const [selectedCategory, setSelectedCategory] =
-    useState("All");
-
-  const [search, setSearch] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(true);
-
+  const [loading, setLoading] = useState(true);
 
   // =====================================
-  // LOAD FOODS FROM MONGODB
+  // SEARCH AND CATEGORY
+  // =====================================
+
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+
+  // =====================================
+  // LOAD FOODS FROM DATABASE
+  // =====================================
+
+  const loadFoods = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(API_URL);
+
+      if (!response.ok) {
+        throw new Error("Failed to load foods");
+      }
+
+      const data = await response.json();
+
+      setFoods(Array.isArray(data) ? data : []);
+
+    } catch (error) {
+      console.error("FOOD LOADING ERROR:", error);
+      setFoods([]);
+      alert("Unable to load food items.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =====================================
+  // LOAD FOODS WHEN PAGE OPENS
   // =====================================
 
   useEffect(() => {
-
-    const loadFoods = async () => {
-
-      try {
-
-        const response =
-          await fetch(API_URL);
-
-        if (!response.ok) {
-
-          throw new Error(
-            "Failed to load foods"
-          );
-
-        }
-
-        const data =
-          await response.json();
-
-        setFoods(data);
-
-      } catch (error) {
-
-        console.log(
-          "Error loading foods:",
-          error
-        );
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
-
     loadFoods();
-
   }, []);
 
-
   // =====================================
-  // IMAGE URL
+  // GET IMAGE URL
   // =====================================
 
   const getImageUrl = (image) => {
-
     if (!image) {
-
       return "";
-
     }
 
-
-    // Full image URL
-
-    if (image.startsWith("http")) {
-
+    // If backend already returns full URL
+    if (
+      image.startsWith("http://") ||
+      image.startsWith("https://")
+    ) {
       return image;
-
     }
 
+    // If image starts with /
+    if (image.startsWith("/")) {
+      return SERVER_URL + image;
+    }
 
-    // Backend uploaded image
-
-    return SERVER_URL + image;
-
+    return SERVER_URL + "/" + image;
   };
 
+  // =====================================
+  // CLEAN PRICE
+  // =====================================
+
+  const cleanPrice = (price) => {
+    if (typeof price === "number") {
+      return price;
+    }
+
+    if (!price) {
+      return 0;
+    }
+
+    const cleanedPrice = String(price)
+      .replace(/₹/g, "")
+      .replace(/,/g, "")
+      .trim();
+
+    const numberPrice = Number(cleanedPrice);
+
+    return Number.isNaN(numberPrice)
+      ? 0
+      : numberPrice;
+  };
 
   // =====================================
-  // FILTER FOOD
-  // =====================================
-
-  const filteredFoods =
-    foods.filter((food) => {
-
-      const categoryMatch =
-        selectedCategory === "All" ||
-        food.category === selectedCategory;
-
-
-      const searchMatch =
-        food.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          );
-
-
-      return (
-        categoryMatch &&
-        searchMatch
-      );
-
-    });
-
-
-  // =====================================
-  // ADD TO CART
+  // ADD FOOD TO CART
   // =====================================
 
   const addToCart = (food) => {
 
-    const existingCart =
+    // Get existing cart
+    const savedCart =
       JSON.parse(
         localStorage.getItem("foodCart")
       ) || [];
 
-
-    const existingItem =
-      existingCart.find(
-        (item) =>
-          item._id === food._id
+    // Check whether food already exists
+    const existingFoodIndex =
+      savedCart.findIndex(
+        (item) => item.id === food._id
       );
-
 
     let updatedCart;
 
+    // =================================
+    // FOOD ALREADY EXISTS
+    // =================================
 
-    if (existingItem) {
+    if (existingFoodIndex !== -1) {
 
-      updatedCart =
-        existingCart.map(
-          (item) => {
+      updatedCart = [...savedCart];
 
-            if (
-              item._id === food._id
-            ) {
-
-              return {
-
-                ...item,
-
-                quantity:
-                  (item.quantity || 1) + 1
-
-              };
-
-            }
-
-            return item;
-
-          }
-        );
+      updatedCart[existingFoodIndex] = {
+        ...updatedCart[existingFoodIndex],
+        quantity:
+          Number(
+            updatedCart[existingFoodIndex].quantity
+          ) + 1
+      };
 
     } else {
 
+      // =================================
+      // NEW FOOD
+      // =================================
+
+      const newCartItem = {
+        id: food._id,
+        name: food.name,
+        category: food.category,
+        price: cleanPrice(food.price),
+
+        // IMPORTANT:
+        // Store complete image URL
+        // so Cart and Order can display it
+        image: getImageUrl(food.image),
+
+        quantity: 1
+      };
+
       updatedCart = [
-
-        ...existingCart,
-
-        {
-
-          ...food,
-
-          quantity: 1
-
-        }
-
+        ...savedCart,
+        newCartItem
       ];
-
     }
 
+    // =================================
+    // SAVE CART
+    // =================================
 
     localStorage.setItem(
       "foodCart",
       JSON.stringify(updatedCart)
     );
 
-
-    // Notify Navbar / Cart
+    // =================================
+    // UPDATE NAVBAR CART COUNT
+    // =================================
 
     window.dispatchEvent(
       new Event("cartUpdated")
     );
 
-
     alert(
-      `${food.name} added to cart!`
+      `${food.name} added to cart! 🛒`
     );
-
   };
 
-
   // =====================================
-  // CATEGORIES
+  // FILTER FOOD
   // =====================================
 
-  const categories = [
+  const filteredFoods = foods.filter((food) => {
 
-    "All",
-    "Pizza",
-    "Burger",
-    "Pasta",
-    "Sandwich",
-    "Drinks",
-    "Desserts"
+    const matchesSearch =
+      food.name
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        );
 
-  ];
+    const matchesCategory =
+      category === "All" ||
+      food.category === category;
 
+    return (
+      matchesSearch &&
+      matchesCategory
+    );
+  });
 
   // =====================================
   // JSX
   // =====================================
 
   return (
-
-    <div className="menupage">
+    <div className="menu-page">
 
       <Navbar />
 
+      {/* =================================
+          PAGE HEADER
+      ================================= */}
+
+      <div className="menu-header">
+
+        <h1>
+          Our Menu 🍽️
+        </h1>
+
+        <p>
+          Choose your favourite food and
+          add it to your cart.
+        </p>
+
+      </div>
 
       {/* =================================
-          SEARCH
-      ================================== */}
+          SEARCH AND FILTER
+      ================================= */}
 
-        <br></br>
+      <div className="menu-filter">
 
-      <div className="searchbox">
+        {/* Search */}
 
         <input
           type="text"
-          placeholder="Search your favourite food.."
+          placeholder="Search food..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
           }
         />
 
-      </div>
-      
-      <br></br>
+        {/* Category */}
 
+        <select
+          value={category}
+          onChange={(e) =>
+            setCategory(e.target.value)
+          }
+        >
+
+          <option value="All">
+            All
+          </option>
+
+          <option value="Pizza">
+            Pizza
+          </option>
+
+          <option value="Burger">
+            Burger
+          </option>
+
+          <option value="Pasta">
+            Pasta
+          </option>
+
+          <option value="Sandwich">
+            Sandwich
+          </option>
+
+          <option value="Dessert">
+            Dessert
+          </option>
+
+          <option value="Drinks">
+            Drinks
+          </option>
+
+        </select>
+
+      </div>
 
       {/* =================================
-          CATEGORIES
-      ================================== */}
+          LOADING
+      ================================= */}
 
-      <div className="category-buttons">
+      {loading ? (
 
-        {categories.map(
-          (category) => (
+        <div className="menu-message">
 
-            <button
-              key={category}
-              onClick={() =>
-                setSelectedCategory(
-                  category
-                )
-              }
-              className={
-                selectedCategory === category
-                  ? "active"
-                  : ""
-              }
+          <h2>
+            Loading food... 🍕
+          </h2>
+
+        </div>
+
+      ) : filteredFoods.length === 0 ? (
+
+        /* =================================
+           NO FOOD
+        ================================= */
+
+        <div className="menu-message">
+
+          <h2>
+            No Food Found 😔
+          </h2>
+
+          <p>
+            Try another food name or category.
+          </p>
+
+        </div>
+
+      ) : (
+
+        /* =================================
+           FOOD CONTAINER
+        ================================= */
+
+        <div className="food-container">
+
+          {filteredFoods.map((food) => (
+
+            <div
+              className="food-card"
+              key={food._id}
             >
 
-              {category}
+              {/* =================================
+                  FOOD IMAGE
+              ================================= */}
 
-            </button>
+              <div className="food-image">
 
-          )
-        )}
-
-      </div>
-
-
-      {/* =================================
-          FOOD SECTION
-      ================================== */}
-
-      <section className="popular-foods">
-
-        <h1>
-          Popular Foods
-        </h1>
-
-
-        {/* Loading */}
-
-        {loading ? (
-
-          <p>
-            Loading foods...
-          </p>
-
-        ) : filteredFoods.length === 0 ? (
-
-          <p>
-            No food items found.
-          </p>
-
-        ) : (
-
-          <div className="food-grid">
-
-            {filteredFoods.map(
-              (food) => (
-
-                <div
-                  className="food-card"
-                  key={food._id}
-                >
-
-
-                  {/* IMAGE */}
+                {food.image ? (
 
                   <img
-                    src={getImageUrl(
-                      food.image
-                    )}
+                    src={getImageUrl(food.image)}
                     alt={food.name}
-                    className="food-image"
+                    onError={(e) => {
+                      e.target.style.display =
+                        "none";
+                    }}
                   />
 
+                ) : (
 
-                  {/* FOOD NAME */}
-
-                  <h2>
-                    {food.name}
-                  </h2>
-
-
-                  {/* CATEGORY */}
-
-                  <p>
-                    {food.category}
-                  </p>
-
-
-                  {/* PRICE */}
-
-                  <h3>
-                    ₹{food.price}
-                  </h3>
-
-
-                  {/* RATING */}
-
-                  <div className="rating">
-
-                    ⭐ 4.5
-
+                  <div className="no-image">
+                    🍽️
                   </div>
 
+                )}
 
-                  {/* ADD TO CART */}
+              </div>
+
+              {/* =================================
+                  FOOD DETAILS
+              ================================= */}
+
+              <div className="food-info">
+
+                <h2>
+                  {food.name}
+                </h2>
+
+                <p className="food-category">
+                  {food.category}
+                </p>
+
+                <div className="food-bottom">
+
+                  <h3>
+                    ₹{cleanPrice(food.price)}
+                  </h3>
 
                   <button
-                    className="add-cart-btn"
+                    type="button"
                     onClick={() =>
                       addToCart(food)
                     }
                   >
-
-                    Add To Cart
-
+                    Add to Cart 🛒
                   </button>
-
 
                 </div>
 
-              )
-            )}
+              </div>
 
-          </div>
+            </div>
 
-        )}
+          ))}
 
-      </section>
+        </div>
 
+      )}
 
       <Footer />
 
     </div>
-
   );
-
 }
