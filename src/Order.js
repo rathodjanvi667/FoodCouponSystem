@@ -3,18 +3,28 @@ import "./Order.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
+const API_URL = "http://localhost:5000";
+
 export default function Order() {
-  // =============================
-  // CART LOCAL STORAGE MATHI LO
-  // =============================
+
+  // =====================================
+  // CART FROM LOCAL STORAGE
+  // =====================================
+
   const [cart] = useState(() => {
-    const savedCart = localStorage.getItem("foodCart");
+
+    const savedCart =
+      localStorage.getItem("foodCart");
 
     if (savedCart) {
       try {
         return JSON.parse(savedCart);
       } catch (error) {
-        console.error("Error loading cart:", error);
+        console.error(
+          "Error loading cart:",
+          error
+        );
+
         return [];
       }
     }
@@ -22,9 +32,11 @@ export default function Order() {
     return [];
   });
 
-  // =============================
+
+  // =====================================
   // CUSTOMER DETAILS
-  // =============================
+  // =====================================
+
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [address, setAddress] = useState("");
@@ -32,20 +44,41 @@ export default function Order() {
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
 
-  // =============================
-  // PAYMENT METHOD
-  // =============================
-  const [paymentMethod, setPaymentMethod] = useState("");
 
-  // =============================
+  // =====================================
+  // PAYMENT
+  // =====================================
+
+  const [paymentMethod, setPaymentMethod] =
+    useState("");
+
+
+  // =====================================
+  // SUCCESS POPUP
+  // =====================================
+
+  const [showSuccess, setShowSuccess] =
+    useState(false);
+
+  const [generatedCoupon, setGeneratedCoupon] =
+    useState(null);
+
+  const [generatedOrderId, setGeneratedOrderId] =
+    useState("");
+
+  const [generatedTotal, setGeneratedTotal] =
+    useState(0);
+
+  const [isPlacingOrder, setIsPlacingOrder] =
+    useState(false);
+
+
+  // =====================================
   // CLEAN PRICE
-  // =============================
-  // Handles:
-  // 259
-  // "259"
-  // "₹259"
-  // "₹1,299"
+  // =====================================
+
   const cleanPrice = (price) => {
+
     if (typeof price === "number") {
       return price;
     }
@@ -54,99 +87,122 @@ export default function Order() {
       return 0;
     }
 
-    const cleanedPrice = String(price)
-      .replace(/₹/g, "")
-      .replace(/,/g, "")
-      .trim();
+    const cleanedPrice =
+      String(price)
+        .replace(/₹/g, "")
+        .replace(/,/g, "")
+        .trim();
 
-    const numberPrice = Number(cleanedPrice);
+    const numberPrice =
+      Number(cleanedPrice);
 
-    return isNaN(numberPrice) ? 0 : numberPrice;
+    return Number.isNaN(numberPrice)
+      ? 0
+      : numberPrice;
   };
 
-  // =============================
+
+  // =====================================
   // GET FOOD ID
-  // =============================
-  // Supports MongoDB _id and old id
+  // =====================================
+
   const getItemId = (item) => {
     return item._id || item.id;
   };
 
-  // =============================
+
+  // =====================================
   // SUBTOTAL
-  // =============================
+  // =====================================
+
   const subtotal = cart.reduce(
-    (total, item) =>
-      total +
-      cleanPrice(item.price) *
-        Number(item.quantity || 1),
+    (total, item) => {
+
+      const price =
+        cleanPrice(item.price);
+
+      const quantity =
+        Number(item.quantity) || 1;
+
+      return total + price * quantity;
+
+    },
     0
   );
 
-  // =============================
+
+  // =====================================
   // DELIVERY FEE
-  // =============================
-  const deliveryFee = cart.length > 0 ? 40 : 0;
+  // =====================================
 
-  // =============================
+  const deliveryFee =
+    cart.length > 0 ? 40 : 0;
+
+
+  // =====================================
   // GST
-  // =============================
-  const gst = Math.round(subtotal * 0.05);
+  // =====================================
 
-  // =============================
+  const gst =
+    Math.round(subtotal * 0.05);
+
+
+  // =====================================
   // DISCOUNT
-  // =============================
-  // The coupon is generated AFTER
-  // successful order, so no discount
-  // is applied to the current order.
+  // =====================================
+
   const discount = 0;
 
-  // =============================
+
+  // =====================================
   // FINAL TOTAL
-  // =============================
+  // =====================================
+
   const total =
     subtotal +
     deliveryFee +
     gst -
     discount;
 
-  // =============================
-  // GENERATE COUPON CODE
-  // =============================
-  const generateCouponCode = () => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    let code = "";
+  // =====================================
+  // PLACE ORDER
+  // =====================================
 
-    for (let i = 0; i < 6; i++) {
-      code += characters.charAt(
-        Math.floor(
-          Math.random() * characters.length
-        )
-      );
+  const placeOrder = async (e) => {
+
+    if (e) {
+      e.preventDefault();
     }
 
-    return `SFC-${code}`;
-  };
 
-  // =============================
-  // PLACE ORDER
-  // =============================
-  const placeOrder = (e) => {
-    e.preventDefault();
+    // =====================================
+    // PREVENT DOUBLE CLICK
+    // =====================================
 
-    // =============================
-    // CART EMPTY CHECK
-    // =============================
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
+    if (isPlacingOrder) {
       return;
     }
 
-    // =============================
-    // CUSTOMER DETAILS VALIDATION
-    // =============================
+
+    // =====================================
+    // CART EMPTY
+    // =====================================
+
+    if (cart.length === 0) {
+
+      alert(
+        "Your cart is empty!"
+      );
+
+      return;
+    }
+
+
+    // =====================================
+    // CUSTOMER VALIDATION
+    // =====================================
+
     if (
       name.trim() === "" ||
       mobile.trim() === "" ||
@@ -155,205 +211,461 @@ export default function Order() {
       state.trim() === "" ||
       pincode.trim() === ""
     ) {
-      alert("Please enter all delivery details.");
+
+      alert(
+        "Please enter all delivery details."
+      );
+
       return;
     }
 
-    // =============================
+
+    // =====================================
     // MOBILE VALIDATION
-    // =============================
-    if (!/^[0-9]{10}$/.test(mobile.trim())) {
-      alert("Please enter a valid 10-digit mobile number.");
+    // =====================================
+
+    if (
+      !/^[0-9]{10}$/.test(
+        mobile.trim()
+      )
+    ) {
+
+      alert(
+        "Please enter a valid 10-digit mobile number."
+      );
+
       return;
     }
 
-    // =============================
+
+    // =====================================
     // PINCODE VALIDATION
-    // =============================
-    if (!/^[0-9]{6}$/.test(pincode.trim())) {
-      alert("Please enter a valid 6-digit pincode.");
+    // =====================================
+
+    if (
+      !/^[0-9]{6}$/.test(
+        pincode.trim()
+      )
+    ) {
+
+      alert(
+        "Please enter a valid 6-digit pincode."
+      );
+
       return;
     }
 
-    // =============================
+
+    // =====================================
     // PAYMENT VALIDATION
-    // =============================
+    // =====================================
+
     if (paymentMethod === "") {
-      alert("Please select payment method.");
+
+      alert(
+        "Please select payment method."
+      );
+
       return;
     }
 
-    // =============================
-    // PREPARE ORDER ITEMS
-    // =============================
-    // Keep food data consistent.
-    const orderItems = cart.map((item) => ({
-      id: getItemId(item),
-      _id: item._id || item.id,
-      name: item.name,
-      category: item.category,
-      price: cleanPrice(item.price),
-      quantity: Number(item.quantity || 1),
-      image: item.image || ""
-    }));
 
-    // =============================
-    // CREATE ORDER OBJECT
-    // =============================
-    const newOrder = {
-      id: Date.now(),
-      customer: name.trim(),
-      mobile: mobile.trim(),
-      address: address.trim(),
-      city: city.trim(),
-      state: state.trim(),
-      pincode: pincode.trim(),
-      items: orderItems,
-      subtotal: subtotal,
-      deliveryFee: deliveryFee,
-      gst: gst,
-      discount: discount,
-      total: total,
-      paymentMethod: paymentMethod,
-      status: "Pending",
-      createdAt: new Date().toISOString()
-    };
+    try {
 
-    // =============================
-    // GET OLD ORDERS
-    // =============================
-    const savedOrders =
-      JSON.parse(
-        localStorage.getItem("orders")
-      ) || [];
+      setIsPlacingOrder(true);
 
-    // =============================
-    // SAVE NEW ORDER
-    // =============================
-    const updatedOrders = [
-      ...savedOrders,
-      newOrder
-    ];
 
-    localStorage.setItem(
-      "orders",
-      JSON.stringify(updatedOrders)
-    );
+      // =====================================
+      // PREPARE ORDER ITEMS
+      // =====================================
 
-    // =============================
-    // GENERATE COUPON
-    // =============================
-    const couponCode =
-      generateCouponCode();
+      const orderItems =
+        cart.map((item) => ({
 
-    // =============================
-    // COUPON VALIDITY
-    // =============================
-    const validFrom = new Date();
+          _id:
+            item._id ||
+            item.id,
 
-    const validUntil = new Date(
-      Date.now() +
-        7 * 24 * 60 * 60 * 1000
-    );
+          id:
+            item.id ||
+            item._id,
 
-    // =============================
-    // CREATE COUPON
-    // =============================
-    const newCoupon = {
-      id: Date.now() + 1,
-      code: couponCode,
-      discount: 10,
-      discountType: "percentage",
-      minOrderAmount: 0,
-      validFrom: validFrom.toISOString(),
-      validUntil: validUntil.toISOString(),
-      customer: name.trim(),
-      mobile: mobile.trim(),
-      orderId: newOrder.id,
-      used: false,
-      createdAt: new Date().toISOString()
-    };
+          name:
+            item.name,
 
-    // =============================
-    // GET CUSTOMER COUPONS
-    // =============================
-    const savedCoupons =
-      JSON.parse(
-        localStorage.getItem(
-          "customerCoupons"
+          category:
+            item.category || "",
+
+          price:
+            cleanPrice(item.price),
+
+          quantity:
+            Number(
+              item.quantity || 1
+            ),
+
+          image:
+            item.image || ""
+
+        }));
+
+
+      // =====================================
+      // CREATE ORDER IN MONGODB
+      // =====================================
+
+      const orderResponse =
+        await fetch(
+          `${API_URL}/api/orders`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              customer:
+                name.trim(),
+
+              mobile:
+                mobile.trim(),
+
+              address:
+                address.trim(),
+
+              city:
+                city.trim(),
+
+              state:
+                state.trim(),
+
+              pincode:
+                pincode.trim(),
+
+              items:
+                orderItems,
+
+              subtotal:
+                subtotal,
+
+              deliveryFee:
+                deliveryFee,
+
+              gst:
+                gst,
+
+              discount:
+                discount,
+
+              total:
+                total,
+
+              paymentMethod:
+                paymentMethod,
+
+              couponCode:
+                ""
+
+            })
+          }
+        );
+
+
+      // =====================================
+      // READ ORDER RESPONSE
+      // =====================================
+
+      const orderData =
+        await orderResponse.json();
+
+
+      // =====================================
+      // ORDER API ERROR
+      // =====================================
+
+      if (!orderResponse.ok) {
+
+        throw new Error(
+          orderData.message ||
+          "Failed to place order"
+        );
+
+      }
+
+
+      // =====================================
+      // GET SAVED ORDER
+      // =====================================
+
+      const savedOrder =
+        orderData.order ||
+        orderData;
+
+
+      // =====================================
+      // CHECK ORDER ID
+      // =====================================
+
+      const orderId =
+        savedOrder.orderNumber ||
+        savedOrder.id ||
+        savedOrder._id;
+
+
+      // =====================================
+      // GENERATE CUSTOMER COUPON
+      // =====================================
+
+      const couponResponse =
+        await fetch(
+          `${API_URL}/api/coupons/generate`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              items:
+                orderItems,
+
+              totalAmount:
+                total,
+
+              store:
+                "Smart Food Coupon",
+
+              customerName:
+                name.trim(),
+
+              customerMobile:
+                mobile.trim(),
+
+              orderId:
+                orderId
+
+            })
+          }
+        );
+
+
+      // =====================================
+      // READ COUPON RESPONSE
+      // =====================================
+
+      const couponData =
+        await couponResponse.json();
+
+
+      // =====================================
+      // COUPON API ERROR
+      // =====================================
+
+      if (!couponResponse.ok) {
+
+        console.error(
+          "Coupon generation failed:",
+          couponData
+        );
+
+
+        localStorage.removeItem(
+          "foodCart"
+        );
+
+
+        window.dispatchEvent(
+          new Event("cartUpdated")
+        );
+
+
+        alert(
+          "Order placed successfully, but coupon generation failed."
+        );
+
+
+        window.location.href =
+          "/Menu";
+
+
+        return;
+      }
+
+
+      // =====================================
+      // GET GENERATED COUPON
+      // =====================================
+      // Supports:
+      // 1. { coupon: {...} }
+      // 2. direct {...}
+
+      const coupon =
+        couponData.coupon ||
+        couponData;
+
+
+      // =====================================
+      // CHECK COUPON
+      // =====================================
+
+      if (
+        !coupon ||
+        !coupon.code
+      ) {
+
+        throw new Error(
+          "Coupon was generated but coupon data was not received."
+        );
+
+      }
+
+
+      // =====================================
+      // SAVE CUSTOMER COUPON LOCALLY
+      // =====================================
+
+      const savedCustomerCoupons =
+        JSON.parse(
+          localStorage.getItem(
+            "customerCoupons"
+          )
+        ) || [];
+
+
+      const customerCoupons = [
+        ...savedCustomerCoupons,
+        coupon
+      ];
+
+
+      localStorage.setItem(
+        "customerCoupons",
+        JSON.stringify(
+          customerCoupons
         )
-      ) || [];
+      );
 
-    // =============================
-    // SAVE CUSTOMER COUPON
-    // =============================
-    const updatedCoupons = [
-      ...savedCoupons,
-      newCoupon
-    ];
 
-    localStorage.setItem(
-      "customerCoupons",
-      JSON.stringify(updatedCoupons)
-    );
+      // =====================================
+      // SAVE LATEST COUPON
+      // =====================================
 
-    // =============================
-    // SAVE LATEST COUPON
-    // =============================
-    // Order/Coupon page can use this
-    // to show the newly generated coupon.
-    localStorage.setItem(
-      "latestCoupon",
-      JSON.stringify(newCoupon)
-    );
+      localStorage.setItem(
+        "latestCoupon",
+        JSON.stringify(
+          coupon
+        )
+      );
 
-    // =============================
-    // CLEAR CART
-    // =============================
-    localStorage.removeItem("foodCart");
 
-    // =============================
-    // UPDATE NAVBAR CART COUNT
-    // =============================
-    window.dispatchEvent(
-      new Event("cartUpdated")
-    );
+      // =====================================
+      // CLEAR CART
+      // =====================================
 
-    // =============================
-    // SUCCESS MESSAGE
-    // =============================
-    alert(
-      "🎉 ORDER PLACED SUCCESSFULLY! 🎉\n\n" +
-      "Order ID: #" +
-      newOrder.id +
-      "\n\n" +
-      "Total Amount: ₹" +
-      total +
-      "\n\n" +
-      "🎁 CONGRATULATIONS! 🎁\n" +
-      "You received a 10% OFF coupon!\n\n" +
-      "Coupon Code: " +
-      couponCode +
-      "\n\n" +
-      "Valid for 7 days.\n\n" +
-      "Use this coupon on your next order!"
-    );
+      localStorage.removeItem(
+        "foodCart"
+      );
 
-    // =============================
-    // GO TO MENU
-    // =============================
-    window.location.href = "/Menu";
+
+      // =====================================
+      // UPDATE NAVBAR
+      // =====================================
+
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      );
+
+
+      // =====================================
+      // SUCCESS DATA
+      // =====================================
+
+      setGeneratedCoupon(
+        coupon
+      );
+
+
+      setGeneratedOrderId(
+        orderId
+      );
+
+
+      setGeneratedTotal(
+        Number(
+          savedOrder.total ||
+          total
+        )
+      );
+
+
+      // =====================================
+      // SHOW SUCCESS POPUP
+      // =====================================
+
+      setShowSuccess(true);
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "PLACE ORDER ERROR:",
+        error
+      );
+
+      alert(
+        error.message ||
+        "Something went wrong while placing your order."
+      );
+
+    }
+
+    finally {
+
+      setIsPlacingOrder(false);
+
+    }
+
   };
 
-  // =============================
-  // RETURN UI
-  // =============================
-  return (
-    <div className="orderpage">
-      <Navbar></Navbar>
 
-//Hero
+  // =====================================
+  // CLOSE SUCCESS POPUP
+  // =====================================
+
+  const closeSuccessPopup = () => {
+
+    setShowSuccess(false);
+
+    window.location.href =
+      "/Menu";
+
+  };
+
+
+  // =====================================
+  // UI
+  // =====================================
+
+  return (
+
+    <div className="orderpage">
+
+      <Navbar />
+
+
+      {/* =====================================
+          HERO
+      ===================================== */}
+
       <section className="orderhero">
+
         <h1>
           Complete Your Order
         </h1>
@@ -363,152 +675,227 @@ export default function Order() {
           delivery details, and confirm
           your purchase.
         </p>
+
       </section>
 
-      {/* =========================
+
+      {/* =====================================
           ORDER CONTAINER
-      ========================== */}
+      ===================================== */}
+
       <section className="ordercontainer">
 
-        {/* =========================
+
+        {/* =====================================
             ORDER SUMMARY
-        ========================== */}
+        ===================================== */}
+
         <div className="ordersummery">
+
           <h2>
             Order Summary
           </h2>
 
+
           {cart.length === 0 ? (
+
             <div>
+
               <h3>
                 Your cart is empty 🛒
               </h3>
 
               <p>
-                Please add some food from
-                the menu.
+                Please add some food
+                from the menu.
               </p>
+
             </div>
+
           ) : (
+
             cart.map((item) => (
+
               <div
                 className="ordercard"
                 key={getItemId(item)}
               >
+
                 {/* FOOD IMAGE */}
-                <img
-                  src={item.image}
-                  alt={item.name}
-                />
+
+                {item.image ? (
+
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    onError={(e) => {
+
+                      e.currentTarget.src =
+                        "https://via.placeholder.com/90x90?text=Food";
+
+                    }}
+                  />
+
+                ) : (
+
+                  <div className="order-no-image">
+                    🍽️
+                  </div>
+
+                )}
+
 
                 {/* FOOD DETAILS */}
+
                 <div className="fooddetails">
+
                   <h3>
                     {item.name}
                   </h3>
 
                   <p>
-                    Category: {item.category}
+                    Category:{" "}
+                    {item.category}
                   </p>
 
                   <p>
-                    Quantity: {item.quantity}
+                    Quantity:{" "}
+                    {item.quantity}
                   </p>
+
                 </div>
 
+
                 {/* ITEM PRICE */}
+
                 <h3>
+
                   ₹
-                  {cleanPrice(item.price) *
-                    Number(item.quantity || 1)}
+                  {cleanPrice(
+                    item.price
+                  ) *
+                    Number(
+                      item.quantity || 1
+                    )}
+
                 </h3>
+
               </div>
+
             ))
+
           )}
+
         </div>
 
-        {/* =========================
+
+        {/* =====================================
             DELIVERY DETAILS
-        ========================== */}
+        ===================================== */}
+
         <div className="deliverydetails">
+
           <h2>
             Delivery Details
           </h2>
 
-          <form onSubmit={placeOrder}>
-            {/* FULL NAME */}
+
+          <form
+            onSubmit={placeOrder}
+          >
+
             <input
               type="text"
               placeholder="Enter Full Name"
               value={name}
               onChange={(e) =>
-                setName(e.target.value)
+                setName(
+                  e.target.value
+                )
               }
             />
 
-            {/* MOBILE */}
+
             <input
               type="text"
               placeholder="Enter Mobile No"
               value={mobile}
               onChange={(e) =>
-                setMobile(e.target.value)
+                setMobile(
+                  e.target.value
+                )
               }
             />
 
-            {/* ADDRESS */}
+
             <textarea
               placeholder="Enter Delivery Address"
               value={address}
               onChange={(e) =>
-                setAddress(e.target.value)
+                setAddress(
+                  e.target.value
+                )
               }
             />
 
-            {/* CITY */}
+
             <input
               type="text"
               placeholder="Enter Your City"
               value={city}
               onChange={(e) =>
-                setCity(e.target.value)
+                setCity(
+                  e.target.value
+                )
               }
             />
 
-            {/* STATE */}
+
             <input
               type="text"
               placeholder="Enter Your State"
               value={state}
               onChange={(e) =>
-                setState(e.target.value)
+                setState(
+                  e.target.value
+                )
               }
             />
 
-            {/* PINCODE */}
+
             <input
               type="text"
               placeholder="Enter Pincode"
               value={pincode}
               onChange={(e) =>
-                setPincode(e.target.value)
+                setPincode(
+                  e.target.value
+                )
               }
             />
+
           </form>
+
         </div>
+
       </section>
 
-      {/* =========================
+
+      {/* =====================================
           PAYMENT
-      ========================== */}
+      ===================================== */}
+
       <section className="paymentsection">
+
         <h2>
           Payment Method
         </h2>
 
+
         <div className="paymentoption">
-          {/* CASH ON DELIVERY */}
+
           <label>
+
             <input
               type="radio"
               name="payment"
@@ -525,10 +912,12 @@ export default function Order() {
             />
 
             Cash on Delivery
+
           </label>
 
-          {/* UPI */}
+
           <label>
+
             <input
               type="radio"
               name="payment"
@@ -544,10 +933,12 @@ export default function Order() {
             />
 
             UPI
+
           </label>
 
-          {/* CARD */}
+
           <label>
+
             <input
               type="radio"
               name="payment"
@@ -564,21 +955,29 @@ export default function Order() {
             />
 
             Credit / Debit Card
+
           </label>
+
         </div>
+
       </section>
 
-      {/* =========================
+
+      {/* =====================================
           BILL DETAILS
-      ========================== */}
+      ===================================== */}
+
       <section className="billsection">
+
         <h2>
           Bill Details
         </h2>
 
+
         <div className="billbox">
-          {/* SUBTOTAL */}
+
           <div>
+
             <span>
               Subtotal
             </span>
@@ -586,10 +985,12 @@ export default function Order() {
             <span>
               ₹{subtotal}
             </span>
+
           </div>
 
-          {/* DELIVERY */}
+
           <div>
+
             <span>
               Delivery Fee
             </span>
@@ -597,10 +998,12 @@ export default function Order() {
             <span>
               ₹{deliveryFee}
             </span>
+
           </div>
 
-          {/* GST */}
+
           <div>
+
             <span>
               GST
             </span>
@@ -608,10 +1011,12 @@ export default function Order() {
             <span>
               ₹{gst}
             </span>
+
           </div>
 
-          {/* DISCOUNT */}
+
           <div>
+
             <span>
               Discount
             </span>
@@ -619,12 +1024,15 @@ export default function Order() {
             <span>
               -₹{discount}
             </span>
+
           </div>
+
 
           <hr />
 
-          {/* FINAL TOTAL */}
+
           <div className="total">
+
             <span>
               Total
             </span>
@@ -632,21 +1040,178 @@ export default function Order() {
             <span>
               ₹{total}
             </span>
+
           </div>
+
         </div>
 
-        {/* =========================
-            PLACE ORDER BUTTON
-        ========================== */}
+
+        {/* =====================================
+            PLACE ORDER
+        ===================================== */}
+
         <button
+          type="button"
           className="placeorderbtn"
           onClick={placeOrder}
+          disabled={isPlacingOrder}
         >
-          Place Order
+
+          {isPlacingOrder
+            ? "Placing Order..."
+            : "Place Order"}
+
         </button>
+
       </section>
 
-      <Footer></Footer>
+
+      {/* =====================================
+          SUCCESS POPUP
+      ===================================== */}
+
+      {showSuccess &&
+        generatedCoupon && (
+
+          <div className="success-overlay">
+
+            <div className="success-popup">
+
+
+              {/* SUCCESS ICON */}
+
+              <div className="success-icon">
+                ✓
+              </div>
+
+
+              {/* SUCCESS TITLE */}
+
+              <h2>
+                Order Placed Successfully!
+              </h2>
+
+
+              <p className="success-message">
+
+                Thank you for ordering
+                with Smart Food Coupon.
+
+              </p>
+
+
+              {/* =================================
+                  ORDER DETAILS
+              ================================= */}
+
+              <div className="order-success-details">
+
+                <div>
+
+                  <span>
+                    Order ID
+                  </span>
+
+                  <strong>
+                    #{generatedOrderId}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Total Amount
+                  </span>
+
+                  <strong>
+                    ₹{generatedTotal}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              {/* =================================
+                  GENERATED COUPON
+              ================================= */}
+
+              <div className="generated-coupon">
+
+                <p>
+                  🎁 Congratulations!
+                </p>
+
+
+                <h3>
+
+                  You received a{" "}
+
+                  {generatedCoupon.discount || 20}
+
+                  % OFF coupon
+
+                </h3>
+
+
+                {/* COUPON CODE */}
+
+                <div className="coupon-code-display">
+
+                  <span>
+                    {generatedCoupon.code}
+                  </span>
+
+                </div>
+
+
+                {/* VALIDITY */}
+
+                <small>
+
+                  Valid until{" "}
+
+                  {generatedCoupon.validUntil
+                    ? new Date(
+                        generatedCoupon.validUntil
+                      ).toLocaleDateString(
+                        "en-IN"
+                      )
+                    : "7 days"}
+
+                  {" "}• Use it on your next order
+
+                </small>
+
+              </div>
+
+
+              {/* =================================
+                  CONTINUE SHOPPING
+              ================================= */}
+
+              <button
+                className="continue-btn"
+                onClick={
+                  closeSuccessPopup
+                }
+              >
+                Continue Shopping
+              </button>
+
+            </div>
+
+          </div>
+
+        )}
+
+
+      <Footer />
+
     </div>
+
   );
+
 }

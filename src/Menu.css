@@ -1,479 +1,513 @@
-/* =========================================
+/* =====================================
    MENU PAGE
-========================================= */
+===================================== */
 
-.menupage {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    overflow-x: hidden;
+.menu-page {
+  min-height: 100vh;
+  background: #f8f9fa;
 }
 
 
-/* =========================================
-   SEARCH BOX
-========================================= */
+/* =====================================
+   MENU HEADER
+===================================== */
 
-.searchbox {
-    width: 100%;
-    height: auto;
+.menu-header {
+  background: linear-gradient(
+    135deg,
+    #ff6b35,
+    #ff914d
+  );
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  color: white;
+  text-align: center;
 
-    padding: 35px 20px 20px;
-    margin: 0;
-
-    background: transparent;
-
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-
-    box-sizing: border-box;
+  padding: 80px 20px 70px;
 }
 
-.searchbox::before,
-.searchbox::after {
-    content: none !important;
-    display: none !important;
+.menu-header h1 {
+  margin: 0 0 15px;
+
+  font-size: 42px;
+  font-weight: 700;
 }
 
-.searchbox input {
-    width: 550px;
-    max-width: 100%;
-    height: 52px;
+.menu-header p {
+  margin: 0;
 
-    padding: 0 22px;
-
-    border: 1px solid #ddd;
-    border-radius: 30px;
-
-    outline: none;
-
-    background-color: #ffffff;
-
-    color: #333;
-
-    font-size: 18px;
-
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    box-sizing: border-box;
-
-    transition: all 0.3s ease;
-}
-
-.searchbox input::placeholder {
-    color: #777;
-}
-
-.searchbox input:focus {
-    border-color: #ff9800;
-
-    box-shadow:
-        0 0 0 3px rgba(255, 152, 0, 0.15);
+  font-size: 17px;
+  line-height: 1.6;
 }
 
 
-/* =========================================
-   CATEGORY BUTTONS
-========================================= */
+/* =====================================
+   SEARCH & FILTER
+===================================== */
 
-.category-buttons {
-    width: 100%;
+.menu-filter {
+  width: 84%;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  margin: 40px auto 20px;
 
-    flex-wrap: wrap;
+  display: flex;
 
-    gap: 18px;
+  justify-content: center;
 
-    padding: 25px 20px 35px;
-    margin: 0;
+  align-items: center;
 
-    background: transparent;
-
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-
-    box-sizing: border-box;
+  gap: 20px;
 }
 
-.category-buttons button {
-    min-width: 120px;
+.menu-filter input,
+.menu-filter select {
+  height: 48px;
 
-    padding: 13px 28px;
+  padding: 0 16px;
 
-    border: none;
-    border-radius: 30px;
+  border: 1px solid #ddd;
 
-    background-color: #ffffff;
+  border-radius: 10px;
 
-    color: #111;
+  background: white;
 
-    font-size: 17px;
-    font-weight: 600;
+  outline: none;
 
-    cursor: pointer;
+  font-size: 15px;
 
-    box-shadow:
-        0 5px 12px rgba(0, 0, 0, 0.20);
+  box-sizing: border-box;
 
-    transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
-.category-buttons button:hover {
-    background-color: #ff9800;
-
-    color: white;
-
-    transform: translateY(-2px);
+.menu-filter input {
+  width: 350px;
 }
 
-.category-buttons button.active {
-    background-color: #ff9800;
+.menu-filter select {
+  width: 200px;
 
-    color: white;
+  cursor: pointer;
+}
 
-    box-shadow:
-        0 7px 15px rgba(255, 152, 0, 0.35);
+.menu-filter input:focus,
+.menu-filter select:focus {
+  border-color: #ff6b35;
+
+  box-shadow:
+    0 0 0 3px rgba(255, 107, 53, 0.12);
 }
 
 
-/* =========================================
-   POPULAR FOOD SECTION
-========================================= */
+/* =====================================
+   FOOD CONTAINER
+===================================== */
 
-.popular-foods {
-    width: 90%;
-    max-width: 1300px;
+.food-container {
+  width: 84%;
 
-    margin: 0 auto;
+  margin: 30px auto 70px;
 
-    padding: 20px 0 70px;
+  display: grid;
 
-    border: none;
-    outline: none;
-}
+  grid-template-columns:
+    repeat(3, 1fr);
 
-.popular-foods > h1 {
-    text-align: center;
-
-    color: #222;
-
-    font-size: 42px;
-    font-weight: 700;
-
-    margin: 10px 0 45px;
+  gap: 30px;
 }
 
 
-/* =========================================
-   FOOD GRID
-========================================= */
-
-.food-grid {
-    width: 100%;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-    gap: 30px;
-
-    align-items: stretch;
-}
-
-
-/* =========================================
+/* =====================================
    FOOD CARD
-========================================= */
+===================================== */
 
 .food-card {
-    width: 100%;
+  background: white;
 
-    background-color: #ffffff;
+  border-radius: 18px;
 
-    border-radius: 18px;
+  overflow: hidden;
 
-    overflow: hidden;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.08);
 
-    text-align: center;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 
-    box-shadow:
-        0 7px 18px rgba(0, 0, 0, 0.16);
+  display: flex;
 
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+  flex-direction: column;
 }
 
 .food-card:hover {
-    transform: translateY(-7px);
+  transform: translateY(-7px);
 
-    box-shadow:
-        0 14px 25px rgba(0, 0, 0, 0.22);
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.13);
 }
 
 
-/* =========================================
+/* =====================================
    FOOD IMAGE
-========================================= */
+===================================== */
 
 .food-image {
-    display: block;
+  width: 100%;
 
-    width: 100%;
-    height: 230px;
+  height: 230px;
 
-    object-fit: cover;
-    object-position: center;
+  background: #f1f1f1;
 
-    margin: 0;
-    padding: 0;
+  overflow: hidden;
 
-    border: none;
+  display: flex;
 
-    background-color: #eeeeee;
+  justify-content: center;
+
+  align-items: center;
+}
+
+.food-image img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition: transform 0.4s ease;
+}
+
+.food-card:hover .food-image img {
+  transform: scale(1.06);
 }
 
 
-/* =========================================
-   FOOD NAME
-========================================= */
+/* =====================================
+   NO IMAGE
+===================================== */
 
-.food-card h2 {
-    margin: 20px 15px 8px;
+.no-image {
+  width: 100%;
 
-    color: #222;
+  height: 100%;
 
-    font-size: 23px;
-    font-weight: 700;
+  display: flex;
 
-    text-transform: capitalize;
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 55px;
+
+  color: #999;
 }
 
 
-/* =========================================
+/* =====================================
+   FOOD INFORMATION
+===================================== */
+
+.food-info {
+  padding: 22px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+}
+
+.food-info h2 {
+  margin: 0 0 8px;
+
+  color: #222;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+
+/* =====================================
    CATEGORY
-========================================= */
+===================================== */
 
-.food-card p {
-    margin: 0 0 8px;
+.food-category {
+  display: inline-block;
 
-    color: #777;
+  width: fit-content;
 
-    font-size: 17px;
+  margin: 0 0 20px;
+
+  padding: 5px 12px;
+
+  background: #fff1eb;
+
+  color: #ff6b35;
+
+  border-radius: 20px;
+
+  font-size: 13px;
+
+  font-weight: 600;
 }
 
 
-/* =========================================
+/* =====================================
+   FOOD BOTTOM
+===================================== */
+
+.food-bottom {
+  margin-top: auto;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+
+/* =====================================
    PRICE
-========================================= */
+===================================== */
 
-.food-card h3 {
-    margin: 8px 0;
+.food-bottom h3 {
+  margin: 0;
 
-    color: #16a34a;
+  color: #28a745;
 
-    font-size: 25px;
-    font-weight: 700;
+  font-size: 22px;
+
+  font-weight: 700;
 }
 
 
-/* =========================================
-   RATING
-========================================= */
-
-.rating {
-    margin: 10px 0 18px;
-
-    color: #ff9800;
-
-    font-size: 17px;
-}
-
-
-/* =========================================
+/* =====================================
    ADD TO CART BUTTON
-========================================= */
+===================================== */
 
-.add-cart-btn {
-    display: inline-block;
+.food-bottom button {
+  border: none;
 
-    padding: 13px 32px;
+  background: #ff6b35;
 
-    margin-bottom: 25px;
+  color: white;
 
-    border: none;
+  padding: 11px 16px;
 
-    border-radius: 30px;
+  border-radius: 9px;
 
-    background-color: #ff9800;
+  font-size: 14px;
 
-    color: white;
+  font-weight: 600;
 
-    font-size: 17px;
-    font-weight: 600;
+  cursor: pointer;
 
-    cursor: pointer;
-
-    transition: all 0.3s ease;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
 }
 
-.add-cart-btn:hover {
-    background-color: #28a745;
+.food-bottom button:hover {
+  background: #e85a27;
 
-    transform: scale(1.04);
+  transform: translateY(-2px);
+}
+
+.food-bottom button:active {
+  transform: scale(0.97);
 }
 
 
-/* =========================================
-   LOADING / EMPTY MESSAGE
-========================================= */
+/* =====================================
+   LOADING / NO FOOD MESSAGE
+===================================== */
 
-.popular-foods > p {
-    text-align: center;
+.menu-message {
+  width: 84%;
 
-    color: #666;
+  min-height: 300px;
 
+  margin: 30px auto 70px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.menu-message h2 {
+  margin: 0 0 10px;
+
+  color: #333;
+
+  font-size: 26px;
+}
+
+.menu-message p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 15px;
+}
+
+
+/* =====================================
+   RESPONSIVE - TABLET
+===================================== */
+
+@media (max-width: 1000px) {
+
+  .food-container {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .menu-filter {
+    width: 90%;
+  }
+
+  .food-container {
+    width: 90%;
+  }
+
+  .menu-message {
+    width: 90%;
+  }
+}
+
+
+/* =====================================
+   RESPONSIVE - MOBILE
+===================================== */
+
+@media (max-width: 650px) {
+
+  .menu-header {
+    padding: 60px 20px 50px;
+  }
+
+  .menu-header h1 {
+    font-size: 32px;
+  }
+
+  .menu-header p {
+    font-size: 15px;
+  }
+
+
+  .menu-filter {
+    width: 90%;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 25px;
+  }
+
+  .menu-filter input,
+  .menu-filter select {
+    width: 100%;
+  }
+
+
+  .food-container {
+    width: 90%;
+
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+
+    margin-top: 25px;
+  }
+
+
+  .food-image {
+    height: 240px;
+  }
+
+
+  .food-info {
+    padding: 20px;
+  }
+
+
+  .food-info h2 {
     font-size: 20px;
+  }
 
-    margin: 50px 0;
+
+  .food-bottom {
+    align-items: center;
+  }
+
+
+  .food-bottom h3 {
+    font-size: 20px;
+  }
+
+
+  .food-bottom button {
+    padding: 10px 13px;
+
+    font-size: 13px;
+  }
+
+
+  .menu-message {
+    width: 90%;
+
+    min-height: 250px;
+  }
+
 }
 
 
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 992px) {
-
-    .food-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 25px;
-    }
-
-    .popular-foods {
-        width: 92%;
-    }
-
-    .searchbox input {
-        width: 500px;
-    }
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 768px) {
-
-    .searchbox {
-        padding: 30px 20px 15px;
-    }
-
-    .searchbox input {
-        width: 90%;
-
-        height: 48px;
-
-        font-size: 16px;
-    }
-
-    .category-buttons {
-        gap: 10px;
-
-        padding: 20px 15px 30px;
-    }
-
-    .category-buttons button {
-        min-width: auto;
-
-        padding: 11px 20px;
-
-        font-size: 15px;
-    }
-
-    .popular-foods {
-        width: 90%;
-
-        padding-bottom: 50px;
-    }
-
-    .popular-foods > h1 {
-        font-size: 34px;
-
-        margin-bottom: 30px;
-    }
-
-    .food-grid {
-        grid-template-columns: 1fr;
-
-        gap: 25px;
-    }
-
-    .food-image {
-        height: 230px;
-    }
-}
-
-
-/* =========================================
+/* =====================================
    SMALL MOBILE
-========================================= */
+===================================== */
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
 
-    .searchbox {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+  .menu-header h1 {
+    font-size: 28px;
+  }
 
-    .searchbox input {
-        width: 100%;
+  .food-image {
+    height: 210px;
+  }
 
-        height: 46px;
+  .food-bottom {
+    flex-direction: column;
 
-        font-size: 15px;
-    }
+    align-items: stretch;
+  }
 
-    .category-buttons {
-        gap: 8px;
-    }
+  .food-bottom h3 {
+    text-align: center;
+  }
 
-    .category-buttons button {
-        padding: 10px 16px;
+  .food-bottom button {
+    width: 100%;
+  }
 
-        font-size: 14px;
-    }
-
-    .popular-foods {
-        width: 92%;
-    }
-
-    .popular-foods > h1 {
-        font-size: 30px;
-    }
-
-    .food-image {
-        height: 210px;
-    }
-
-    .food-card h2 {
-        font-size: 21px;
-    }
-
-    .food-card h3 {
-        font-size: 23px;
-    }
 }

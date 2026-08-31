@@ -6,6 +6,7 @@ const path = require("path");
 
 const Food = require("./Models/Food");
 const Coupon = require("./Models/Coupon");
+const Order = require("./Models/Order");
 
 const app = express();
 
@@ -105,18 +106,25 @@ app.get("/", (req, res) => {
 });
 
 
+
+
+
 // =====================================
 // GET ALL FOODS
 // =====================================
 
 app.get(
   "/api/foods",
+
   async (req, res) => {
 
     try {
 
       const foods =
-        await Food.find();
+        await Food.find()
+          .sort({
+            createdAt: -1
+          });
 
       res.json(foods);
 
@@ -218,7 +226,6 @@ app.post(
         error
       );
 
-
       res.status(500).json({
 
         message:
@@ -277,7 +284,6 @@ app.delete(
         error
       );
 
-
       res.status(500).json({
 
         message:
@@ -289,6 +295,11 @@ app.delete(
 
   }
 );
+
+
+// =====================================
+// COUPON APIs
+// =====================================
 
 
 // =====================================
@@ -323,7 +334,6 @@ app.get(
         error
       );
 
-
       res.status(500).json({
 
         message:
@@ -338,7 +348,7 @@ app.get(
 
 
 // =====================================
-// ADD COUPON
+// ADD ADMIN COUPON
 // =====================================
 
 app.post(
@@ -365,13 +375,39 @@ app.post(
       } = req.body;
 
 
-      // Check duplicate coupon
+      if (!code) {
+
+        return res.status(400).json({
+
+          message:
+            "Coupon code is required"
+
+        });
+
+      }
+
+
+      if (!store) {
+
+        return res.status(400).json({
+
+          message:
+            "Store is required"
+
+        });
+
+      }
+
+
+      // =====================================
+      // CHECK DUPLICATE
+      // =====================================
 
       const existingCoupon =
         await Coupon.findOne({
 
           code:
-            code.toUpperCase()
+            code.toUpperCase().trim()
 
         });
 
@@ -388,19 +424,21 @@ app.post(
       }
 
 
-      // Create coupon
+      // =====================================
+      // CREATE COUPON
+      // =====================================
 
       const newCoupon =
         new Coupon({
 
           code:
-            code.toUpperCase(),
+            code.toUpperCase().trim(),
 
           discount:
             Number(discount),
 
           minOrderAmount:
-            Number(minOrderAmount),
+            Number(minOrderAmount) || 0,
 
           validFrom:
             validFrom,
@@ -412,12 +450,19 @@ app.post(
             store,
 
           description:
-            description
+            description,
+
+          isActive:
+            true,
+
+          type:
+            "admin",
+
+          status:
+            "generated"
 
         });
 
-
-      // Save permanently
 
       const savedCoupon =
         await newCoupon.save();
@@ -442,7 +487,6 @@ app.post(
         error
       );
 
-
       res.status(500).json({
 
         message:
@@ -454,6 +498,590 @@ app.post(
 
   }
 );
+
+
+// =====================================
+// GENERATE CUSTOMER COUPON
+// =====================================
+
+app.post(
+  "/api/coupons/generate",
+  async (req, res) => {
+
+    try {
+
+      console.log(
+        "GENERATE COUPON DATA:",
+        req.body
+      );
+
+      const {
+        items,
+        totalAmount,
+        store,
+        customerName,
+        customerMobile,
+        orderId
+      } = req.body;
+
+
+      // =====================================
+      // VALIDATION
+      // =====================================
+
+      if (
+        !items ||
+        !Array.isArray(items) ||
+        items.length === 0
+      ) {
+
+        return res.status(400).json({
+          message: "Cart is empty"
+        });
+
+      }
+
+
+      // =====================================
+      // STORE
+      // =====================================
+
+      const couponStore =
+        store || "Smart Food Coupon";
+
+
+      // =====================================
+      // GENERATE UNIQUE CODE
+      // =====================================
+
+      let couponCode;
+      let existingCoupon;
+
+      do {
+
+        const randomPart =
+          Math.random()
+            .toString(36)
+            .substring(2, 8)
+            .toUpperCase();
+
+        couponCode =
+          `SFC-${randomPart}`;
+
+
+        existingCoupon =
+          await Coupon.findOne({
+            code: couponCode
+          });
+
+      } while (existingCoupon);
+
+
+      // =====================================
+      // DISCOUNT
+      // =====================================
+
+      const discount = 10;
+
+
+      // =====================================
+      // VALID FROM
+      // =====================================
+
+      const validFrom =
+        new Date();
+
+
+      // =====================================
+      // VALID UNTIL - 7 DAYS
+      // =====================================
+
+      const validUntil =
+        new Date();
+
+      validUntil.setDate(
+        validUntil.getDate() + 7
+      );
+
+
+      // =====================================
+      // CREATE COUPON
+      // =====================================
+
+      const generatedCoupon =
+        new Coupon({
+
+          code: couponCode,
+
+          discount: discount,
+
+          // Next order માટે minimum amount નથી
+          minOrderAmount: 0,
+
+          validFrom: validFrom,
+
+          validUntil: validUntil,
+
+          store: couponStore,
+
+          description:
+            "10% OFF coupon generated after successful order",
+
+          isActive: true,
+
+          type: "generated",
+
+          status: "generated",
+
+          customerName:
+            customerName || "",
+
+          customerMobile:
+            customerMobile || "",
+
+          orderId:
+            orderId ? String(orderId) : "",
+
+          items: items,
+
+          totalAmount:
+            Number(totalAmount) || 0
+
+        });
+
+
+      // =====================================
+      // SAVE TO MONGODB
+      // =====================================
+
+      const savedCoupon =
+        await generatedCoupon.save();
+
+
+      console.log(
+        "Generated Coupon Saved:",
+        savedCoupon
+      );
+
+
+      // =====================================
+      // SEND RESPONSE
+      // =====================================
+
+      res.status(201).json({
+
+        message:
+          "Coupon generated successfully",
+
+        coupon:
+          savedCoupon
+
+      });
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "GENERATE COUPON ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        message:
+          "Failed to generate coupon",
+
+        error:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+// =====================================
+// GET ALL ORDERS
+// =====================================
+
+app.get(
+  "/api/orders",
+  async (req, res) => {
+
+    try {
+
+      const orders =
+        await Order
+          .find()
+          .sort({
+            createdAt: -1
+          });
+
+      res.json(orders);
+
+    } catch (error) {
+
+      console.log(
+        "GET ORDERS ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        message:
+          "Failed to get orders"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// CREATE ORDER
+// =====================================
+
+app.post(
+  "/api/orders",
+  async (req, res) => {
+
+    try {
+
+      console.log(
+        "ORDER DATA:",
+        req.body
+      );
+
+
+      const {
+        customer,
+        mobile,
+        address,
+        city,
+        state,
+        pincode,
+        items,
+        subtotal,
+        deliveryFee,
+        gst,
+        discount,
+        total,
+        paymentMethod,
+        couponCode
+      } = req.body;
+
+
+      // =====================================
+      // VALIDATION
+      // =====================================
+
+      if (
+        !customer ||
+        !mobile ||
+        !address ||
+        !city ||
+        !state ||
+        !pincode
+      ) {
+
+        return res.status(400).json({
+
+          message:
+            "All customer details are required"
+
+        });
+
+      }
+
+
+      if (
+        !items ||
+        !Array.isArray(items) ||
+        items.length === 0
+      ) {
+
+        return res.status(400).json({
+
+          message:
+            "Order must contain at least one item"
+
+        });
+
+      }
+
+
+      // =====================================
+      // GENERATE ORDER NUMBER
+      // =====================================
+
+      const orderNumber =
+        `ORD-${Date.now()}`;
+
+
+      // =====================================
+      // CREATE ORDER
+      // =====================================
+
+      const newOrder =
+        new Order({
+
+          orderNumber:
+
+            orderNumber,
+
+          customer:
+            customer.trim(),
+
+          mobile:
+            mobile.trim(),
+
+          address:
+            address.trim(),
+
+          city:
+            city.trim(),
+
+          state:
+            state.trim(),
+
+          pincode:
+            pincode.trim(),
+
+          items:
+            items,
+
+          subtotal:
+            Number(subtotal) || 0,
+
+          deliveryFee:
+            Number(deliveryFee) || 0,
+
+          gst:
+            Number(gst) || 0,
+
+          discount:
+            Number(discount) || 0,
+
+          total:
+            Number(total) || 0,
+
+          paymentMethod:
+            paymentMethod,
+
+          couponCode:
+            couponCode || "",
+
+          status:
+            "Pending"
+
+        });
+
+
+      // =====================================
+      // SAVE ORDER
+      // =====================================
+
+      const savedOrder =
+        await newOrder.save();
+
+
+      console.log(
+        "Order saved successfully:",
+        savedOrder
+      );
+
+
+      // =====================================
+      // RESPONSE
+      // =====================================
+
+      res.status(201).json({
+
+        message:
+          "Order placed successfully",
+
+        order:
+          savedOrder
+
+      });
+
+    } catch (error) {
+
+      console.log(
+        "CREATE ORDER ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        message:
+          "Failed to create order",
+
+        error:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// UPDATE ORDER STATUS
+// =====================================
+
+app.put(
+  "/api/orders/:id/status",
+  async (req, res) => {
+
+    try {
+
+      const {
+        status
+      } = req.body;
+
+
+      const allowedStatuses = [
+        "Pending",
+        "Preparing",
+        "Delivered",
+        "Cancelled"
+      ];
+
+
+      if (
+        !allowedStatuses.includes(status)
+      ) {
+
+        return res.status(400).json({
+
+          message:
+            "Invalid order status"
+
+        });
+
+      }
+
+
+      const updatedOrder =
+        await Order.findByIdAndUpdate(
+
+          req.params.id,
+
+          {
+            status:
+              status
+          },
+
+          {
+            new: true
+          }
+
+        );
+
+
+      if (!updatedOrder) {
+
+        return res.status(404).json({
+
+          message:
+            "Order not found"
+
+        });
+
+      }
+
+
+      res.json({
+
+        message:
+          "Order status updated successfully",
+
+        order:
+          updatedOrder
+
+      });
+
+    } catch (error) {
+
+      console.log(
+        "UPDATE ORDER STATUS ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        message:
+          "Failed to update order status"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// DELETE ORDER
+// =====================================
+
+app.delete(
+  "/api/orders/:id",
+  async (req, res) => {
+
+    try {
+
+      const deletedOrder =
+        await Order.findByIdAndDelete(
+          req.params.id
+        );
+
+
+      if (!deletedOrder) {
+
+        return res.status(404).json({
+
+          message:
+            "Order not found"
+
+        });
+
+      }
+
+
+      res.json({
+
+        message:
+          "Order deleted successfully"
+
+      });
+
+    } catch (error) {
+
+      console.log(
+        "DELETE ORDER ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        message:
+          "Failed to delete order"
+
+      });
+
+    }
+
+  }
+);
+
 
 
 // =====================================
@@ -501,11 +1129,565 @@ app.delete(
         error
       );
 
-
       res.status(500).json({
 
         message:
           "Failed to delete coupon"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// ORDER APIs
+// =====================================
+
+
+// =====================================
+// CREATE ORDER
+// =====================================
+
+app.post(
+  "/api/orders",
+
+  async (req, res) => {
+
+    try {
+
+      console.log(
+        "ORDER DATA:",
+        req.body
+      );
+
+
+      const {
+        customer,
+        mobile,
+        address,
+        city,
+        state,
+        pincode,
+        items,
+        subtotal,
+        deliveryFee,
+        gst,
+        discount,
+        total,
+        paymentMethod,
+        couponCode
+      } = req.body;
+
+
+      // =====================================
+      // VALIDATION
+      // =====================================
+
+      if (!customer) {
+
+        return res.status(400).json({
+
+          message:
+            "Customer name is required"
+
+        });
+
+      }
+
+
+      if (!mobile) {
+
+        return res.status(400).json({
+
+          message:
+            "Mobile number is required"
+
+        });
+
+      }
+
+
+      if (!address) {
+
+        return res.status(400).json({
+
+          message:
+            "Address is required"
+
+        });
+
+      }
+
+
+      if (!city) {
+
+        return res.status(400).json({
+
+          message:
+            "City is required"
+
+        });
+
+      }
+
+
+      if (!state) {
+
+        return res.status(400).json({
+
+          message:
+            "State is required"
+
+        });
+
+      }
+
+
+      if (!pincode) {
+
+        return res.status(400).json({
+
+          message:
+            "Pincode is required"
+
+        });
+
+      }
+
+
+      if (
+        !items ||
+        !Array.isArray(items) ||
+        items.length === 0
+      ) {
+
+        return res.status(400).json({
+
+          message:
+            "Order items are required"
+
+        });
+
+      }
+
+
+      if (!paymentMethod) {
+
+        return res.status(400).json({
+
+          message:
+            "Payment method is required"
+
+        });
+
+      }
+
+
+      // =====================================
+      // GENERATE ORDER NUMBER
+      // =====================================
+
+      const orderNumber =
+        `ORD-${Date.now()}`;
+
+
+      // =====================================
+      // CREATE ORDER
+      // =====================================
+
+      const newOrder =
+        new Order({
+
+          orderNumber:
+
+            orderNumber,
+
+          customer:
+            customer.trim(),
+
+          mobile:
+            mobile.trim(),
+
+          address:
+            address.trim(),
+
+          city:
+            city.trim(),
+
+          state:
+            state.trim(),
+
+          pincode:
+            pincode.trim(),
+
+          items:
+            items.map((item) => ({
+
+              foodId:
+                item._id ||
+                item.id ||
+                "",
+
+              name:
+                item.name,
+
+              category:
+                item.category || "",
+
+              price:
+                Number(item.price) || 0,
+
+              quantity:
+                Number(item.quantity) || 1,
+
+              image:
+                item.image || ""
+
+            })),
+
+          subtotal:
+            Number(subtotal) || 0,
+
+          deliveryFee:
+            Number(deliveryFee) || 0,
+
+          gst:
+            Number(gst) || 0,
+
+          discount:
+            Number(discount) || 0,
+
+          total:
+            Number(total) || 0,
+
+          paymentMethod:
+            paymentMethod,
+
+          status:
+            "Pending",
+
+          couponCode:
+            couponCode || ""
+
+        });
+
+
+      // =====================================
+      // SAVE ORDER
+      // =====================================
+
+      const savedOrder =
+        await newOrder.save();
+
+
+      console.log(
+        "Order Saved:",
+        savedOrder
+      );
+
+
+      // =====================================
+      // SEND RESPONSE
+      // =====================================
+
+      res.status(201).json({
+
+        message:
+          "Order placed successfully",
+
+        order:
+          savedOrder
+
+      });
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "CREATE ORDER ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to create order",
+
+        error:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// GET ALL ORDERS
+// =====================================
+
+app.get(
+  "/api/orders",
+
+  async (req, res) => {
+
+    try {
+
+      const orders =
+        await Order
+          .find()
+          .sort({
+            createdAt: -1
+          });
+
+
+      res.json(
+        orders
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "GET ORDERS ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to get orders"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// GET SINGLE ORDER
+// =====================================
+
+app.get(
+  "/api/orders/:id",
+
+  async (req, res) => {
+
+    try {
+
+      const order =
+        await Order.findById(
+          req.params.id
+        );
+
+
+      if (!order) {
+
+        return res.status(404).json({
+
+          message:
+            "Order not found"
+
+        });
+
+      }
+
+
+      res.json(
+        order
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "GET SINGLE ORDER ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to get order"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// UPDATE ORDER STATUS
+// =====================================
+
+app.patch(
+  "/api/orders/:id/status",
+
+  async (req, res) => {
+
+    try {
+
+      const {
+        status
+      } = req.body;
+
+
+      const allowedStatuses = [
+
+        "Pending",
+
+        "Preparing",
+
+        "Delivered",
+
+        "Cancelled"
+
+      ];
+
+
+      if (
+        !allowedStatuses.includes(
+          status
+        )
+      ) {
+
+        return res.status(400).json({
+
+          message:
+            "Invalid order status"
+
+        });
+
+      }
+
+
+      const updatedOrder =
+        await Order.findByIdAndUpdate(
+
+          req.params.id,
+
+          {
+            status:
+              status
+          },
+
+          {
+            new: true
+          }
+
+        );
+
+
+      if (!updatedOrder) {
+
+        return res.status(404).json({
+
+          message:
+            "Order not found"
+
+        });
+
+      }
+
+
+      res.json({
+
+        message:
+          "Order status updated successfully",
+
+        order:
+          updatedOrder
+
+      });
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "UPDATE ORDER STATUS ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to update order status"
+
+      });
+
+    }
+
+  }
+);
+
+
+// =====================================
+// DELETE ORDER
+// =====================================
+
+app.delete(
+  "/api/orders/:id",
+
+  async (req, res) => {
+
+    try {
+
+      const deletedOrder =
+        await Order.findByIdAndDelete(
+          req.params.id
+        );
+
+
+      if (!deletedOrder) {
+
+        return res.status(404).json({
+
+          message:
+            "Order not found"
+
+        });
+
+      }
+
+
+      res.json({
+
+        message:
+          "Order deleted successfully"
+
+      });
+
+    }
+
+    catch (error) {
+
+      console.log(
+        "DELETE ORDER ERROR:",
+        error
+      );
+
+
+      res.status(500).json({
+
+        message:
+          "Failed to delete order"
 
       });
 

@@ -144,7 +144,7 @@ export default function Navbar() {
         className="logo"
       >
         <FaUtensils />
-        Food Coupon
+         CouponBite
       </Link>
 
       {/* =================================

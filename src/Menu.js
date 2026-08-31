@@ -7,7 +7,6 @@ const API_URL = "http://localhost:5000/api/foods";
 const SERVER_URL = "http://localhost:5000";
 
 export default function Menu() {
-
   // =====================================
   // FOOD LIST
   // =====================================
@@ -39,10 +38,11 @@ export default function Menu() {
       const data = await response.json();
 
       setFoods(Array.isArray(data) ? data : []);
-
     } catch (error) {
       console.error("FOOD LOADING ERROR:", error);
+
       setFoods([]);
+
       alert("Unable to load food items.");
     } finally {
       setLoading(false);
@@ -79,6 +79,7 @@ export default function Menu() {
       return SERVER_URL + image;
     }
 
+    // If image does not start with /
     return SERVER_URL + "/" + image;
   };
 
@@ -112,83 +113,101 @@ export default function Menu() {
   // =====================================
 
   const addToCart = (food) => {
+    try {
+      // Get existing cart
+      const savedCart =
+        JSON.parse(
+          localStorage.getItem("foodCart")
+        ) || [];
 
-    // Get existing cart
-    const savedCart =
-      JSON.parse(
-        localStorage.getItem("foodCart")
-      ) || [];
+      // Create complete image URL
+      const imageUrl = getImageUrl(food.image);
 
-    // Check whether food already exists
-    const existingFoodIndex =
-      savedCart.findIndex(
-        (item) => item.id === food._id
+      // Check whether food already exists
+      const existingFoodIndex =
+        savedCart.findIndex(
+          (item) => item.id === food._id
+        );
+
+      let updatedCart;
+
+      // =================================
+      // FOOD ALREADY EXISTS
+      // =================================
+
+      if (existingFoodIndex !== -1) {
+        updatedCart = [...savedCart];
+
+        updatedCart[existingFoodIndex] = {
+          ...updatedCart[existingFoodIndex],
+
+          // Make sure image is present
+          image:
+            updatedCart[existingFoodIndex].image ||
+            imageUrl,
+
+          quantity:
+            Number(
+              updatedCart[existingFoodIndex].quantity
+            ) + 1
+        };
+      } else {
+        // =================================
+        // NEW FOOD
+        // =================================
+
+        const newCartItem = {
+          id: food._id,
+
+          name: food.name,
+
+          category: food.category,
+
+          price: cleanPrice(food.price),
+
+          // IMPORTANT:
+          // Save complete image URL
+          image: imageUrl,
+
+          quantity: 1
+        };
+
+        updatedCart = [
+          ...savedCart,
+          newCartItem
+        ];
+      }
+
+      // =================================
+      // SAVE CART
+      // =================================
+
+      localStorage.setItem(
+        "foodCart",
+        JSON.stringify(updatedCart)
       );
 
-    let updatedCart;
-
-    // =================================
-    // FOOD ALREADY EXISTS
-    // =================================
-
-    if (existingFoodIndex !== -1) {
-
-      updatedCart = [...savedCart];
-
-      updatedCart[existingFoodIndex] = {
-        ...updatedCart[existingFoodIndex],
-        quantity:
-          Number(
-            updatedCart[existingFoodIndex].quantity
-          ) + 1
-      };
-
-    } else {
-
       // =================================
-      // NEW FOOD
+      // UPDATE NAVBAR CART COUNT
       // =================================
 
-      const newCartItem = {
-        id: food._id,
-        name: food.name,
-        category: food.category,
-        price: cleanPrice(food.price),
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      );
 
-        // IMPORTANT:
-        // Store complete image URL
-        // so Cart and Order can display it
-        image: getImageUrl(food.image),
+      alert(
+        `${food.name} added to cart! 🛒`
+      );
+    } catch (error) {
+      console.error(
+        "ADD TO CART ERROR:",
+        error
+      );
 
-        quantity: 1
-      };
-
-      updatedCart = [
-        ...savedCart,
-        newCartItem
-      ];
+      alert(
+        "Unable to add food to cart."
+      );
     }
-
-    // =================================
-    // SAVE CART
-    // =================================
-
-    localStorage.setItem(
-      "foodCart",
-      JSON.stringify(updatedCart)
-    );
-
-    // =================================
-    // UPDATE NAVBAR CART COUNT
-    // =================================
-
-    window.dispatchEvent(
-      new Event("cartUpdated")
-    );
-
-    alert(
-      `${food.name} added to cart! 🛒`
-    );
   };
 
   // =====================================
@@ -196,7 +215,6 @@ export default function Menu() {
   // =====================================
 
   const filteredFoods = foods.filter((food) => {
-
     const matchesSearch =
       food.name
         ?.toLowerCase()
@@ -239,6 +257,7 @@ export default function Menu() {
         </p>
 
       </div>
+
 
       {/* =================================
           SEARCH AND FILTER
@@ -297,6 +316,7 @@ export default function Menu() {
         </select>
 
       </div>
+
 
       {/* =================================
           LOADING
@@ -371,6 +391,7 @@ export default function Menu() {
                 )}
 
               </div>
+
 
               {/* =================================
                   FOOD DETAILS
