@@ -1,6 +1,8 @@
 import React from "react";
 import "./PopularFoods.css";
 
+import { FaShoppingCart, FaTag } from "react-icons/fa";
+
 import pizza1 from "./Images/Pizza1.jpg";
 import burger1 from "./Images/burger1.jpg";
 import pasta1 from "./Images/Pasta1.jpg";
@@ -55,6 +57,11 @@ export default function PopularFoods() {
     }
   ];
 
+
+  /* =========================================
+     ADD TO CART
+  ========================================= */
+
   const addToCart = (food) => {
 
     const savedCart = localStorage.getItem("foodCart");
@@ -63,9 +70,11 @@ export default function PopularFoods() {
       ? JSON.parse(savedCart)
       : [];
 
+
     const existingItem = cart.find(
       (item) => item.id === food.id
     );
+
 
     if (existingItem) {
 
@@ -73,7 +82,7 @@ export default function PopularFoods() {
         item.id === food.id
           ? {
               ...item,
-              quantity: item.quantity + 1
+              quantity: Number(item.quantity || 1) + 1
             }
           : item
       );
@@ -101,13 +110,17 @@ export default function PopularFoods() {
       );
     }
 
-    // Navbar cart count update
+
+    /* Update navbar cart count */
+
     window.dispatchEvent(
       new Event("cartUpdated")
     );
 
+
     alert(`${food.name} added to cart!`);
   };
+
 
   return (
     <div className="foodcontainer">
@@ -119,20 +132,61 @@ export default function PopularFoods() {
           key={food.id}
         >
 
-          <img
-            src={food.image}
-            alt={food.name}
-          />
+          {/* =================================
+              FOOD IMAGE
+          ================================= */}
 
-          <h3>{food.name}</h3>
+          <div className="food-image-wrapper">
 
-          <p>₹{food.price}</p>
+            <img
+              src={food.image}
+              alt={food.name}
+            />
 
-          <button
-            onClick={() => addToCart(food)}
-          >
-            Buy Coupon
-          </button>
+            <span className="food-tag">
+              <FaTag />
+              Popular
+            </span>
+
+          </div>
+
+
+          {/* =================================
+              FOOD CONTENT
+          ================================= */}
+
+          <div className="food-content">
+
+            <span className="food-category">
+              {food.category}
+            </span>
+
+            <h3>
+              {food.name}
+            </h3>
+
+
+            <div className="food-bottom">
+
+              <div className="food-price">
+                <small>Coupon from</small>
+                <strong>
+                  ₹{food.price}
+                </strong>
+              </div>
+
+
+              <button
+                onClick={() => addToCart(food)}
+                className="buy-food-btn"
+              >
+                <FaShoppingCart />
+                Buy Coupon
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 

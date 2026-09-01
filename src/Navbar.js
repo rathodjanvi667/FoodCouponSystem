@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaUtensils, FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
@@ -143,7 +143,6 @@ export default function Navbar() {
         to="/"
         className="logo"
       >
-        <FaUtensils />
          CouponBite
       </Link>
 

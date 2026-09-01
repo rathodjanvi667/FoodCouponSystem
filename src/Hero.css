@@ -1,90 +1,694 @@
-.hero{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 70px 80px;
-    background: #f7fff7;
-}
-.heroleft{
-    width: 50%;
-}
-.heroleft h1{
-    font-size: 55px;
-    color: #222;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-.heroleft p{
-    font-size: 20px;
-    color: #555;
-    margin-bottom: 35px;
-    line-height: 1.7;
-}
-.herobtn{
-    display: flex;
-    gap: 20px;
-}
-.buycoupon{
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 15px 35px;
-    border-radius: 30px;
-    font-size: 18px;
-    cursor: pointer;
-    font-weight: bold;
-}
-.buycoupon:hover{
-    background-color: #218838;
-}
-.buycoupon a{
-    text-decoration: none;
-    color: white;
-}
-.menubtn{
-    background-color: #218838;
-    color: white;
-    border: none;
-    padding: 15px 35px;
-    border-radius: 30px;
-    font-size: 18px;
-    cursor: pointer;
-    font-weight: bold;
-}
-.menubtn:hover{
-    background-color: #f57c00;
-}
-.menubtn a{
-    text-decoration: none;
-    color: white;
-}
-.heroright{
-    width: 45%;
-    text-align: center;
-}
-.heroright img{
-    width: 100%;
-    border-radius: 30px;
-    box-shadow: 0 20px 40px #218838;
+/* =====================================================
+   COUPONBITE - MODERN HERO
+===================================================== */
+
+.hero {
+  position: relative;
+
+  width: min(1180px, calc(100% - 40px));
+
+  min-height: 560px;
+
+  margin: 35px auto 0;
+
+  padding: 70px 65px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 0.9fr;
+
+  align-items: center;
+
+  gap: 55px;
+
+  overflow: hidden;
+
+  border-radius: 32px;
+
+  background:
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(255, 90, 54, 0.14),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #fff8f5 0%,
+      #fffdfb 55%,
+      #ffffff 100%
+    );
+
+  border: 1px solid #f1e3de;
+
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.06);
 }
 
-@media(max-width:768px){
-    .hero{
-        flex-direction: column;
-        padding: 40px 20px;
-    }
-    .heroleft,.heroright{
-           width: 100%;
-           text-align: center;
-    }
-    .heroleft h1{
-        font-size: 38px;
-    }
-    .heroleft p{
-        font-size: 17px;
-    }
-    .herobtn{
-        justify-content: center;
-        margin-bottom: 30px;
-    }
+
+/* =====================================================
+   BACKGROUND DECORATION
+===================================================== */
+
+.hero::before {
+  content: "";
+
+  position: absolute;
+
+  width: 380px;
+  height: 380px;
+
+  right: -180px;
+  bottom: -190px;
+
+  border-radius: 50%;
+
+  border: 65px solid rgba(255, 90, 54, 0.055);
+
+  pointer-events: none;
+}
+
+.hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 10px;
+  height: 10px;
+
+  left: 48%;
+  top: 65px;
+
+  border-radius: 50%;
+
+  background: #ff5a36;
+
+  box-shadow:
+    28px 35px 0 rgba(255, 90, 54, 0.35),
+    -25px 55px 0 rgba(255, 90, 54, 0.18);
+
+  opacity: 0.6;
+
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   LEFT CONTENT
+===================================================== */
+
+.heroleft {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 570px;
+}
+
+
+/* =====================================================
+   HERO BADGE
+===================================================== */
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+
+  margin-bottom: 20px;
+
+  padding: 7px 13px;
+
+  border-radius: 30px;
+
+  background: #fff0eb;
+
+  color: #ff5a36;
+
+  border: 1px solid #ffe0d7;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+
+/* =====================================================
+   HERO TITLE
+===================================================== */
+
+.heroleft h1 {
+  margin: 0;
+
+  font-family: "Plus Jakarta Sans", sans-serif;
+
+  font-size: clamp(44px, 4.5vw, 64px);
+
+  font-weight: 800;
+
+  line-height: 1.08;
+
+  letter-spacing: -2.5px;
+
+  color: #171717;
+}
+
+
+/* Highlight effect */
+
+.heroleft h1::first-line {
+  color: #171717;
+}
+
+
+/* =====================================================
+   HERO DESCRIPTION
+===================================================== */
+
+.heroleft p {
+  max-width: 520px;
+
+  margin: 22px 0 30px;
+
+  color: #707070;
+
+  font-size: 16px;
+
+  line-height: 1.75;
+}
+
+
+/* =====================================================
+   HERO BUTTONS
+===================================================== */
+
+.herobtn {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 35px;
+}
+
+
+/* =====================================================
+   BUY COUPON
+===================================================== */
+
+.buycoupon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+
+  padding: 0 23px;
+
+  border-radius: 12px;
+
+  background: #ff5a36;
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  box-shadow: 0 9px 22px rgba(255, 90, 54, 0.2);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.buycoupon:hover {
+  background: #e94827;
+
+  color: #ffffff;
+
+  transform: translateY(-3px);
+
+  box-shadow: 0 13px 28px rgba(255, 90, 54, 0.27);
+}
+
+
+/* =====================================================
+   MENU BUTTON
+===================================================== */
+
+.menubtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+
+  padding: 0 23px;
+
+  border: 1px solid #dedede;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #252525;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition:
+    transform 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.menubtn:hover {
+  color: #ff5a36;
+
+  border-color: #ffcfc2;
+
+  transform: translateY(-3px);
+
+  box-shadow: 0 9px 22px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =====================================================
+   BENEFITS
+===================================================== */
+
+.hero-benefits {
+  display: flex;
+  align-items: center;
+
+  gap: 25px;
+}
+
+
+.hero-benefit {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.benefit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 27px;
+  height: 27px;
+
+  border-radius: 50%;
+
+  background: #eaf8ee;
+
+  color: #16a34a;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+.hero-benefit div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+}
+
+
+.hero-benefit strong {
+  color: #252525;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+.hero-benefit small {
+  color: #8a8a8a;
+
+  font-size: 10px;
+}
+
+
+/* =====================================================
+   RIGHT IMAGE AREA
+===================================================== */
+
+.heroright {
+  position: relative;
+
+  z-index: 2;
+
+  min-height: 420px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =====================================================
+   IMAGE WRAPPER
+===================================================== */
+
+.hero-image-wrapper {
+  position: relative;
+
+  width: 410px;
+  height: 410px;
+
+  padding: 13px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 25px 55px rgba(0, 0, 0, 0.12);
+}
+
+
+.hero-image-wrapper::before {
+  content: "";
+
+  position: absolute;
+
+  inset: -13px;
+
+  border: 2px dashed rgba(255, 90, 54, 0.2);
+
+  border-radius: 50%;
+
+  animation: heroRotate 25s linear infinite;
+}
+
+
+.hero-image-wrapper img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+}
+
+
+/* =====================================================
+   ROTATION
+===================================================== */
+
+@keyframes heroRotate {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+/* =====================================================
+   DISCOUNT CARD
+===================================================== */
+
+.hero-discount-card {
+  position: absolute;
+
+  left: 5px;
+  bottom: 55px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 13px 16px;
+
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border: 1px solid #eeeeee;
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.12);
+
+  backdrop-filter: blur(10px);
+
+  animation: floatingCard 3s ease-in-out infinite;
+}
+
+
+.discount-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 11px;
+
+  background: #ff5a36;
+  color: #ffffff;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+
+.hero-discount-card div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.hero-discount-card strong {
+  color: #171717;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+.hero-discount-card small {
+  color: #888888;
+
+  font-size: 10px;
+}
+
+
+@keyframes floatingCard {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+
+  .hero {
+    padding: 55px 40px;
+
+    grid-template-columns: 1fr 0.85fr;
+
+    gap: 30px;
+  }
+
+  .heroleft h1 {
+    font-size: 45px;
+
+    letter-spacing: -1.8px;
+  }
+
+  .hero-image-wrapper {
+    width: 340px;
+    height: 340px;
+  }
+
+  .hero-discount-card {
+    left: -10px;
+    bottom: 45px;
+  }
+
+  .hero-benefits {
+    gap: 15px;
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 750px) {
+
+  .hero {
+    width: calc(100% - 30px);
+
+    margin-top: 20px;
+
+    padding: 45px 25px 35px;
+
+    grid-template-columns: 1fr;
+
+    gap: 40px;
+
+    border-radius: 25px;
+
+    text-align: center;
+  }
+
+  .heroleft {
+    max-width: 100%;
+  }
+
+  .hero-badge {
+    margin-bottom: 15px;
+  }
+
+  .heroleft h1 {
+    font-size: 39px;
+
+    letter-spacing: -1.5px;
+  }
+
+  .heroleft p {
+    margin: 18px auto 25px;
+
+    font-size: 14px;
+  }
+
+  .herobtn {
+    justify-content: center;
+
+    margin-bottom: 28px;
+  }
+
+  .hero-benefits {
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 15px;
+  }
+
+  .heroright {
+    min-height: 330px;
+  }
+
+  .hero-image-wrapper {
+    width: 310px;
+    height: 310px;
+  }
+
+  .hero-discount-card {
+    left: 50%;
+
+    bottom: 5px;
+
+    transform: translateX(-50%);
+
+    animation: none;
+
+    white-space: nowrap;
+  }
+
+  .hero-discount-card:hover {
+    transform: translateX(-50%);
+  }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 450px) {
+
+  .hero {
+    width: calc(100% - 20px);
+
+    padding: 38px 18px 30px;
+  }
+
+  .heroleft h1 {
+    font-size: 32px;
+
+    letter-spacing: -1.2px;
+  }
+
+  .heroleft p {
+    font-size: 13px;
+  }
+
+  .herobtn {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .buycoupon,
+  .menubtn {
+    width: 100%;
+  }
+
+  .hero-benefits {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    width: fit-content;
+
+    margin: auto;
+  }
+
+  .heroright {
+    min-height: 285px;
+  }
+
+  .hero-image-wrapper {
+    width: 260px;
+    height: 260px;
+  }
+
+  .hero-discount-card {
+    bottom: -5px;
+
+    padding: 10px 13px;
+  }
+
+  .discount-icon {
+    width: 34px;
+    height: 34px;
+  }
+
 }

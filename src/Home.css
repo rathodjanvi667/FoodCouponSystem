@@ -1,84 +1,370 @@
-.home{
-    background-color: #f8f9fa;
-    min-height: 100vh;
+/* =====================================================
+   COUPONBITE - MODERN HOME PAGE
+===================================================== */
+
+.home {
+  width: 100%;
+  min-height: 100vh;
+
+  background: #fafaf8;
+
+  color: #252525;
+
+  overflow-x: hidden;
 }
-.section{
-    padding: 70px 80px;
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.home main {
+  width: 100%;
 }
-.container{
-    width: 90%;
-    margin: auto;
+
+
+/* =====================================================
+   COMMON CONTAINER
+===================================================== */
+
+.container {
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 0 auto;
 }
-.section-title{
-    font-size: 36px;
-    color: #222;
-    text-align: center;
-    margin-bottom: 10px;
+
+
+/* =====================================================
+   COMMON SECTION
+===================================================== */
+
+.section {
+  width: 100%;
 }
-.section-subtitle{
-    text-align: center;
-    color: #666;
-    font-size: 18px;
+
+
+/* =====================================================
+   POPULAR FOOD SECTION
+===================================================== */
+
+.popular-section {
+  position: relative;
+
+  padding: 90px 0 100px;
+
+  background: #fafaf8;
+
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   BACKGROUND DECORATION
+===================================================== */
+
+.popular-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  left: -180px;
+  top: 120px;
+
+  border-radius: 50%;
+
+  background: #fff0eb;
+
+  opacity: 0.75;
+
+  pointer-events: none;
+}
+
+.popular-section::after {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+  height: 220px;
+
+  right: -130px;
+  bottom: 80px;
+
+  border-radius: 50%;
+
+  background: #fff5f1;
+
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   SECTION HEADING
+===================================================== */
+
+.section-heading {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 720px;
+
+  margin: 0 auto 45px;
+
+  text-align: center;
+}
+
+
+/* =====================================================
+   SECTION LABEL
+===================================================== */
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  padding: 6px 12px;
+
+  border-radius: 30px;
+
+  background: #fff1eb;
+
+  color: #ff5a36;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.1px;
+}
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title {
+  margin: 0;
+
+  font-family: "Plus Jakarta Sans", sans-serif;
+
+  font-size: 38px;
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  letter-spacing: -1px;
+
+  color: #171717;
+}
+
+
+/* =====================================================
+   TITLE ORANGE LINE
+===================================================== */
+
+.section-title::after {
+  content: "";
+
+  display: block;
+
+  width: 42px;
+  height: 4px;
+
+  margin: 14px auto 0;
+
+  border-radius: 20px;
+
+  background: #ff5a36;
+}
+
+
+/* =====================================================
+   SECTION SUBTITLE
+===================================================== */
+
+.section-subtitle {
+  max-width: 620px;
+
+  margin: 16px auto 0;
+
+  color: #777777;
+
+  font-size: 15px;
+  font-weight: 400;
+
+  line-height: 1.7;
+}
+
+
+/* =====================================================
+   POPULAR FOODS COMPONENT
+===================================================== */
+
+.popular-section .container > div:last-child {
+  position: relative;
+
+  z-index: 2;
+}
+
+
+/* =====================================================
+   FEATURES SECTION
+===================================================== */
+
+.features-section {
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   FEATURES TOP BORDER
+===================================================== */
+
+.features-section::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  width: 90%;
+  height: 1px;
+
+  background: #eeeeee;
+
+  transform: translateX(-50%);
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.home > footer {
+  width: 100%;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .container {
+    width: min(92%, 700px);
+  }
+
+  .popular-section {
+    padding: 75px 0 85px;
+  }
+
+  .section-heading {
     margin-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 32px;
+  }
+
+  .section-subtitle {
+    font-size: 14px;
+  }
+
 }
-.offer{
-    background: linear-gradient(135deg,#28a745,#ff9800);
-    color: white;
-    padding: 80px 20px;
-    text-align: center;
-    margin-top: 50px;
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .container {
+    width: calc(100% - 30px);
+  }
+
+  .popular-section {
+    padding: 60px 0 70px;
+  }
+
+  .section-heading {
+    margin-bottom: 32px;
+  }
+
+  .section-label {
+    margin-bottom: 10px;
+
+    padding: 5px 10px;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+  }
+
+  .section-title {
+    font-size: 27px;
+
+    letter-spacing: -0.7px;
+  }
+
+  .section-title::after {
+    width: 35px;
+    height: 3px;
+
+    margin-top: 11px;
+  }
+
+  .section-subtitle {
+    margin-top: 13px;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+  }
+
+  .popular-section::before {
+    width: 180px;
+    height: 180px;
+
+    left: -120px;
+  }
+
+  .popular-section::after {
+    width: 150px;
+    height: 150px;
+
+    right: -100px;
+  }
+
 }
-.offercontent h2{
-    font-size: 42px;
-    margin-bottom: 15px;
-}
-.offercontent p{
-    font-size: 20px;
-    margin-bottom: 30px;
-}
-.offerbtn{
-    padding: 14px 35px;
-    background-color: white;
-    color: #28a745;
-    border: none;
-    border-radius: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.offerbtn:hover{
-    background-color: #222;
-    color: white;
-}
-@media(max-width:992px){
-    .section{
-        padding: 50px 20px;
-    }
-    .section-title{
-        font-size: 30px;
-    }
-    .offercontent h2{
-        font-size: 32px;
-    }
-    .offercontent p{
-        font-size: 18px;
-    }
-}
-@media(max-width:768px){
-    .section-title{
-        font-size: 26px;
-    }
-    .section-subtitle{
-        font-size: 16px;
-    }
-    .offer{
-        padding: 60px 15px;
-    }
-    .offercontent h2{
-        font-size: 28px;
-    }
-    .offerbtn{
-        width: 180px;
-    }
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .section-subtitle {
+    font-size: 12px;
+  }
+
 }

@@ -3,6 +3,15 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import "./Menu.css";
 
+import {
+  FaSearch,
+  FaUtensils,
+  FaShoppingCart,
+  FaMapMarkerAlt,
+  FaStore,
+  FaFilter,
+} from "react-icons/fa";
+
 const FOOD_API = "http://localhost:5000/api/foods";
 const RESTAURANT_API = "http://localhost:5000/api/restaurants";
 const SERVER_URL = "http://localhost:5000";
@@ -23,7 +32,8 @@ export default function Menu() {
   const [restaurants, setRestaurants] = useState([]);
   const [loadingRestaurants, setLoadingRestaurants] = useState(true);
 
-  const [selectedRestaurant, setSelectedRestaurant] = useState("All");
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState("All");
 
   // =====================================
   // SEARCH
@@ -48,15 +58,13 @@ export default function Menu() {
 
       setLoadingRestaurants(true);
 
-      const response =
-        await fetch(RESTAURANT_API);
+      const response = await fetch(RESTAURANT_API);
 
       if (!response.ok) {
         throw new Error("Failed to load restaurants");
       }
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       setRestaurants(
         Array.isArray(data)
@@ -86,7 +94,7 @@ export default function Menu() {
 
 
   // =====================================
-  // LOAD ALL FOODS
+  // LOAD FOODS
   // =====================================
 
   const loadFoods = async () => {
@@ -95,15 +103,13 @@ export default function Menu() {
 
       setLoadingFoods(true);
 
-      const response =
-        await fetch(FOOD_API);
+      const response = await fetch(FOOD_API);
 
       if (!response.ok) {
         throw new Error("Failed to load foods");
       }
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       setFoods(
         Array.isArray(data)
@@ -120,9 +126,7 @@ export default function Menu() {
 
       setFoods([]);
 
-      alert(
-        "Unable to load food items."
-      );
+      alert("Unable to load food items.");
 
     } finally {
 
@@ -185,14 +189,12 @@ export default function Menu() {
       return 0;
     }
 
-    const cleanedPrice =
-      String(price)
-        .replace(/₹/g, "")
-        .replace(/,/g, "")
-        .trim();
+    const cleanedPrice = String(price)
+      .replace(/₹/g, "")
+      .replace(/,/g, "")
+      .trim();
 
-    const numberPrice =
-      Number(cleanedPrice);
+    const numberPrice = Number(cleanedPrice);
 
     return Number.isNaN(numberPrice)
       ? 0
@@ -217,114 +219,80 @@ export default function Menu() {
       const imageUrl =
         getImageUrl(food.image);
 
-
       const existingFoodIndex =
         savedCart.findIndex(
           (item) =>
             item.id === food._id
         );
 
-
       let updatedCart;
 
 
-      // =================================
       // EXISTING FOOD
-      // =================================
 
-      if (
-        existingFoodIndex !== -1
-      ) {
+      if (existingFoodIndex !== -1) {
 
-        updatedCart =
-          [...savedCart];
+        updatedCart = [...savedCart];
 
-        updatedCart[
-          existingFoodIndex
-        ] = {
+        updatedCart[existingFoodIndex] = {
 
-          ...updatedCart[
-            existingFoodIndex
-          ],
+          ...updatedCart[existingFoodIndex],
 
           image:
-            updatedCart[
-              existingFoodIndex
-            ].image ||
+            updatedCart[existingFoodIndex].image ||
             imageUrl,
 
           quantity:
             Number(
-              updatedCart[
-                existingFoodIndex
-              ].quantity
+              updatedCart[existingFoodIndex].quantity
             ) + 1
 
         };
 
       }
 
-      // =================================
+
       // NEW FOOD
-      // =================================
 
       else {
 
         const newCartItem = {
 
-          id:
-            food._id,
+          id: food._id,
 
-          name:
-            food.name,
+          name: food.name,
 
-          category:
-            food.category,
+          category: food.category,
 
-          price:
-            cleanPrice(
-              food.price
-            ),
+          price: cleanPrice(food.price),
 
-          image:
-            imageUrl,
+          image: imageUrl,
 
           restaurantId:
             food.restaurantId || "",
 
-          quantity:
-            1
+          quantity: 1
 
         };
 
-
         updatedCart = [
-
           ...savedCart,
-
           newCartItem
-
         ];
 
       }
 
 
-      // =================================
       // SAVE CART
-      // =================================
 
       localStorage.setItem(
         "foodCart",
-        JSON.stringify(
-          updatedCart
-        )
+        JSON.stringify(updatedCart)
       );
-
 
       window.dispatchEvent(
         new Event("cartUpdated")
       );
-
 
       alert(
         `${food.name} added to cart! 🛒`
@@ -350,54 +318,35 @@ export default function Menu() {
   // FILTER FOODS
   // =====================================
 
-  const filteredFoods =
-    foods.filter((food) => {
+  const filteredFoods = foods.filter((food) => {
 
-      // -------------------------------
-      // SEARCH
-      // -------------------------------
-
-      const matchesSearch =
-        food.name
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          );
-
-
-      // -------------------------------
-      // CATEGORY
-      // -------------------------------
-
-      const matchesCategory =
-        category === "All" ||
-        food.category === category;
-
-
-      // -------------------------------
-      // RESTAURANT
-      // -------------------------------
-
-      const matchesRestaurant =
-        selectedRestaurant === "All" ||
-        String(
-          food.restaurantId
-        ) === String(
-          selectedRestaurant
+    const matchesSearch =
+      food.name
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
         );
 
+    const matchesCategory =
+      category === "All" ||
+      food.category === category;
 
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesRestaurant
-      );
+    const matchesRestaurant =
+      selectedRestaurant === "All" ||
+      String(food.restaurantId) ===
+        String(selectedRestaurant);
 
-    });
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesRestaurant
+    );
+
+  });
 
 
   // =====================================
-  // SELECTED RESTAURANT NAME
+  // SELECTED RESTAURANT
   // =====================================
 
   const selectedRestaurantData =
@@ -415,55 +364,74 @@ export default function Menu() {
       <Navbar />
 
 
-      {/* =================================
-          HEADER
-      ================================= */}
+      {/* =====================================
+          MENU HERO
+      ===================================== */}
 
-      <div className="menu-header">
+      <section className="menu-hero">
 
-        <h1>
-          Our Menu 🍽️
-        </h1>
+        <div className="menu-hero-content">
 
-        <p>
-          Choose your favourite food,
-          select a restaurant and add
-          it to your cart.
-        </p>
+          <span className="menu-label">
+            <FaUtensils />
+            COUPONBITE MENU
+          </span>
 
-      </div>
-
-
-      {/* =================================
-          RESTAURANT SECTION
-      ================================= */}
-
-      <div className="restaurant-menu-section">
-
-        <div className="restaurant-menu-title">
-
-          <h2>
-            Choose Restaurant
-          </h2>
+          <h1>
+            Explore Delicious
+            <span> Food & Deals</span>
+          </h1>
 
           <p>
-            Select a restaurant to see
-            its available food.
+            Choose your favorite restaurant, discover
+            delicious food and add your favorites to
+            your cart.
           </p>
 
         </div>
 
+      </section>
 
-        <div className="restaurant-menu-list">
 
-          {/* ALL RESTAURANTS */}
+      {/* =====================================
+          RESTAURANTS
+      ===================================== */}
+
+      <section className="restaurant-section">
+
+        <div className="section-heading">
+
+          <div>
+
+            <span className="section-label">
+              <FaStore />
+              RESTAURANTS
+            </span>
+
+            <h2>
+              Choose Restaurant
+            </h2>
+
+            <p>
+              Select a restaurant to explore
+              its available food.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div className="restaurant-list">
+
+          {/* ALL */}
 
           <button
             type="button"
             className={
               selectedRestaurant === "All"
-                ? "restaurant-menu-btn active"
-                : "restaurant-menu-btn"
+                ? "restaurant-btn active"
+                : "restaurant-btn"
             }
             onClick={() =>
               setSelectedRestaurant("All")
@@ -471,10 +439,10 @@ export default function Menu() {
           >
 
             <span className="restaurant-icon">
-              🍽️
+              <FaUtensils />
             </span>
 
-            <span>
+            <span className="restaurant-name">
               All Restaurants
             </span>
 
@@ -491,194 +459,270 @@ export default function Menu() {
 
           ) : (
 
-            restaurants.map(
-              (restaurant) => (
+            restaurants.map((restaurant) => (
 
-                <button
-                  type="button"
-                  key={restaurant._id}
-                  className={
-                    String(
-                      selectedRestaurant
-                    ) ===
-                    String(
-                      restaurant._id
-                    )
-                      ? "restaurant-menu-btn active"
-                      : "restaurant-menu-btn"
-                  }
-                  onClick={() =>
-                    setSelectedRestaurant(
-                      restaurant._id
-                    )
-                  }
-                >
+              <button
+                type="button"
+                key={restaurant._id}
+                className={
+                  String(selectedRestaurant) ===
+                  String(restaurant._id)
+                    ? "restaurant-btn active"
+                    : "restaurant-btn"
+                }
+                onClick={() =>
+                  setSelectedRestaurant(
+                    restaurant._id
+                  )
+                }
+              >
 
-                  <span className="restaurant-icon">
+                <span className="restaurant-icon">
 
-                    {restaurant.image ? (
+                  {restaurant.image ? (
 
-                      <img
-                        src={getImageUrl(
-                          restaurant.image
-                        )}
-                        alt={
-                          restaurant.name
-                        }
-                      />
+                    <img
+                      src={getImageUrl(
+                        restaurant.image
+                      )}
+                      alt={restaurant.name}
+                    />
 
-                    ) : (
+                  ) : (
 
-                      "🏪"
+                    <FaStore />
 
-                    )}
+                  )}
 
-                  </span>
+                </span>
 
+                <span className="restaurant-name">
+                  {restaurant.name}
+                </span>
 
-                  <span>
-                    {restaurant.name}
-                  </span>
+              </button>
 
-                </button>
-
-              )
-            )
+            ))
 
           )}
 
         </div>
 
-      </div>
+      </section>
 
 
-      {/* =================================
+      {/* =====================================
           SELECTED RESTAURANT
-      ================================= */}
+      ===================================== */}
 
       {selectedRestaurantData && (
 
         <div className="selected-restaurant">
 
-          <h2>
-            {selectedRestaurantData.name}
-          </h2>
+          <div className="selected-icon">
+            <FaStore />
+          </div>
 
-          <p>
-            📍 {selectedRestaurantData.location}
-          </p>
+          <div>
+
+            <span>
+              CURRENT RESTAURANT
+            </span>
+
+            <h2>
+              {selectedRestaurantData.name}
+            </h2>
+
+            <p>
+              <FaMapMarkerAlt />
+              {selectedRestaurantData.location}
+            </p>
+
+          </div>
 
         </div>
 
       )}
 
 
-      {/* =================================
-          SEARCH + CATEGORY
-      ================================= */}
+      {/* =====================================
+          FILTER SECTION
+      ===================================== */}
 
-      <div className="menu-filter">
+      <section className="menu-content">
 
-        {/* SEARCH */}
+        <div className="menu-filter">
 
-        <input
-          type="text"
-          placeholder="Search food..."
-          value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
-        />
+          {/* SEARCH */}
 
+          <div className="search-box">
 
-        {/* FOOD CATEGORY */}
+            <FaSearch />
 
-        <select
-          value={category}
-          onChange={(e) =>
-            setCategory(
-              e.target.value
-            )
-          }
-        >
+            <input
+              type="text"
+              placeholder="Search your favorite food..."
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+            />
 
-          <option value="All">
-            All Food
-          </option>
-
-          <option value="Pizza">
-            Pizza
-          </option>
-
-          <option value="Burger">
-            Burger
-          </option>
-
-          <option value="Pasta">
-            Pasta
-          </option>
-
-          <option value="Sandwich">
-            Sandwich
-          </option>
-
-          <option value="Dessert">
-            Dessert
-          </option>
-
-          <option value="Drinks">
-            Drinks
-          </option>
-
-        </select>
-
-      </div>
+          </div>
 
 
-      {/* =================================
-          FOOD LOADING
-      ================================= */}
+          {/* CATEGORY */}
 
-      {loadingFoods ? (
+          <div className="category-box">
 
-        <div className="menu-message">
+            <FaFilter />
 
-          <h2>
-            Loading food... 🍕
-          </h2>
+            <select
+              value={category}
+              onChange={(e) =>
+                setCategory(e.target.value)
+              }
+            >
+
+              <option value="All">
+                All Food
+              </option>
+
+              <option value="Pizza">
+                Pizza
+              </option>
+
+              <option value="Burger">
+                Burger
+              </option>
+
+              <option value="Pasta">
+                Pasta
+              </option>
+
+              <option value="Sandwich">
+                Sandwich
+              </option>
+
+              <option value="Dessert">
+                Dessert
+              </option>
+
+              <option value="Drinks">
+                Drinks
+              </option>
+
+            </select>
+
+          </div>
 
         </div>
 
-      ) : filteredFoods.length === 0 ? (
 
-        <div className="menu-message">
+        {/* =====================================
+            RESULT INFO
+        ===================================== */}
 
-          <h2>
-            No Food Found 😔
-          </h2>
+        {!loadingFoods &&
+          filteredFoods.length > 0 && (
 
-          <p>
+            <div className="food-result-info">
 
-            {selectedRestaurant !== "All"
-              ? "This restaurant has no food available for the selected filter."
-              : "Try another food name or category."}
+              <div>
 
-          </p>
+                <h2>
+                  Popular Food
+                </h2>
 
-        </div>
+                <p>
+                  {filteredFoods.length} items available
+                </p>
 
-      ) : (
+              </div>
 
-        /* =================================
-           FOOD CARDS
-        ================================= */
+              {(search || category !== "All") && (
 
-        <div className="food-container">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    setCategory("All");
+                  }}
+                >
+                  Clear Filters
+                </button>
 
-          {filteredFoods.map(
-            (food) => (
+              )}
+
+            </div>
+
+          )}
+
+
+        {/* =====================================
+            LOADING
+        ===================================== */}
+
+        {loadingFoods ? (
+
+          <div className="menu-message">
+
+            <div className="loading-icon">
+              <FaUtensils />
+            </div>
+
+            <h2>
+              Loading delicious food...
+            </h2>
+
+            <p>
+              Please wait while we prepare the menu.
+            </p>
+
+          </div>
+
+        ) : filteredFoods.length === 0 ? (
+
+          <div className="menu-message">
+
+            <div className="empty-icon">
+              🍽️
+            </div>
+
+            <h2>
+              No Food Found
+            </h2>
+
+            <p>
+
+              {selectedRestaurant !== "All"
+                ? "This restaurant has no food available for the selected filter."
+                : "Try another food name or category."}
+
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setCategory("All");
+                setSelectedRestaurant("All");
+              }}
+            >
+              View All Food
+            </button>
+
+          </div>
+
+        ) : (
+
+          /* =====================================
+             FOOD CARDS
+          ===================================== */
+
+          <div className="food-container">
+
+            {filteredFoods.map((food) => (
 
               <div
                 className="food-card"
@@ -692,23 +736,24 @@ export default function Menu() {
                   {food.image ? (
 
                     <img
-                      src={getImageUrl(
-                        food.image
-                      )}
+                      src={getImageUrl(food.image)}
                       alt={food.name}
                       onError={(e) => {
-                        e.target.style.display =
-                          "none";
+                        e.target.style.display = "none";
                       }}
                     />
 
                   ) : (
 
                     <div className="no-image">
-                      🍽️
+                      <FaUtensils />
                     </div>
 
                   )}
+
+                  <span className="food-badge">
+                    {food.category}
+                  </span>
 
                 </div>
 
@@ -717,23 +762,28 @@ export default function Menu() {
 
                 <div className="food-info">
 
+                  <span className="food-category">
+                    {food.category}
+                  </span>
+
                   <h2>
                     {food.name}
                   </h2>
 
-                  <p className="food-category">
-                    {food.category}
-                  </p>
-
 
                   <div className="food-bottom">
 
-                    <h3>
-                      ₹
-                      {cleanPrice(
-                        food.price
-                      )}
-                    </h3>
+                    <div className="food-price">
+
+                      <small>
+                        Coupon Price
+                      </small>
+
+                      <strong>
+                        ₹{cleanPrice(food.price)}
+                      </strong>
+
+                    </div>
 
 
                     <button
@@ -742,7 +792,8 @@ export default function Menu() {
                         addToCart(food)
                       }
                     >
-                      Add to Cart 🛒
+                      <FaShoppingCart />
+                      Add to Cart
                     </button>
 
                   </div>
@@ -751,12 +802,13 @@ export default function Menu() {
 
               </div>
 
-            )
-          )}
+            ))}
 
-        </div>
+          </div>
 
-      )}
+        )}
+
+      </section>
 
 
       <Footer />
