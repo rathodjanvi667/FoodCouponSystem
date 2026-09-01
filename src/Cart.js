@@ -19,35 +19,46 @@ export default function Cart() {
       .trim();
 
     const numberPrice = Number(cleanedPrice);
+
     return isNaN(numberPrice) ? 0 : numberPrice;
   };
 
+
   // =====================================
   // GET FOOD ID
-  // Supports both MongoDB _id and old id
+  // Supports MongoDB _id and old id
   // =====================================
 
   const getItemId = (item) => item._id || item.id;
+
 
   // =====================================
   // LOAD CART FROM LOCAL STORAGE
   // =====================================
 
   const [cart, setCart] = useState(() => {
+
     const savedCart = localStorage.getItem("foodCart");
 
     if (savedCart) {
+
       try {
+
         const oldCart = JSON.parse(savedCart);
 
         // Fix old cart data
         const fixedCart = oldCart.map((item) => ({
           ...item,
+
           id: item.id || item._id,
+
           price: cleanPrice(item.price),
+
           quantity: Number(item.quantity) || 1,
+
           image: item.image || ""
         }));
+
 
         // Save corrected cart
         localStorage.setItem(
@@ -58,8 +69,11 @@ export default function Cart() {
         return fixedCart;
 
       } catch (error) {
+
         console.error("Error loading cart:", error);
+
         localStorage.removeItem("foodCart");
+
         return [];
       }
     }
@@ -67,18 +81,13 @@ export default function Cart() {
     return [];
   });
 
-  // =====================================
-  // NEW - COUPON STATES
-  // =====================================
-
-  const [generatedCoupon, setGeneratedCoupon] = useState(null);
-  const [showCouponPopup, setShowCouponPopup] = useState(false);
 
   // =====================================
   // SAVE CART
   // =====================================
 
   const saveCart = (updatedCart) => {
+
     setCart(updatedCart);
 
     localStorage.setItem(
@@ -87,21 +96,31 @@ export default function Cart() {
     );
 
     // Notify Navbar about cart changes
-    window.dispatchEvent(new Event("cartUpdated"));
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
   };
+
 
   // =====================================
   // INCREASE QUANTITY
   // =====================================
 
   const increaseQuantity = (id) => {
+
     const updatedCart = cart.map((item) => {
+
       if (getItemId(item) === id) {
+
         return {
           ...item,
+
           id: item.id || item._id,
+
           price: cleanPrice(item.price),
-          quantity: Number(item.quantity || 1) + 1
+
+          quantity:
+            Number(item.quantity || 1) + 1
         };
       }
 
@@ -111,34 +130,47 @@ export default function Cart() {
     saveCart(updatedCart);
   };
 
+
   // =====================================
   // DECREASE QUANTITY
   // =====================================
 
   const decreaseQuantity = (id) => {
+
     const updatedCart = cart
       .map((item) => {
+
         if (getItemId(item) === id) {
+
           return {
             ...item,
+
             id: item.id || item._id,
+
             price: cleanPrice(item.price),
-            quantity: Number(item.quantity || 1) - 1
+
+            quantity:
+              Number(item.quantity || 1) - 1
           };
         }
 
         return item;
       })
-      .filter((item) => Number(item.quantity) > 0);
+
+      .filter(
+        (item) => Number(item.quantity) > 0
+      );
 
     saveCart(updatedCart);
   };
+
 
   // =====================================
   // REMOVE ITEM
   // =====================================
 
   const removeItem = (id) => {
+
     const updatedCart = cart.filter(
       (item) => getItemId(item) !== id
     );
@@ -146,17 +178,22 @@ export default function Cart() {
     saveCart(updatedCart);
   };
 
+
   // =====================================
   // CLEAR CART
   // =====================================
 
   const clearCart = () => {
+
     setCart([]);
 
     localStorage.removeItem("foodCart");
 
-    window.dispatchEvent(new Event("cartUpdated"));
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
   };
+
 
   // =====================================
   // TOTAL ITEMS
@@ -168,118 +205,67 @@ export default function Cart() {
     0
   );
 
+
   // =====================================
   // TOTAL AMOUNT
   // =====================================
 
-  const totalAmount = cart.reduce((total, item) => {
-    const price = cleanPrice(item.price);
-    const quantity = Number(item.quantity) || 1;
+  const totalAmount = cart.reduce(
+    (total, item) => {
 
-    return total + price * quantity;
-  }, 0);
+      const price = cleanPrice(item.price);
+
+      const quantity =
+        Number(item.quantity) || 1;
+
+      return total + price * quantity;
+    },
+    0
+  );
 
 
   // =====================================
-  // NEW - GENERATE COUPON
+  // PLACE ORDER / CHECKOUT
   // =====================================
 
-  const generateCoupon = () => {
+  const handlePlaceOrder = () => {
 
     if (cart.length === 0) {
-      alert("Please add food items to your cart first.");
+
+      alert("Your cart is empty!");
+
       return;
     }
 
-    // Generate random coupon number
-    const randomNumber = Math.floor(
-      1000 + Math.random() * 9000
-    );
-
-    // Get restaurant/store/location from cart
-    const restaurantNames = [
-      ...new Set(
-        cart
-          .map(
-            (item) =>
-              item.restaurant ||
-              item.store ||
-              item.location
-          )
-          .filter(Boolean)
-      )
-    ];
-
-    const restaurant =
-      restaurantNames.length > 0
-        ? restaurantNames.join(", ")
-        : "All Restaurants";
-
-    // Create coupon
-    const coupon = {
-      code: `FOOD${randomNumber}`,
-      discount: 10,
-      minOrderAmount: 299,
-      restaurant: restaurant,
-      validUntil: new Date(
-        Date.now() + 24 * 60 * 60 * 1000
-      ).toISOString()
-    };
-
-    // Save coupon in localStorage
-    localStorage.setItem(
-      "generatedCoupon",
-      JSON.stringify(coupon)
-    );
-
-    // Set coupon
-    setGeneratedCoupon(coupon);
-
-    // Show popup
-    setShowCouponPopup(true);
+    // Coupon is NOT generated here.
+    // User will go to Checkout page.
+    window.location.href = "/Checkout";
   };
 
 
   // =====================================
-  // NEW - COPY COUPON
+  // UI
   // =====================================
-
-  const copyCoupon = () => {
-
-    if (!generatedCoupon) return;
-
-    navigator.clipboard.writeText(
-      generatedCoupon.code
-    );
-
-    alert("Coupon code copied! 🎉");
-  };
-
-
-  // =====================================
-  // NEW - CLOSE COUPON POPUP
-  // =====================================
-
-  const closeCouponPopup = () => {
-    setShowCouponPopup(false);
-  };
-
 
   return (
+
     <div className="cart-page">
 
-      <Navbar></Navbar>
+      <Navbar />
+
 
       {/* =====================================
           CART HEADER
       ===================================== */}
 
       <div className="cart-header">
+
         <h1>My Cart 🛒</h1>
 
         <p>
           Review your food items before placing your order.
         </p>
+
       </div>
 
 
@@ -303,6 +289,7 @@ export default function Cart() {
 
         <div className="cart-container">
 
+
           {/* =====================================
               CART ITEMS
           ===================================== */}
@@ -310,6 +297,7 @@ export default function Cart() {
           <div className="cart-items">
 
             <h2>Cart Items</h2>
+
 
             {cart.map((food) => {
 
@@ -321,6 +309,7 @@ export default function Cart() {
                   className="cart-item"
                   key={foodId}
                 >
+
 
                   {/* FOOD IMAGE */}
 
@@ -334,9 +323,13 @@ export default function Cart() {
 
                   <div className="cart-details">
 
-                    <h3>{food.name}</h3>
+                    <h3>
+                      {food.name}
+                    </h3>
 
-                    <p>{food.category}</p>
+                    <p>
+                      {food.category}
+                    </p>
 
                     <h4>
                       ₹{cleanPrice(food.price)}
@@ -414,7 +407,9 @@ export default function Cart() {
 
               <span>Items</span>
 
-              <span>{totalItems}</span>
+              <span>
+                {totalItems}
+              </span>
 
             </div>
 
@@ -423,7 +418,9 @@ export default function Cart() {
 
               <span>Subtotal</span>
 
-              <span>₹{totalAmount}</span>
+              <span>
+                ₹{totalAmount}
+              </span>
 
             </div>
 
@@ -432,7 +429,9 @@ export default function Cart() {
 
               <span>Delivery</span>
 
-              <span>FREE</span>
+              <span>
+                FREE
+              </span>
 
             </div>
 
@@ -444,34 +443,24 @@ export default function Cart() {
 
             <div className="total-row">
 
-              <span>Total</span>
+              <span>
+                Total
+              </span>
 
-              <span>₹{totalAmount}</span>
+              <span>
+                ₹{totalAmount}
+              </span>
 
             </div>
 
 
             {/* =====================================
-                NEW - GENERATE COUPON BUTTON
-            ===================================== */}
-
-            <button
-              className="generate-coupon-btn"
-              onClick={generateCoupon}
-            >
-              🎟️ Generate Coupon
-            </button>
-
-
-            {/* =====================================
-                CHECKOUT
+                PLACE ORDER
             ===================================== */}
 
             <button
               className="order-btn"
-              onClick={() => {
-                window.location.href = "/Checkout";
-              }}
+              onClick={handlePlaceOrder}
             >
               Place Order
             </button>
@@ -489,144 +478,9 @@ export default function Cart() {
           </div>
 
         </div>
-      )}
-
-
-      {/* =====================================
-          NEW - COUPON POPUP
-      ===================================== */}
-
-      {showCouponPopup && generatedCoupon && (
-
-        <div
-          className="coupon-overlay"
-          onClick={closeCouponPopup}
-        >
-
-          <div
-            className="coupon-popup"
-            onClick={(e) => e.stopPropagation()}
-          >
-
-            {/* CLOSE BUTTON */}
-
-            <button
-              className="coupon-close"
-              onClick={closeCouponPopup}
-            >
-              ×
-            </button>
-
-
-            {/* SUCCESS ICON */}
-
-            <div className="coupon-success-icon">
-              🎉
-            </div>
-
-
-            <h2>
-              Coupon Generated!
-            </h2>
-
-
-            <p className="coupon-subtitle">
-              Congratulations! You unlocked a
-              special discount.
-            </p>
-
-
-            {/* DISCOUNT */}
-
-            <div className="coupon-discount">
-
-              <strong>
-                {generatedCoupon.discount}% OFF
-              </strong>
-
-              <span>
-                On orders above ₹
-                {generatedCoupon.minOrderAmount}
-              </span>
-
-            </div>
-
-
-            {/* COUPON CODE */}
-
-            <div className="coupon-code-box">
-
-              <span>
-                {generatedCoupon.code}
-              </span>
-
-              <button
-                onClick={copyCoupon}
-              >
-                📋 Copy
-              </button>
-
-            </div>
-
-
-            {/* VALID RESTAURANT */}
-
-            <div className="coupon-info">
-
-              <p>
-                📍 <strong>Valid At:</strong>
-              </p>
-
-              <span>
-                {generatedCoupon.restaurant}
-              </span>
-
-            </div>
-
-
-            {/* VALID DATE */}
-
-            <div className="coupon-info">
-
-              <p>
-                ⏰ <strong>Valid Until:</strong>
-              </p>
-
-              <span>
-                {new Date(
-                  generatedCoupon.validUntil
-                ).toLocaleDateString("en-IN")}
-              </span>
-
-            </div>
-
-
-            {/* NOTE */}
-
-            <p className="coupon-note">
-              Use this coupon during checkout to
-              get your discount. 🎁
-            </p>
-
-
-            {/* DONE */}
-
-            <button
-              className="coupon-done-btn"
-              onClick={closeCouponPopup}
-            >
-              Continue Shopping
-            </button>
-
-          </div>
-
-        </div>
 
       )}
-
-
-      <Footer></Footer>
-
+      <Footer />
     </div>
   );
 }

@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section className='hero'>
           <div className='heroleft'>
-               <h1>Delicious Food <br></br>At Your Fingertips</h1>
+               <h1>Save More on Every<br></br> Food Order </h1>
                <p>Buy Food Coupons Online,Save time,and enjoy your favorite food at affordable prices.</p>
 
                <div className='herobtn'>

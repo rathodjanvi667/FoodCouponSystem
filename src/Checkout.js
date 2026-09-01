@@ -201,7 +201,7 @@ export default function Checkout() {
     <div className="checkout-page">
       <Navbar></Navbar>
         
-//Header
+
       <div className="checkout-header">
         <h1>
           Generate Food Coupon 🎟️

@@ -4,21 +4,30 @@ const foodSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     category: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     price: {
       type: Number,
-      required: true
+      required: true,
+      min: 1
     },
 
     image: {
       type: String,
+      required: true
+    },
+
+    restaurantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant",
       required: true
     }
   },

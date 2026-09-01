@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Managefood.css";
 
 const API_URL = "http://localhost:5000/api/foods";
+const RESTAURANT_API_URL = "http://localhost:5000/api/restaurants";
 const SERVER_URL = "http://localhost:5000";
 
 export default function ManageFood() {
@@ -16,14 +17,30 @@ export default function ManageFood() {
 
 
   // =====================================
+  // RESTAURANT LIST
+  // =====================================
+
+  const [restaurants, setRestaurants] = useState([]);
+
+  const [restaurantLoading, setRestaurantLoading] =
+    useState(true);
+
+
+  // =====================================
   // FORM DATA
   // =====================================
 
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("Pizza");
+
+  const [category, setCategory] =
+    useState("Pizza");
+
   const [price, setPrice] = useState("");
 
-  // Selected image file
+  const [restaurantId, setRestaurantId] =
+    useState("");
+
+  // Selected image
   const [image, setImage] = useState(null);
 
 
@@ -37,13 +54,19 @@ export default function ManageFood() {
 
       setLoading(true);
 
-      const response = await fetch(API_URL);
+      const response =
+        await fetch(API_URL);
 
       if (!response.ok) {
-        throw new Error("Failed to load foods");
+
+        throw new Error(
+          "Failed to load foods"
+        );
+
       }
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       setFoods(data);
 
@@ -51,11 +74,61 @@ export default function ManageFood() {
 
       console.log(error);
 
-      alert("Unable to load foods from database");
+      alert(
+        "Unable to load foods from database"
+      );
 
     } finally {
 
       setLoading(false);
+
+    }
+
+  };
+
+
+  // =====================================
+  // LOAD RESTAURANTS
+  // =====================================
+
+  const loadRestaurants = async () => {
+
+    try {
+
+      setRestaurantLoading(true);
+
+      const response =
+        await fetch(
+          RESTAURANT_API_URL
+        );
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Failed to load restaurants"
+        );
+
+      }
+
+      const data =
+        await response.json();
+
+      setRestaurants(data);
+
+    } catch (error) {
+
+      console.log(
+        "RESTAURANT LOAD ERROR:",
+        error
+      );
+
+      alert(
+        "Unable to load restaurants from database"
+      );
+
+    } finally {
+
+      setRestaurantLoading(false);
 
     }
 
@@ -70,6 +143,8 @@ export default function ManageFood() {
 
     loadFoods();
 
+    loadRestaurants();
+
   }, []);
 
 
@@ -82,7 +157,9 @@ export default function ManageFood() {
     e.preventDefault();
 
 
-    // Validation
+    // =====================================
+    // VALIDATION
+    // =====================================
 
     if (
       name.trim() === "" ||
@@ -99,39 +176,75 @@ export default function ManageFood() {
     }
 
 
+    // Restaurant validation
+
+    if (!restaurantId) {
+
+      alert(
+        "Please select a restaurant"
+      );
+
+      return;
+
+    }
+
+
     try {
 
       // =================================
       // FORM DATA
       // =================================
 
-      const formData = new FormData();
+      const formData =
+        new FormData();
 
-      formData.append("name", name);
+      formData.append(
+        "name",
+        name.trim()
+      );
 
-      formData.append("category", category);
+      formData.append(
+        "category",
+        category
+      );
 
-      formData.append("price", price);
+      formData.append(
+        "price",
+        price
+      );
 
-      formData.append("image", image);
+      formData.append(
+        "restaurantId",
+        restaurantId
+      );
+
+      formData.append(
+        "image",
+        image
+      );
 
 
       // =================================
       // SEND TO BACKEND
       // =================================
 
-      const response = await fetch(
-        API_URL,
-        {
-          method: "POST",
-          body: formData
-        }
-      );
+      const response =
+        await fetch(
+          API_URL,
+          {
+            method: "POST",
+            body: formData
+          }
+        );
 
 
       if (!response.ok) {
 
+        const errorData =
+          await response.json();
+
         throw new Error(
+          errorData.message ||
           "Failed to add food"
         );
 
@@ -148,8 +261,8 @@ export default function ManageFood() {
 
       setFoods(
         (previousFoods) => [
-          ...previousFoods,
-          savedFood
+          savedFood,
+          ...previousFoods
         ]
       );
 
@@ -163,6 +276,8 @@ export default function ManageFood() {
       setCategory("Pizza");
 
       setPrice("");
+
+      setRestaurantId("");
 
       setImage(null);
 
@@ -179,9 +294,13 @@ export default function ManageFood() {
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "ADD FOOD ERROR:",
+        error
+      );
 
       alert(
+        error.message ||
         "Failed to add food"
       );
 
@@ -203,23 +322,30 @@ export default function ManageFood() {
 
 
     if (!confirmDelete) {
+
       return;
+
     }
 
 
     try {
 
-      const response = await fetch(
-        `${API_URL}/${id}`,
-        {
-          method: "DELETE"
-        }
-      );
+      const response =
+        await fetch(
+          `${API_URL}/${id}`,
+          {
+            method: "DELETE"
+          }
+        );
 
 
       if (!response.ok) {
 
+        const errorData =
+          await response.json();
+
         throw new Error(
+          errorData.message ||
           "Failed to delete food"
         );
 
@@ -242,9 +368,13 @@ export default function ManageFood() {
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "DELETE FOOD ERROR:",
+        error
+      );
 
       alert(
+        error.message ||
         "Failed to delete food"
       );
 
@@ -260,15 +390,50 @@ export default function ManageFood() {
   const getImageUrl = (image) => {
 
     if (!image) {
+
       return "";
+
     }
 
-    // If image already contains full URL
-    if (image.startsWith("http")) {
+
+    if (
+      image.startsWith("http")
+    ) {
+
       return image;
+
     }
+
 
     return SERVER_URL + image;
+
+  };
+
+
+  // =====================================
+  // GET RESTAURANT NAME
+  // =====================================
+
+  const getRestaurantName = (id) => {
+
+    if (!id) {
+
+      return "Not Assigned";
+
+    }
+
+
+    const restaurant =
+      restaurants.find(
+        (item) =>
+          item._id === id ||
+          item._id === String(id)
+      );
+
+
+    return restaurant
+      ? restaurant.name
+      : "Restaurant Not Found";
 
   };
 
@@ -295,7 +460,7 @@ export default function ManageFood() {
           </h1>
 
           <p>
-            Add and manage your food items
+            Add and manage food items by restaurant
           </p>
 
         </div>
@@ -324,83 +489,168 @@ export default function ManageFood() {
 
           {/* Food Name */}
 
-          <input
-            type="text"
-            placeholder="Food Name"
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-          />
+          <div className="food-form-field">
+
+            <label>
+              Food Name
+            </label>
+
+            <input
+              type="text"
+              placeholder="e.g. Margherita Pizza"
+              value={name}
+              onChange={(e) =>
+                setName(e.target.value)
+              }
+            />
+
+          </div>
+
+
+          {/* Restaurant */}
+
+          <div className="food-form-field">
+
+            <label>
+              Restaurant
+            </label>
+
+            <select
+              value={restaurantId}
+              onChange={(e) =>
+                setRestaurantId(
+                  e.target.value
+                )
+              }
+              disabled={restaurantLoading}
+            >
+
+              <option value="">
+                {restaurantLoading
+                  ? "Loading Restaurants..."
+                  : "Select Restaurant"}
+              </option>
+
+
+              {restaurants
+                .filter(
+                  (restaurant) =>
+                    restaurant.status !==
+                    "Inactive"
+                )
+                .map(
+                  (restaurant) => (
+
+                    <option
+                      key={restaurant._id}
+                      value={restaurant._id}
+                    >
+                      {restaurant.name}
+                    </option>
+
+                  )
+                )}
+
+            </select>
+
+          </div>
 
 
           {/* Category */}
 
-          <select
-            value={category}
-            onChange={(e) =>
-              setCategory(e.target.value)
-            }
-          >
+          <div className="food-form-field">
 
-            <option value="Pizza">
-              Pizza
-            </option>
+            <label>
+              Category
+            </label>
 
-            <option value="Burger">
-              Burger
-            </option>
+            <select
+              value={category}
+              onChange={(e) =>
+                setCategory(
+                  e.target.value
+                )
+              }
+            >
 
-            <option value="Pasta">
-              Pasta
-            </option>
+              <option value="Pizza">
+                Pizza
+              </option>
 
-            <option value="Sandwich">
-              Sandwich
-            </option>
+              <option value="Burger">
+                Burger
+              </option>
 
-            <option value="Dessert">
-              Dessert
-            </option>
+              <option value="Pasta">
+                Pasta
+              </option>
 
-            <option value="Drinks">
-              Drinks
-            </option>
+              <option value="Sandwich">
+                Sandwich
+              </option>
 
-          </select>
+              <option value="Dessert">
+                Dessert
+              </option>
+
+              <option value="Drinks">
+                Drinks
+              </option>
+
+            </select>
+
+          </div>
 
 
           {/* Price */}
 
-          <input
-            type="number"
-            placeholder="Price"
-            value={price}
-            onChange={(e) =>
-              setPrice(e.target.value)
-            }
-          />
+          <div className="food-form-field">
+
+            <label>
+              Price
+            </label>
+
+            <input
+              type="number"
+              min="1"
+              placeholder="Price"
+              value={price}
+              onChange={(e) =>
+                setPrice(e.target.value)
+              }
+            />
+
+          </div>
 
 
           {/* Image */}
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setImage(
-                e.target.files[0]
-              )
-            }
-          />
+          <div className="food-form-field image-field">
+
+            <label>
+              Food Image
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setImage(
+                  e.target.files[0]
+                )
+              }
+            />
+
+          </div>
 
 
           {/* Add Button */}
 
-          <button type="submit">
-
+          <button
+            type="submit"
+            className="add-food-btn"
+          >
             Add Food
-
           </button>
 
         </form>
@@ -414,134 +664,191 @@ export default function ManageFood() {
 
       <div className="food-list-box">
 
-        <h2>
-          Food List
-        </h2>
+        <div className="food-list-header">
+
+          <div>
+
+            <h2>
+              Food List
+            </h2>
+
+            <p>
+              Food items assigned to restaurants
+            </p>
+
+          </div>
+
+          <span className="food-count">
+            {foods.length} Foods
+          </span>
+
+        </div>
 
 
         {loading ? (
 
-          <p>
+          <div className="food-loading">
             Loading foods...
-          </p>
+          </div>
 
         ) : foods.length === 0 ? (
 
-          <p>
+          <div className="no-foods">
             No food items available.
-          </p>
+          </div>
 
         ) : (
 
-          <table>
+          <div className="food-table-wrapper">
 
-            <thead>
+            <table>
 
-              <tr>
+              <thead>
 
-                <th>
-                  ID
-                </th>
+                <tr>
 
-                <th>
-                  Image
-                </th>
+                  <th>
+                    Image
+                  </th>
 
-                <th>
-                  Food Name
-                </th>
+                  <th>
+                    Food Name
+                  </th>
 
-                <th>
-                  Category
-                </th>
+                  <th>
+                    Restaurant
+                  </th>
 
-                <th>
-                  Price
-                </th>
+                  <th>
+                    Category
+                  </th>
 
-                <th>
-                  Action
-                </th>
+                  <th>
+                    Price
+                  </th>
 
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {foods.map((food) => (
-
-                <tr
-                  key={food._id}
-                >
-
-                  <td>
-                    {food._id}
-                  </td>
-
-
-                  <td>
-
-                    {food.image && (
-
-                      <img
-                        src={getImageUrl(
-                          food.image
-                        )}
-                        alt={food.name}
-                        width="60"
-                        height="50"
-                        style={{
-                          objectFit: "cover",
-                          borderRadius: "8px"
-                        }}
-                      />
-
-                    )}
-
-                  </td>
-
-
-                  <td>
-                    {food.name}
-                  </td>
-
-
-                  <td>
-                    {food.category}
-                  </td>
-
-
-                  <td>
-                    ₹{food.price}
-                  </td>
-
-
-                  <td>
-
-                    <button
-                      className="delete-btn"
-                      onClick={() =>
-                        deleteFood(
-                          food._id
-                        )
-                      }
-                    >
-
-                      Delete
-
-                    </button>
-
-                  </td>
+                  <th>
+                    Action
+                  </th>
 
                 </tr>
 
-              ))}
+              </thead>
 
-            </tbody>
 
-          </table>
+              <tbody>
+
+                {foods.map(
+                  (food) => (
+
+                    <tr
+                      key={food._id}
+                    >
+
+                      {/* IMAGE */}
+
+                      <td>
+
+                        {food.image ? (
+
+                          <img
+                            src={getImageUrl(
+                              food.image
+                            )}
+                            alt={
+                              food.name
+                            }
+                            className="food-image"
+                          />
+
+                        ) : (
+
+                          <div className="no-food-image">
+                            🍽️
+                          </div>
+
+                        )}
+
+                      </td>
+
+
+                      {/* FOOD NAME */}
+
+                      <td>
+
+                        <strong>
+                          {food.name}
+                        </strong>
+
+                      </td>
+
+
+                      {/* RESTAURANT */}
+
+                      <td>
+
+                        <span className="restaurant-name">
+
+                          {getRestaurantName(
+                            food.restaurantId
+                          )}
+
+                        </span>
+
+                      </td>
+
+
+                      {/* CATEGORY */}
+
+                      <td>
+
+                        <span className="category-badge">
+
+                          {food.category}
+
+                        </span>
+
+                      </td>
+
+
+                      {/* PRICE */}
+
+                      <td>
+
+                        <strong className="food-price">
+                          ₹{food.price}
+                        </strong>
+
+                      </td>
+
+
+                      {/* DELETE */}
+
+                      <td>
+
+                        <button
+                          className="delete-btn"
+                          onClick={() =>
+                            deleteFood(
+                              food._id
+                            )
+                          }
+                        >
+                          Delete
+                        </button>
+
+                      </td>
+
+                    </tr>
+
+                  )
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
 
         )}
 
@@ -550,4 +857,5 @@ export default function ManageFood() {
     </div>
 
   );
+
 }

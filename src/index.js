@@ -14,6 +14,7 @@ import Admindashboard from './Admindashboard';
 import ManageFood from './Managefood';
 import Managecoupon from './Managecoupon';
 import Manageorder from './Manageorder';
+import ManageRestaurant from "./ManageRestaurant";
 import ProtectedRoute from './ProtectedRoute';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -31,20 +32,20 @@ root.render(
 
         {/* Customer Pages */}
 
-        <Route path="/"element={<Home />}/>
-        <Route path="/Menu"element={<Menu />}/>
-        <Route path="/Coupon" element={<Coupon />}/>
-        <Route path="/Order" element={<Order />}/>
-        <Route path="/About" element={<About />}/>
-        <Route path="/Contact" element={<Contact />}/>
-         <Route path="/Cart" element={<Cart></Cart>}/>
-         <Route path="/Checkout" element={<Checkout></Checkout>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/Menu" element={<Menu />} />
+        <Route path="/Coupon" element={<Coupon />} />
+        <Route path="/Order" element={<Order />} />
+        <Route path="/About" element={<About />} />
+        <Route path="/Contact" element={<Contact />} />
+        <Route path="/Cart" element={<Cart></Cart>} />
+        <Route path="/Checkout" element={<Checkout></Checkout>} />
 
         {/* Login */}
-        <Route path="/Login"element={<Login />}/>
+        <Route path="/Login" element={<Login />} />
 
         {/* Register */}
-         <Route path="/Register"element={<Register></Register>}/>
+        <Route path="/Register" element={<Register></Register>} />
 
         {/* Admin Dashboard */}
         <Route
@@ -53,7 +54,7 @@ root.render(
             <ProtectedRoute role="admin">
               <Admindashboard />
             </ProtectedRoute>
-          }/>
+          } />
 
         {/* Manage Food */}
         <Route
@@ -83,6 +84,11 @@ root.render(
               <Manageorder />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/ManageRestaurant"
+          element={<ManageRestaurant />}
         />
 
       </Routes>
