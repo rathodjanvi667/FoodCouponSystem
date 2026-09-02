@@ -1,88 +1,159 @@
-/* =====================================================
-   COUPONBITE - MODERN HOME PAGE
-===================================================== */
+/* =========================================================
+   SMART FOOD COUPON - HOME PAGE
+   Modern Orange / Cream Theme
+========================================================= */
 
 .home {
   width: 100%;
   min-height: 100vh;
-
-  background: #fafaf8;
-
-  color: #252525;
-
+  background: #fffaf7;
+  color: #222;
   overflow-x: hidden;
 }
 
+/* =========================================================
+   COMMON SECTION
+========================================================= */
 
-/* =====================================================
-   MAIN
-===================================================== */
-
-.home main {
+.home .section {
   width: 100%;
+  padding: 90px 0;
+  position: relative;
 }
 
-
-/* =====================================================
-   COMMON CONTAINER
-===================================================== */
-
-.container {
-  width: min(1180px, calc(100% - 40px));
-
+.home .container {
+  width: min(1200px, 92%);
   margin: 0 auto;
 }
 
+/* =========================================================
+   SECTION HEADING
+========================================================= */
 
-/* =====================================================
-   COMMON SECTION
-===================================================== */
-
-.section {
-  width: 100%;
+.home .section-heading {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px;
 }
 
+/* Small orange label */
 
-/* =====================================================
-   POPULAR FOOD SECTION
-===================================================== */
+.home .section-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-.popular-section {
-  position: relative;
+  padding: 8px 16px;
 
-  padding: 90px 0 100px;
+  background: #fff0e9;
+  color: #ff5a1f;
 
-  background: #fafaf8;
+  border: 1px solid #ffd9c8;
+  border-radius: 30px;
 
-  overflow: hidden;
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+
+  margin-bottom: 14px;
 }
 
+/* =========================================================
+   SECTION TITLE
+========================================================= */
 
-/* =====================================================
-   BACKGROUND DECORATION
-===================================================== */
+.home .section-title {
+  margin: 0;
 
-.popular-section::before {
+  color: #1f1f1f;
+
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 850;
+
+  line-height: 1.15;
+
+  letter-spacing: -1px;
+}
+
+/* Orange underline */
+
+.home .section-title::after {
+  content: "";
+
+  display: block;
+
+  width: 55px;
+  height: 4px;
+
+  margin: 16px auto 0;
+
+  background: linear-gradient(
+    90deg,
+    #ff5a1f,
+    #ff8a4c
+  );
+
+  border-radius: 20px;
+}
+
+/* =========================================================
+   SECTION SUBTITLE
+========================================================= */
+
+.home .section-subtitle {
+  margin: 18px auto 0;
+
+  max-width: 650px;
+
+  color: #777;
+
+  font-size: 16px;
+
+  line-height: 1.7;
+
+  font-weight: 400;
+}
+
+/* =========================================================
+   POPULAR SECTION
+========================================================= */
+
+.home .popular-section {
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(255, 90, 31, 0.055),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #fffaf7 0%,
+      #ffffff 100%
+    );
+}
+
+/* Decorative background */
+
+.home .popular-section::before {
   content: "";
 
   position: absolute;
 
-  width: 300px;
-  height: 300px;
+  width: 260px;
+  height: 260px;
 
-  left: -180px;
-  top: 120px;
+  top: 40px;
+  left: -150px;
 
   border-radius: 50%;
 
-  background: #fff0eb;
-
-  opacity: 0.75;
+  background: rgba(255, 90, 31, 0.045);
 
   pointer-events: none;
 }
 
-.popular-section::after {
+.home .popular-section::after {
   content: "";
 
   position: absolute;
@@ -90,281 +161,199 @@
   width: 220px;
   height: 220px;
 
+  bottom: 30px;
   right: -130px;
-  bottom: 80px;
 
   border-radius: 50%;
 
-  background: #fff5f1;
+  background: rgba(255, 138, 76, 0.045);
 
   pointer-events: none;
 }
 
+/* Keep content above decoration */
 
-/* =====================================================
-   SECTION HEADING
-===================================================== */
-
-.section-heading {
+.home .popular-section .container {
   position: relative;
-
-  z-index: 2;
-
-  max-width: 720px;
-
-  margin: 0 auto 45px;
-
-  text-align: center;
-}
-
-
-/* =====================================================
-   SECTION LABEL
-===================================================== */
-
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 12px;
-
-  padding: 6px 12px;
-
-  border-radius: 30px;
-
-  background: #fff1eb;
-
-  color: #ff5a36;
-
-  font-size: 11px;
-  font-weight: 800;
-
-  letter-spacing: 1.1px;
-}
-
-
-/* =====================================================
-   SECTION TITLE
-===================================================== */
-
-.section-title {
-  margin: 0;
-
-  font-family: "Plus Jakarta Sans", sans-serif;
-
-  font-size: 38px;
-  font-weight: 800;
-
-  line-height: 1.2;
-
-  letter-spacing: -1px;
-
-  color: #171717;
-}
-
-
-/* =====================================================
-   TITLE ORANGE LINE
-===================================================== */
-
-.section-title::after {
-  content: "";
-
-  display: block;
-
-  width: 42px;
-  height: 4px;
-
-  margin: 14px auto 0;
-
-  border-radius: 20px;
-
-  background: #ff5a36;
-}
-
-
-/* =====================================================
-   SECTION SUBTITLE
-===================================================== */
-
-.section-subtitle {
-  max-width: 620px;
-
-  margin: 16px auto 0;
-
-  color: #777777;
-
-  font-size: 15px;
-  font-weight: 400;
-
-  line-height: 1.7;
-}
-
-
-/* =====================================================
-   POPULAR FOODS COMPONENT
-===================================================== */
-
-.popular-section .container > div:last-child {
-  position: relative;
-
   z-index: 2;
 }
 
-
-/* =====================================================
+/* =========================================================
    FEATURES SECTION
-===================================================== */
+========================================================= */
 
-.features-section {
-  position: relative;
-
+.home .features-section {
   width: 100%;
 
-  background: #ffffff;
+  padding: 90px 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fff7f2 100%
+    );
+
+  position: relative;
 
   overflow: hidden;
 }
 
+/* Decorative orange glow */
 
-/* =====================================================
-   FEATURES TOP BORDER
-===================================================== */
-
-.features-section::before {
+.home .features-section::before {
   content: "";
 
   position: absolute;
 
-  top: 0;
-  left: 50%;
+  width: 350px;
+  height: 350px;
 
-  width: 90%;
-  height: 1px;
+  top: -180px;
+  right: -120px;
 
-  background: #eeeeee;
+  border-radius: 50%;
 
-  transform: translateX(-50%);
+  background: rgba(255, 90, 31, 0.055);
+
+  pointer-events: none;
 }
 
+.home .features-section::after {
+  content: "";
 
-/* =====================================================
-   FOOTER
-===================================================== */
+  position: absolute;
 
-.home > footer {
+  width: 280px;
+  height: 280px;
+
+  bottom: -150px;
+  left: -100px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 138, 76, 0.045);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   SMOOTH SECTION SPACING
+========================================================= */
+
+.home main {
   width: 100%;
 }
 
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-/* =====================================================
-   TABLET
-===================================================== */
+@media (max-width: 992px) {
 
-@media (max-width: 900px) {
-
-  .container {
-    width: min(92%, 700px);
+  .home .section {
+    padding: 75px 0;
   }
 
-  .popular-section {
-    padding: 75px 0 85px;
+  .home .features-section {
+    padding: 75px 0;
   }
 
-  .section-heading {
-    margin-bottom: 40px;
+  .home .section-heading {
+    margin-bottom: 38px;
   }
 
-  .section-title {
-    font-size: 32px;
+  .home .section-title {
+    font-size: 38px;
   }
-
-  .section-subtitle {
-    font-size: 14px;
-  }
-
 }
 
+/* =========================================================
+   TABLET
+========================================================= */
 
-/* =====================================================
-   MOBILE
-===================================================== */
+@media (max-width: 768px) {
 
-@media (max-width: 600px) {
-
-  .container {
-    width: calc(100% - 30px);
+  .home .section {
+    padding: 65px 0;
   }
 
-  .popular-section {
-    padding: 60px 0 70px;
+  .home .container {
+    width: calc(100% - 36px);
   }
 
-  .section-heading {
+  .home .section-heading {
     margin-bottom: 32px;
   }
 
-  .section-label {
-    margin-bottom: 10px;
-
-    padding: 5px 10px;
-
-    font-size: 9px;
-
-    letter-spacing: 1px;
+  .home .section-label {
+    font-size: 11px;
+    padding: 7px 13px;
   }
 
-  .section-title {
-    font-size: 27px;
-
-    letter-spacing: -0.7px;
+  .home .section-title {
+    font-size: 34px;
   }
 
-  .section-title::after {
-    width: 35px;
-    height: 3px;
-
-    margin-top: 11px;
-  }
-
-  .section-subtitle {
-    margin-top: 13px;
-
-    font-size: 13px;
+  .home .section-subtitle {
+    font-size: 15px;
 
     line-height: 1.65;
+
+    padding: 0 8px;
   }
 
-  .popular-section::before {
-    width: 180px;
-    height: 180px;
-
-    left: -120px;
+  .home .features-section {
+    padding: 65px 0;
   }
-
-  .popular-section::after {
-    width: 150px;
-    height: 150px;
-
-    right: -100px;
-  }
-
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
 
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
+@media (max-width: 480px) {
 
-@media (max-width: 400px) {
-
-  .section-title {
-    font-size: 24px;
+  .home .section {
+    padding: 55px 0;
   }
 
-  .section-subtitle {
-    font-size: 12px;
+  .home .container {
+    width: calc(100% - 28px);
   }
 
+  .home .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .home .section-label {
+    font-size: 10px;
+
+    padding: 7px 12px;
+
+    letter-spacing: 0.9px;
+  }
+
+  .home .section-title {
+    font-size: 29px;
+
+    letter-spacing: -0.6px;
+  }
+
+  .home .section-title::after {
+    width: 45px;
+    height: 3px;
+
+    margin-top: 13px;
+  }
+
+  .home .section-subtitle {
+    font-size: 14px;
+
+    margin-top: 14px;
+  }
+
+  .home .features-section {
+    padding: 55px 0;
+  }
 }

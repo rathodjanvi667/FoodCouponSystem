@@ -1,261 +1,457 @@
-/* =====================================
+/* =========================================================
    CHECKOUT PAGE
-===================================== */
+========================================================= */
 
 .checkout-page {
+  width: 100%;
   min-height: 100vh;
-  background: #f8f9fa;
+  background: #fffaf7;
+  color: #1f1f1f;
 }
 
 
-/* =====================================
-   HEADER
-===================================== */
+/* =========================================================
+   CHECKOUT HEADER
+========================================================= */
 
 .checkout-header {
+  width: 100%;
+  min-height: 225px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 30px 20px;
+  box-sizing: border-box;
+
+  position: relative;
+  overflow: hidden;
+
   background: linear-gradient(
     135deg,
-    #28a745,
-    #ff9800
+    #ff5a1f,
+    #ff8a4c
   );
-  color: white;
-  text-align: center;
-  padding: 55px 20px;
+}
+
+.checkout-header::before {
+  content: "";
+
+  position: absolute;
+
+  width: 310px;
+  height: 310px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.10);
+
+  top: -170px;
+  left: -85px;
+}
+
+.checkout-header::after {
+  content: "";
+
+  position: absolute;
+
+  width: 250px;
+  height: 250px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  right: -70px;
+  bottom: -145px;
 }
 
 .checkout-header h1 {
-  margin: 0 0 10px;
+  position: relative;
+  z-index: 2;
+
+  margin: 0 0 9px;
+
+  color: #fff;
+
   font-size: 40px;
+  line-height: 1.2;
+  font-weight: 800;
 }
 
 .checkout-header p {
+  position: relative;
+  z-index: 2;
+
   margin: 0;
-  font-size: 17px;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 
-/* =====================================
-   MAIN CONTAINER
-===================================== */
+/* =========================================================
+   CHECKOUT CONTAINER
+========================================================= */
 
 .checkout-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 40px auto;
+  width: min(1100px, calc(100% - 40px));
+
+  margin: 60px auto 75px;
+
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
+
+  grid-template-columns: 0.9fr 1.1fr;
+
+  gap: 25px;
+
   align-items: start;
 }
 
 
-/* =====================================
-   COUPON FORM
-===================================== */
+/* =========================================================
+   CHECKOUT FORM
+========================================================= */
 
 .checkout-form {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+
+  background: #fff;
+
+  border: 1px solid #ffe0d2;
+  border-radius: 20px;
+
+  box-shadow: 0 9px 30px rgba(70, 30, 10, 0.07);
 }
 
 .checkout-form h2 {
-  margin: 0 0 25px;
-  color: #333;
-  font-size: 24px;
+  margin: 0 0 23px;
+
+  color: #222;
+
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .checkout-form form {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
+
+/* =========================================================
+   FORM LABELS
+========================================================= */
+
 .checkout-form label {
-  margin-bottom: 7px;
-  color: #555;
-  font-weight: bold;
-  font-size: 14px;
+  display: block;
+
+  margin: 0 0 7px;
+
+  color: #333;
+
+  font-size: 13px;
+  font-weight: 700;
 }
+
+
+/* =========================================================
+   FORM INPUTS
+========================================================= */
 
 .checkout-form input {
   width: 100%;
+  height: 45px;
+
   box-sizing: border-box;
-  padding: 13px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+
+  margin: 0 0 18px;
+
+  padding: 0 13px;
+
+  border: 1px solid #e7ddd8;
+  border-radius: 10px;
+
   outline: none;
-  font-size: 15px;
-  transition: 0.3s;
+
+  background: #fffdfc;
+
+  color: #222;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.checkout-form input::placeholder {
+  color: #aaa;
 }
 
 .checkout-form input:focus {
-  border-color: #ff9800;
-  box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.1);
+  border-color: #ff8a4c;
+
+  background: #fff;
+
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.09);
 }
 
 
-/* =====================================
+/* =========================================================
+   READ ONLY OFFER
+========================================================= */
+
+.checkout-form input[readonly] {
+  background: #fff4ee;
+
+  color: #ff5a1f;
+
+  border-color: #ffd7c5;
+
+  font-weight: 800;
+
+  cursor: default;
+}
+
+
+/* =========================================================
    GENERATE COUPON BUTTON
-===================================== */
+========================================================= */
 
 .checkout-form button {
   width: 100%;
-  padding: 14px;
-  margin-top: 5px;
+
+  height: 47px;
+
+  margin-top: 3px;
+
   border: none;
-  border-radius: 8px;
-  background: #ff9800;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #ff5a1f,
+    #ff8a4c
+  );
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 750;
+
   cursor: pointer;
-  transition: 0.3s;
+
+  box-shadow: 0 8px 20px rgba(255, 90, 31, 0.20);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .checkout-form button:hover {
-  background: #f57c00;
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 25px rgba(255, 90, 31, 0.28);
+}
+
+.checkout-form button:active {
   transform: translateY(-1px);
 }
 
 
-/* =====================================
-   COUPON SUMMARY
-===================================== */
+/* =========================================================
+   CHECKOUT SUMMARY
+========================================================= */
 
 .checkout-summary {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  height: fit-content;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+
+  background: #fff;
+
+  border: 1px solid #ffe0d2;
+  border-radius: 20px;
+
+  box-shadow: 0 9px 30px rgba(70, 30, 10, 0.07);
 }
 
 .checkout-summary h2 {
   margin: 0 0 20px;
-  color: #333;
-  font-size: 24px;
+
+  color: #222;
+
+  font-size: 22px;
+  font-weight: 800;
 }
 
 
-/* =====================================
-   FOOD ITEM
-===================================== */
+/* =========================================================
+   CHECKOUT ITEM
+========================================================= */
 
 .checkout-item {
   display: flex;
-  justify-content: space-between;
+
   align-items: center;
+  justify-content: space-between;
+
   gap: 15px;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid #f1e5df;
+}
+
+.checkout-item:last-of-type {
+  border-bottom: none;
 }
 
 .checkout-item h3 {
-  margin: 0 0 6px;
-  color: #333;
-  font-size: 16px;
+  margin: 0 0 5px;
+
+  color: #292929;
+
+  font-size: 14px;
+  font-weight: 750;
 }
 
 .checkout-item p {
   margin: 0;
-  color: #777;
-  font-size: 13px;
+
+  color: #999;
+
+  font-size: 12px;
 }
 
-.checkout-item span {
-  color: #28a745;
-  font-weight: bold;
-  white-space: nowrap;
+.checkout-item > span {
+  flex-shrink: 0;
+
+  color: #ff5a1f;
+
+  font-size: 14px;
+  font-weight: 800;
 }
 
 
-/* =====================================
-   HORIZONTAL LINE
-===================================== */
+/* =========================================================
+   SUMMARY DIVIDER
+========================================================= */
 
 .checkout-summary hr {
-  margin: 20px 0;
-  border: none;
-  border-top: 1px solid #eee;
+  border: 0;
+
+  border-top: 1px solid #eee3dd;
+
+  margin: 17px 0;
 }
 
 
-/* =====================================
-   TOTAL
-===================================== */
+/* =========================================================
+   CHECKOUT TOTAL
+========================================================= */
 
 .checkout-total {
   display: flex;
-  justify-content: space-between;
+
   align-items: center;
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: bold;
+  justify-content: space-between;
+
+  padding-top: 2px;
+}
+
+.checkout-total span:first-child {
+  color: #222;
+
+  font-size: 17px;
+  font-weight: 800;
 }
 
 .checkout-total span:last-child {
-  color: #28a745;
+  color: #ff5a1f;
+
+  font-size: 21px;
+  font-weight: 800;
 }
 
 
-/* =====================================
+/* =========================================================
    COUPON NOTE
-===================================== */
+========================================================= */
 
 .coupon-note {
-  margin-top: 25px;
-  padding: 15px;
-  background: #fff7ed;
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.6;
+  margin-top: 22px !important;
+
+  padding: 15px 17px !important;
+
+  background: #fff7ed !important;
+
+  border: 1px solid #ffdfc9;
+
+  border-radius: 12px !important;
+
+  color: #555;
+
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+.coupon-note strong {
+  color: #d94d19;
 }
 
 .coupon-note p {
-  margin: 6px 0 0;
+  margin: 6px 0 0 !important;
 }
 
-.coupon-note p:nth-child(3) {
-  margin: 5px 0;
+.coupon-note p:last-child {
+  margin: 5px 0 0 !important;
+
+  color: #ff5a1f;
+
+  font-weight: 750;
 }
 
 
-/* =====================================
+/* =========================================================
    TABLET
-===================================== */
+========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 
   .checkout-container {
-    width: 92%;
     grid-template-columns: 1fr;
+
+    max-width: 700px;
+
+    gap: 22px;
+
+    margin-top: 50px;
   }
 
   .checkout-form,
   .checkout-summary {
-    width: 100%;
-    box-sizing: border-box;
+    padding: 25px;
   }
-
 }
 
 
-/* =====================================
+/* =========================================================
    MOBILE
-===================================== */
+========================================================= */
 
-@media (max-width: 550px) {
-
-  .checkout-container {
-    width: 94%;
-    margin: 25px auto;
-    gap: 20px;
-  }
+@media (max-width: 600px) {
 
   .checkout-header {
-    padding: 40px 15px;
+    min-height: 205px;
   }
 
   .checkout-header h1 {
@@ -263,32 +459,105 @@
   }
 
   .checkout-header p {
-    font-size: 15px;
+    max-width: 320px;
+
+    font-size: 13px;
   }
 
-  .checkout-form {
-    padding: 20px;
+
+  .checkout-container {
+    width: calc(100% - 30px);
+
+    margin: 40px auto 50px;
+
+    gap: 18px;
   }
 
+
+  .checkout-form,
   .checkout-summary {
-    padding: 20px;
+    padding: 20px 17px;
+
+    border-radius: 17px;
   }
 
   .checkout-form h2,
   .checkout-summary h2 {
-    font-size: 21px;
+    font-size: 20px;
   }
+
+
+  .checkout-form input {
+    height: 44px;
+
+    margin-bottom: 16px;
+  }
+
+  .checkout-form label {
+    font-size: 12px;
+  }
+
+  .checkout-form button {
+    height: 45px;
+
+    font-size: 13px;
+  }
+
 
   .checkout-item {
     padding: 12px 0;
   }
 
   .checkout-item h3 {
-    font-size: 15px;
+    font-size: 13px;
   }
 
-  .checkout-total {
-    font-size: 18px;
+  .checkout-item p {
+    font-size: 11px;
   }
 
+  .checkout-item > span {
+    font-size: 13px;
+  }
+
+
+  .checkout-total span:first-child {
+    font-size: 16px;
+  }
+
+  .checkout-total span:last-child {
+    font-size: 19px;
+  }
+
+
+  .coupon-note {
+    padding: 13px !important;
+
+    font-size: 12px !important;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .checkout-header h1 {
+    font-size: 27px;
+  }
+
+  .checkout-container {
+    width: calc(100% - 24px);
+  }
+
+  .checkout-form,
+  .checkout-summary {
+    padding: 18px 14px;
+  }
+
+  .checkout-item {
+    gap: 10px;
+  }
 }

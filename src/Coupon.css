@@ -1,842 +1,864 @@
-/* =====================================================
+/* =========================================================
    COUPON PAGE
-===================================================== */
+========================================================= */
 
 .coupon-page {
   min-height: 100vh;
-  background: #faf9f7;
+  background: #fffaf7;
   color: #222;
-  font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
 
-/* =====================================================
-   HERO
-===================================================== */
+/* =========================================================
+   PAGE HEADER / HERO
+========================================================= */
 
 .coupon-page-header {
-  width: 100%;
-  background: #171717;
-  color: #fff;
-  padding: 50px 7%;
+  position: relative;
+  overflow: hidden;
+  padding: 52px 7%;
+  background:
+    radial-gradient(circle at 90% 15%, rgba(255, 138, 76, 0.18), transparent 28%),
+    linear-gradient(135deg, #fff3eb 0%, #fffaf7 55%, #ffffff 100%);
+  border-bottom: 1px solid #f4e4db;
+}
+
+.coupon-page-header::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  right: -100px;
+  top: -130px;
+  border-radius: 50%;
+  background: rgba(255, 90, 31, 0.07);
+}
+
+.coupon-page-header::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  left: -90px;
+  bottom: -110px;
+  border-radius: 50%;
+  background: rgba(255, 138, 76, 0.08);
 }
 
 .coupon-hero-content {
-  max-width: 1200px;
-  margin: auto;
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
 }
 
 .coupon-hero-icon {
-  width: 62px;
-  height: 62px;
+  width: 68px;
+  height: 68px;
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 16px;
-  background: #ff713d;
-
-  font-size: 27px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+  color: #fff;
+  font-size: 28px;
+  box-shadow: 0 12px 28px rgba(255, 90, 31, 0.22);
+  transform: rotate(-5deg);
 }
 
 .coupon-hero-label {
-  margin-bottom: 5px;
-
-  color: #ff713d;
-  font-size: 12px;
-  font-weight: 700;
+  margin-bottom: 6px;
+  color: #ff5a1f;
+  font-size: 11px;
+  font-weight: 800;
   letter-spacing: 1.5px;
 }
 
 .coupon-hero-content h1 {
   margin: 0;
-
-  color: #fff;
-  font-size: 36px;
+  color: #202020;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.1;
   font-weight: 800;
-  letter-spacing: -0.8px;
+  letter-spacing: -1.5px;
 }
 
 .coupon-hero-content p {
-  margin: 7px 0 0;
-
-  color: #bdbdbd;
+  max-width: 600px;
+  margin: 9px 0 0;
+  color: #777;
   font-size: 14px;
+  line-height: 1.6;
 }
 
 
-/* =====================================================
-   LOADING
-===================================================== */
+/* =========================================================
+   COUPON SECTION
+========================================================= */
 
-.coupon-loading {
-  min-height: 450px;
+.coupon-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 55px 24px 80px;
+}
 
+.coupon-section-heading {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+.coupon-section-label {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 7px;
+  color: #ff5a1f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.coupon-section-heading h2 {
+  margin: 0;
+  color: #222;
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.coupon-section-heading p {
+  margin: 7px 0 0;
+  color: #888;
+  font-size: 14px;
+}
+
+.coupon-count {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  padding: 8px 14px;
+  border: 1px solid #ffd3c0;
+  border-radius: 50px;
+  background: #fff4ee;
+  color: #ff5a1f;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   COUPON GRID
+========================================================= */
+
+.coupon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+
+/* =========================================================
+   FOOD TICKET
+========================================================= */
+
+.food-ticket {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr) 145px;
+  min-height: 330px;
+  overflow: hidden;
+  border: 1px solid #eadfd9;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(35, 25, 20, 0.07);
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.food-ticket:hover {
+  transform: translateY(-5px);
+  border-color: #ffd0bd;
+  box-shadow: 0 17px 38px rgba(255, 90, 31, 0.12);
+}
+
+
+/* =========================================================
+   TICKET DISCOUNT
+========================================================= */
+
+.ticket-discount {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  text-align: center;
-}
-
-.coupon-loader {
-  width: 40px;
-  height: 40px;
-
-  margin-bottom: 18px;
-
-  border: 4px solid #ebe8e4;
-  border-top-color: #ff713d;
-  border-radius: 50%;
-
-  animation: couponSpin 0.8s linear infinite;
-}
-
-.coupon-loading h3 {
-  margin: 0 0 5px;
-  font-size: 19px;
-}
-
-.coupon-loading p {
-  margin: 0;
-  color: #777;
-  font-size: 13px;
-}
-
-@keyframes couponSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* =====================================================
-   MAIN SECTION
-===================================================== */
-
-.coupon-section {
-  max-width: 1200px;
-  margin: auto;
-
-  padding: 42px 25px 65px;
-}
-
-
-/* =====================================================
-   HEADING
-===================================================== */
-
-.coupon-section-heading {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.coupon-section-label {
-  color: #ff713d;
-
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-}
-
-.coupon-section-heading h2 {
-  margin: 5px 0 6px;
-
-  color: #222;
-  font-size: 29px;
-  font-weight: 800;
-}
-
-.coupon-section-heading p {
-  margin: 0;
-
-  color: #777;
-  font-size: 13px;
-}
-
-.coupon-count {
-  display: inline-flex;
-
-  margin-top: 13px;
-  padding: 6px 13px;
-
-  border-radius: 30px;
-
-  background: #fff0eb;
-  color: #ff713d;
-
-  font-size: 11px;
-  font-weight: 700;
-}
-
-
-/* =====================================================
-   COUPON GRID
-===================================================== */
-
-.coupon-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-
-/* =====================================================
-   COUPON CARD
-===================================================== */
-
-.food-ticket {
-  min-width: 0;
-
-  background: #fff;
-
-  border: 1px solid #ebe8e4;
-  border-radius: 17px;
-
-  overflow: hidden;
-
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.055);
-
-  transition: transform 0.25s ease,
-              box-shadow 0.25s ease;
-}
-
-.food-ticket:hover {
-  transform: translateY(-4px);
-
-  box-shadow: 0 13px 30px rgba(0, 0, 0, 0.09);
-}
-
-
-/* =====================================================
-   DISCOUNT HEADER
-===================================================== */
-
-.ticket-discount {
-  min-height: 70px;
-
-  padding: 15px 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  background: #171717;
+  padding: 20px 10px;
+  background: linear-gradient(160deg, #ff5a1f, #ff7e42);
   color: #fff;
+  text-align: center;
+}
+
+.ticket-discount::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 1px;
+  height: 100%;
+  border-right: 1px dashed rgba(255, 255, 255, 0.5);
 }
 
 .ticket-discount strong {
-  display: inline-block;
-
-  color: #ff713d;
-  font-size: 28px;
+  display: block;
+  font-size: 36px;
   line-height: 1;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .ticket-discount span {
-  display: inline-block;
-
-  margin-left: 3px;
-
-  color: #fff;
+  display: block;
+  margin-top: 5px;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.7px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .ticket-discount code {
-  padding: 7px 9px;
-
-  border: 1px dashed #777;
+  display: inline-block;
+  margin-top: 17px;
+  padding: 6px 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.65);
   border-radius: 6px;
-
-  background: rgba(255, 255, 255, 0.04);
-
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
-
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  word-break: break-all;
 }
 
 
-/* =====================================================
+/* =========================================================
    PERFORATION
-===================================================== */
+========================================================= */
 
 .ticket-perforation {
-  position: relative;
-
-  height: 1px;
-
-  margin: 0 13px;
-
-  border-top: 2px dashed #e4dfda;
-}
-
-.ticket-perforation::before,
-.ticket-perforation::after {
-  content: "";
-
-  position: absolute;
-  top: -9px;
-
-  width: 16px;
-  height: 16px;
-
-  background: #faf9f7;
-
-  border: 1px solid #ebe8e4;
-  border-radius: 50%;
-}
-
-.ticket-perforation::before {
-  left: -22px;
-}
-
-.ticket-perforation::after {
-  right: -22px;
+  display: none;
 }
 
 
-/* =====================================================
-   CONTENT
-===================================================== */
+/* =========================================================
+   TICKET CONTENT
+========================================================= */
 
 .ticket-content {
-  padding: 18px;
+  min-width: 0;
+  padding: 22px 20px 18px;
 }
 
 .ticket-status-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .ticket-status {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-
   padding: 5px 9px;
-
-  border-radius: 20px;
-
+  border-radius: 50px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .ticket-status.valid {
-  background: #e9f8ef;
-  color: #218a4b;
+  background: #eaf8ef;
+  color: #219653;
 }
 
 .ticket-status.upcoming {
-  background: #fff5dd;
-  color: #b87900;
+  background: #fff5df;
+  color: #d98a00;
 }
 
 .ticket-status.expired {
-  background: #fcebea;
-  color: #c43d35;
+  background: #ffeded;
+  color: #df4141;
 }
 
-
-/* =====================================================
-   COUPON TITLE
-===================================================== */
+.ticket-status svg {
+  font-size: 10px;
+}
 
 .ticket-content h3 {
-  margin: 11px 0 4px;
-
-  color: #222;
+  overflow: hidden;
+  margin: 12px 0 9px;
+  color: #242424;
   font-size: 19px;
-  font-weight: 800;
   line-height: 1.3;
+  font-weight: 800;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
-
-/* =====================================================
-   STORE
-===================================================== */
 
 .ticket-store {
   display: flex;
   align-items: center;
   gap: 6px;
-
-  color: #ff713d;
-
+  color: #ff5a1f;
   font-size: 12px;
   font-weight: 700;
 }
 
+.ticket-store svg {
+  font-size: 12px;
+}
+
 .ticket-description {
-  margin: 9px 0 15px;
-
-  color: #777;
-
-  font-size: 11.5px;
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 10px 0 15px;
+  color: #858585;
+  font-size: 11px;
   line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 
-/* =====================================================
-   INFO
-===================================================== */
+/* =========================================================
+   TICKET INFO
+========================================================= */
 
 .ticket-info-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-
-  margin-bottom: 14px;
+  padding: 12px 0;
+  border-top: 1px solid #f0e8e4;
+  border-bottom: 1px solid #f0e8e4;
 }
 
 .ticket-info {
   min-width: 0;
-
-  padding: 9px;
-
-  background: #faf9f7;
-
-  border: 1px solid #eeeae5;
-  border-radius: 8px;
 }
 
 .ticket-info small {
-  display: block;
-
-  margin-bottom: 3px;
-
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
   color: #999;
-
   font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 .ticket-info small svg {
-  margin-right: 3px;
+  color: #ff5a1f;
+  font-size: 9px;
 }
 
 .ticket-info span {
   display: block;
-
   overflow: hidden;
-
-  color: #333;
-
-  font-size: 10.5px;
-  font-weight: 600;
-
+  color: #444;
+  font-size: 11px;
+  font-weight: 700;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 
-/* =====================================================
+/* =========================================================
    VALIDITY
-===================================================== */
+========================================================= */
 
 .ticket-validity {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-
-  padding-top: 13px;
-
-  border-top: 1px solid #eeeae5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 12px;
 }
 
-.ticket-validity div {
+.ticket-validity > div {
   min-width: 0;
 }
 
 .ticket-validity small {
-  display: block;
-
-  margin-bottom: 3px;
-
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
   color: #999;
-
   font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 .ticket-validity small svg {
-  margin-right: 3px;
+  color: #ff5a1f;
+  font-size: 9px;
 }
 
 .ticket-validity span {
   display: block;
-
   color: #444;
-
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 
-/* =====================================================
-   CODE
-===================================================== */
+/* =========================================================
+   CODE ROW
+========================================================= */
 
 .ticket-code-row {
   display: flex;
   align-items: center;
   gap: 7px;
-
-  padding-top: 13px;
+  margin-top: 13px;
 }
 
 .ticket-code-box {
-  flex: 1;
   min-width: 0;
-
+  flex: 1;
+  overflow: hidden;
   padding: 9px 10px;
-
-  background: #f7f5f2;
-
-  border: 1px dashed #d9d4cf;
-  border-radius: 7px;
-
-  color: #333;
-
+  border: 1px dashed #ffb596;
+  border-radius: 8px;
+  background: #fff8f4;
+  color: #ff5a1f;
+  font-family: monospace;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.8px;
-
   text-align: center;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: 0.7px;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .ticket-copy {
-  width: 36px;
-  height: 36px;
+  width: 35px;
+  height: 35px;
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border: none;
-  border-radius: 7px;
-
-  background: #171717;
-  color: #fff;
-
+  border: 1px solid #ffd0bd;
+  border-radius: 8px;
+  background: #fff;
+  color: #ff5a1f;
   cursor: pointer;
-
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .ticket-copy:hover {
-  background: #ff713d;
+  border-color: #ff5a1f;
+  background: #ff5a1f;
+  color: #fff;
 }
 
 
-/* =====================================================
-   FOOD
-===================================================== */
+/* =========================================================
+   TICKET FOOD / IMAGE
+========================================================= */
 
 .ticket-food {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-
-  padding: 12px 18px;
-
-  background: #fff8f5;
-
-  border-top: 1px solid #f2ebe7;
-  border-bottom: 1px solid #f2ebe7;
+  justify-content: center;
+  padding: 15px 12px;
+  border-left: 1px dashed #e6d6ce;
+  background: linear-gradient(180deg, #fffaf7, #fff3ec);
+  text-align: center;
 }
 
 .ticket-food-image {
-  width: 46px;
-  height: 46px;
-  flex-shrink: 0;
-
+  width: 100px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   overflow: hidden;
-
-  background: #f3f0ed;
-
-  border-radius: 9px;
+  border: 5px solid #fff;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(50, 30, 20, 0.1);
 }
 
 .ticket-food-image img {
   width: 100%;
   height: 100%;
-
   display: block;
-
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.food-ticket:hover .ticket-food-image img {
+  transform: scale(1.07);
 }
 
 .ticket-food-emoji {
-  font-size: 24px;
+  font-size: 45px;
+  line-height: 1;
 }
 
 .ticket-food-text {
-  min-width: 0;
+  max-width: 120px;
+  margin-top: 12px;
 }
 
 .ticket-food-text small {
   display: block;
-
-  margin-bottom: 3px;
-
+  margin-bottom: 4px;
   color: #999;
-
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .ticket-food-text strong {
   display: block;
-
-  overflow: hidden;
-
-  color: #333;
-
-  font-size: 11.5px;
-  font-weight: 700;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  color: #ff5a1f;
+  font-size: 11px;
+  line-height: 1.3;
 }
 
 
-/* =====================================================
+/* =========================================================
    ACTION
-===================================================== */
+========================================================= */
 
 .ticket-action {
-  padding: 13px 18px 17px;
+  position: absolute;
+  right: 14px;
+  bottom: 15px;
+  width: 120px;
 }
 
 .ticket-action button {
   width: 100%;
-
-  padding: 10px 14px;
-
+  height: 34px;
   border: none;
   border-radius: 8px;
-
-  background: #ff713d;
+  background: linear-gradient(135deg, #ff5a1f, #ff7b3d);
   color: #fff;
-
-  font-size: 11.5px;
-  font-weight: 700;
-
+  font-size: 10px;
+  font-weight: 800;
   cursor: pointer;
-
-  transition: 0.2s ease;
+  box-shadow: 0 6px 14px rgba(255, 90, 31, 0.18);
+  transition: all 0.22s ease;
 }
 
-.ticket-action button:hover {
-  background: #e95d2d;
-
-  transform: translateY(-1px);
+.ticket-action button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 18px rgba(255, 90, 31, 0.25);
 }
 
 .ticket-action button:disabled {
-  background: #ddd8d3;
-  color: #888;
-
   cursor: not-allowed;
-
-  transform: none;
+  background: #e8e5e3;
+  color: #999;
+  box-shadow: none;
 }
 
 
-/* =====================================================
-   EXPIRED
-===================================================== */
+/* =========================================================
+   UPCOMING TICKET
+========================================================= */
+
+.food-ticket.upcoming .ticket-discount {
+  background: linear-gradient(160deg, #f39b27, #f6b54f);
+}
+
+
+/* =========================================================
+   EXPIRED TICKET
+========================================================= */
 
 .food-ticket.expired {
   opacity: 0.72;
 }
 
 .food-ticket.expired .ticket-discount {
-  background: #454545;
+  background: linear-gradient(160deg, #8d8d8d, #aaa);
 }
 
-.food-ticket.expired .ticket-discount strong {
-  color: #aaa;
-}
-
-
-/* =====================================================
-   UPCOMING
-===================================================== */
-
-.food-ticket.upcoming .ticket-discount {
-  background: #292929;
+.food-ticket.expired .ticket-food {
+  filter: grayscale(0.4);
 }
 
 
-/* =====================================================
+/* =========================================================
    NO COUPONS
-===================================================== */
+========================================================= */
 
 .no-coupons {
-  max-width: 480px;
-
-  margin: 20px auto;
-  padding: 50px 25px;
-
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 45px 20px;
+  border: 1px dashed #edcfc1;
+  border-radius: 20px;
   background: #fff;
-
-  border: 1px solid #ebe8e4;
-  border-radius: 17px;
-
   text-align: center;
 }
 
 .no-coupon-icon {
-  width: 62px;
-  height: 62px;
-
-  margin: 0 auto 14px;
-
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  background: #fff0eb;
-  color: #ff713d;
-
-  border-radius: 50%;
-
-  font-size: 25px;
+  margin-bottom: 17px;
+  border-radius: 20px;
+  background: #fff1e9;
+  color: #ff5a1f;
+  font-size: 27px;
 }
 
 .no-coupons h3 {
-  margin: 0 0 6px;
-
-  font-size: 19px;
+  margin: 0;
+  color: #292929;
+  font-size: 21px;
+  font-weight: 800;
 }
 
 .no-coupons p {
-  margin: 0;
-
-  color: #777;
-
-  font-size: 12px;
+  max-width: 430px;
+  margin: 8px auto 0;
+  color: #888;
+  font-size: 13px;
   line-height: 1.6;
 }
 
 
-/* =====================================================
-   TABLET
-===================================================== */
+/* =========================================================
+   LOADING
+========================================================= */
 
-@media (max-width: 1050px) {
-  .coupon-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.coupon-loading {
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  text-align: center;
+}
 
-  .coupon-page-header {
-    padding: 45px 5%;
+.coupon-loader {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 20px;
+  border: 4px solid #ffe0d2;
+  border-top-color: #ff5a1f;
+  border-radius: 50%;
+  animation: couponLoader 0.85s linear infinite;
+}
+
+.coupon-loading h3 {
+  margin: 0;
+  color: #292929;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.coupon-loading p {
+  margin: 8px 0 0;
+  color: #888;
+  font-size: 13px;
+}
+
+@keyframes couponLoader {
+  to {
+    transform: rotate(360deg);
   }
 }
 
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* =========================================================
+   LARGE TABLET
+========================================================= */
 
-@media (max-width: 760px) {
-  .coupon-section {
-    padding: 35px 18px 55px;
-  }
-
-  .coupon-hero-content h1 {
-    font-size: 30px;
-  }
+@media (max-width: 1050px) {
 
   .coupon-grid {
     grid-template-columns: 1fr;
+    max-width: 760px;
+    margin: 0 auto;
+  }
 
-    max-width: 500px;
-
-    margin: auto;
+  .food-ticket {
+    grid-template-columns: 115px minmax(0, 1fr) 160px;
   }
 }
 
 
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
+/* =========================================================
+   TABLET
+========================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 700px) {
+
   .coupon-page-header {
-    padding: 32px 18px;
+    padding: 42px 20px;
   }
 
   .coupon-hero-content {
-    gap: 13px;
+    align-items: flex-start;
   }
 
   .coupon-hero-icon {
-    width: 50px;
-    height: 50px;
-
-    border-radius: 13px;
-
-    font-size: 21px;
+    width: 56px;
+    height: 56px;
+    font-size: 23px;
   }
 
   .coupon-hero-content h1 {
-    font-size: 24px;
+    font-size: 32px;
   }
 
-  .coupon-hero-content p {
-    font-size: 11px;
+  .coupon-section {
+    padding: 42px 18px 65px;
   }
 
   .coupon-section-heading h2 {
-    font-size: 24px;
+    font-size: 25px;
   }
 
-  .ticket-content {
-    padding: 16px;
+  .coupon-count {
+    position: static;
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .food-ticket {
+    grid-template-columns: 105px minmax(0, 1fr);
   }
 
   .ticket-food {
-    padding: 11px 16px;
+    display: none;
   }
 
   .ticket-action {
-    padding: 12px 16px 16px;
+    position: static;
+    width: 100%;
+    margin-top: 13px;
   }
 
-  .ticket-code-row {
-    padding-top: 12px;
+  .ticket-content {
+    padding-bottom: 18px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .coupon-page-header {
+    padding: 35px 16px;
   }
 
-  .ticket-info-row {
-    grid-template-columns: 1fr;
+  .coupon-hero-content {
+    gap: 14px;
+  }
+
+  .coupon-hero-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 20px;
+  }
+
+  .coupon-hero-label {
+    font-size: 9px;
+  }
+
+  .coupon-hero-content h1 {
+    font-size: 27px;
+    letter-spacing: -0.8px;
+  }
+
+  .coupon-hero-content p {
+    font-size: 12px;
+  }
+
+  .coupon-section {
+    padding: 35px 14px 55px;
+  }
+
+  .coupon-grid {
+    gap: 18px;
+  }
+
+  .food-ticket {
+    grid-template-columns: 88px minmax(0, 1fr);
+    border-radius: 15px;
   }
 
   .ticket-discount {
-    padding: 14px 16px;
+    padding: 15px 7px;
+  }
+
+  .ticket-discount strong {
+    font-size: 29px;
+  }
+
+  .ticket-discount span {
+    font-size: 8px;
+  }
+
+  .ticket-discount code {
+    max-width: 75px;
+    margin-top: 13px;
+    font-size: 8px;
+  }
+
+  .ticket-content {
+    padding: 16px 14px;
+  }
+
+  .ticket-content h3 {
+    font-size: 16px;
+  }
+
+  .ticket-description {
+    font-size: 10px;
+  }
+
+  .ticket-info-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ticket-validity {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .ticket-code-row {
+    margin-top: 11px;
+  }
+
+  .ticket-code-box {
+    font-size: 10px;
+  }
+
+  .no-coupons {
+    min-height: 280px;
   }
 }

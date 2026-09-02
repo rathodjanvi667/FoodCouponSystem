@@ -1,9 +1,11 @@
+/* =========================================================
+   ABOUT PAGE
+========================================================= */
+
 .about {
   width: 100%;
-  background: #faf9f7;
-  color: #171717;
-  font-family: "Poppins", "Segoe UI", sans-serif;
-  overflow: hidden;
+  background: #fffaf7;
+  color: #1f1f1f;
 }
 
 
@@ -13,104 +15,80 @@
 
 .about-banner {
   width: 100%;
-  min-height: 270px;
+  min-height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
 
-  position: relative;
-  overflow: hidden;
-
   background:
     linear-gradient(
       135deg,
-      rgba(255, 113, 61, 0.96),
-      rgba(255, 133, 83, 0.92)
+      rgba(255, 90, 31, 0.96),
+      rgba(255, 138, 76, 0.94)
     );
 
-  padding: 55px 20px;
+  position: relative;
+  overflow: hidden;
 }
-
-
-/* Decorative circles */
 
 .about-banner::before {
   content: "";
   position: absolute;
-
-  width: 280px;
-  height: 280px;
-
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
-
   background: rgba(255, 255, 255, 0.10);
-
-  top: -150px;
-  left: -70px;
+  top: -170px;
+  left: -100px;
 }
-
 
 .about-banner::after {
   content: "";
   position: absolute;
-
-  width: 350px;
-  height: 350px;
-
+  width: 260px;
+  height: 260px;
   border-radius: 50%;
-
   background: rgba(255, 255, 255, 0.08);
-
-  bottom: -220px;
-  right: -100px;
+  right: -80px;
+  bottom: -150px;
 }
-
 
 .about-banner-content {
   position: relative;
   z-index: 2;
-  max-width: 700px;
+  padding: 30px 20px;
 }
-
 
 .about-banner-content span {
   display: inline-block;
+  margin-bottom: 10px;
 
-  padding: 7px 15px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 8px 15px;
   border-radius: 30px;
-
-  background: rgba(255, 255, 255, 0.18);
-
-  border: 1px solid rgba(255, 255, 255, 0.25);
-
-  color: #ffffff;
-
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-
-  margin-bottom: 13px;
 }
 
-
-.about-banner h1 {
+.about-banner-content h1 {
   margin: 0;
-
-  color: #ffffff;
+  color: #fff;
 
   font-size: 42px;
+  line-height: 1.15;
   font-weight: 800;
-
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
 }
 
-
-.about-banner p {
+.about-banner-content p {
   margin: 10px 0 0;
-
-  color: rgba(255, 255, 255, 0.94);
+  color: rgba(255, 255, 255, 0.92);
 
   font-size: 17px;
   font-weight: 500;
@@ -118,19 +96,16 @@
 
 
 /* =========================================================
-   MAIN CONTENT
+   ABOUT MAIN CONTAINER
 ========================================================= */
 
 .about-container {
-  width: min(1120px, calc(100% - 40px));
-
+  width: min(1200px, calc(100% - 40px));
   margin: 70px auto;
 
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
-
   align-items: center;
-
   gap: 65px;
 }
 
@@ -141,53 +116,43 @@
 
 .about-image {
   position: relative;
-
   width: 100%;
-  height: 430px;
-
-  border-radius: 24px;
-
-  overflow: hidden;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 18px 45px rgba(23, 23, 23, 0.10);
+  max-width: 530px;
+  margin: 0 auto;
 }
-
-
-.about-image::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      180deg,
-      transparent 55%,
-      rgba(23, 23, 23, 0.18)
-    );
-
-  pointer-events: none;
-}
-
 
 .about-image img {
-  width: 100%;
-  height: 100%;
-
   display: block;
+  width: 100%;
+  height: 430px;
 
   object-fit: cover;
   object-position: center;
 
-  transition: transform 0.5s ease;
+  border-radius: 24px;
+
+  box-shadow: 0 18px 45px rgba(70, 30, 10, 0.14);
 }
 
+.about-image::before {
+  content: "";
+  position: absolute;
 
-.about-image:hover img {
-  transform: scale(1.04);
+  width: 100%;
+  height: 100%;
+
+  border: 2px solid #ffb08c;
+  border-radius: 24px;
+
+  top: 14px;
+  left: 14px;
+
+  z-index: 0;
+}
+
+.about-image img {
+  position: relative;
+  z-index: 1;
 }
 
 
@@ -197,50 +162,44 @@
 
 .about-image-badge {
   position: absolute;
-
   z-index: 3;
 
-  left: 22px;
-  bottom: 22px;
+  left: -20px;
+  bottom: 25px;
 
   display: flex;
   align-items: center;
   gap: 11px;
 
-  padding: 11px 16px;
-
-  background: rgba(255, 255, 255, 0.96);
+  background: #fff;
+  padding: 13px 20px;
 
   border-radius: 14px;
 
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 12px 30px rgba(60, 25, 10, 0.16);
+  border: 1px solid #ffe0d2;
 }
 
-
 .about-image-badge strong {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 11px;
+  background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+  color: #fff;
 
-  background: #ff713d;
-
-  color: #ffffff;
+  border-radius: 50%;
 
   font-size: 20px;
   font-weight: 800;
 }
 
-
 .about-image-badge span {
-  color: #252525;
-
-  font-size: 13px;
+  color: #333;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -250,246 +209,225 @@
 ========================================================= */
 
 .about-content {
-  padding: 10px 0;
+  max-width: 600px;
 }
-
 
 .about-label {
   display: inline-block;
 
-  color: #ff713d;
+  margin-bottom: 12px;
+
+  color: #ff5a1f;
 
   font-size: 12px;
   font-weight: 800;
-
-  letter-spacing: 1.5px;
-
-  margin-bottom: 13px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
 }
-
 
 .about-content h2 {
   margin: 0 0 20px;
 
-  max-width: 540px;
-
-  color: #171717;
+  color: #1f1f1f;
 
   font-size: 39px;
   line-height: 1.15;
-
   font-weight: 800;
-
-  letter-spacing: -1.2px;
+  letter-spacing: -0.7px;
 }
-
 
 .about-content h2 span {
-  color: #ff713d;
+  color: #ff5a1f;
 }
 
-
 .about-content p {
-  max-width: 570px;
+  margin: 0 0 14px;
 
-  margin: 0 0 15px;
-
-  color: #66615d;
+  color: #666;
 
   font-size: 15px;
-  line-height: 1.75;
+  line-height: 1.8;
+  font-weight: 400;
 }
 
 
 /* =========================================================
-   EXPLORE MENU BUTTON
+   ABOUT BUTTON
 ========================================================= */
 
 .about-btn {
   margin-top: 12px;
-
-  border: none;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
 
-  padding: 13px 21px;
+  padding: 13px 22px;
 
+  border: none;
   border-radius: 10px;
 
-  background: #171717;
-
-  color: #ffffff;
-
-  font-family: inherit;
+  background: linear-gradient(135deg, #ff5a1f, #ff8a4c);
+  color: #fff;
 
   font-size: 14px;
   font-weight: 700;
 
   cursor: pointer;
 
+  box-shadow: 0 8px 20px rgba(255, 90, 31, 0.22);
+
   transition:
-    background 0.25s ease,
     transform 0.25s ease,
-    box-shadow 0.25s ease;
+    box-shadow 0.25s ease,
+    gap 0.25s ease;
 }
 
-
 .about-btn span {
-  color: #ff713d;
-
   font-size: 19px;
-
   line-height: 1;
-
   transition: transform 0.25s ease;
 }
 
-
 .about-btn:hover {
-  background: #ff713d;
-
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 10px 22px rgba(255, 113, 61, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(255, 90, 31, 0.30);
+  gap: 15px;
 }
-
 
 .about-btn:hover span {
-  color: #ffffff;
-
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
-
 .about-btn:active {
-  transform: translateY(0);
+  transform: translateY(-1px);
 }
 
 
 /* =========================================================
-   STATISTICS / FEATURES
+   FEATURES / STATS
 ========================================================= */
 
 .features {
-  width: min(1120px, calc(100% - 40px));
-
+  width: min(1200px, calc(100% - 40px));
   margin: 0 auto 75px;
 
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
-
-  gap: 18px;
+  gap: 20px;
 }
 
 
 /* =========================================================
-   FEATURE BOX
+   STAT BOX
 ========================================================= */
 
 .box {
   position: relative;
 
-  min-height: 165px;
-
-  padding: 27px 20px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
   text-align: center;
 
-  background: #ffffff;
+  padding: 28px 18px;
 
-  border: 1px solid #ebe8e4;
+  background: #fff;
 
-  border-radius: 17px;
+  border: 1px solid #ffe0d2;
+  border-radius: 18px;
+
+  box-shadow: 0 8px 25px rgba(70, 30, 10, 0.06);
+
+  overflow: hidden;
 
   transition:
     transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
-
 
 .box::before {
   content: "";
-
   position: absolute;
 
+  left: 0;
   top: 0;
-  left: 50%;
 
-  width: 45px;
+  width: 100%;
   height: 3px;
 
-  border-radius: 0 0 5px 5px;
+  background: linear-gradient(90deg, #ff5a1f, #ff8a4c);
 
-  background: #ff713d;
+  transform: scaleX(0);
+  transform-origin: center;
 
-  transform: translateX(-50%);
+  transition: transform 0.25s ease;
 }
 
-
 .box:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
 
-  border-color: rgba(255, 113, 61, 0.30);
+  border-color: #ffc7b0;
 
-  box-shadow:
-    0 14px 30px rgba(23, 23, 23, 0.08);
+  box-shadow: 0 15px 35px rgba(70, 30, 10, 0.11);
+}
+
+.box:hover::before {
+  transform: scaleX(1);
 }
 
 
 /* =========================================================
-   BOX ICON
+   STAT ICON
 ========================================================= */
 
 .box-icon {
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto 12px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 11px;
+  border-radius: 15px;
 
-  border-radius: 13px;
+  background: #fff1ea;
 
-  background: #fff1eb;
+  font-size: 24px;
 
-  font-size: 22px;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.box:hover .box-icon {
+  transform: scale(1.08);
+  background: #ffe5d9;
 }
 
 
 /* =========================================================
-   BOX TEXT
+   STAT NUMBER
 ========================================================= */
 
 .box h3 {
-  margin: 0;
+  margin: 0 0 5px;
 
-  color: #171717;
+  color: #ff5a1f;
 
-  font-size: 24px;
+  font-size: 27px;
+  line-height: 1.2;
   font-weight: 800;
 }
 
-
 .box p {
-  margin: 5px 0 0;
+  margin: 0;
 
-  color: #77716c;
+  color: #777;
 
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 
@@ -497,95 +435,33 @@
    TABLET
 ========================================================= */
 
-@media (max-width: 1050px) {
+@media (max-width: 950px) {
 
   .about-container {
-    gap: 40px;
+    grid-template-columns: 1fr;
+    gap: 45px;
+    margin: 55px auto;
   }
 
   .about-image {
-    height: 390px;
+    max-width: 600px;
   }
 
-  .about-content h2 {
-    font-size: 34px;
+  .about-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .about-btn {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .features {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-}
-
-
-/* =========================================================
-   TABLET / SMALL LAPTOP
-========================================================= */
-
-@media (max-width: 800px) {
-
-  .about-banner {
-    min-height: 235px;
-    padding: 45px 20px;
-  }
-
-  .about-banner h1 {
-    font-size: 34px;
-  }
-
-  .about-banner p {
-    font-size: 15px;
-  }
-
-
-  .about-container {
-    grid-template-columns: 1fr;
-
-    margin-top: 50px;
-    margin-bottom: 55px;
-
-    gap: 40px;
-  }
-
-
-  .about-image {
-    height: 390px;
-  }
-
-
-  .about-content {
-    text-align: center;
-  }
-
-
-  .about-label {
-    margin-bottom: 10px;
-  }
-
-
-  .about-content h2 {
-    margin-left: auto;
-    margin-right: auto;
-
-    font-size: 34px;
-  }
-
-
-  .about-content p {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-
-  .about-btn {
-    margin-top: 10px;
-  }
-
-
-  .features {
     margin-bottom: 60px;
   }
-
 }
 
 
@@ -597,95 +473,88 @@
 
   .about-banner {
     min-height: 210px;
-
-    padding: 40px 18px;
   }
 
+  .about-banner-content {
+    padding: 25px 15px;
+  }
 
   .about-banner-content span {
-    font-size: 9px;
-
-    padding: 6px 12px;
-
-    letter-spacing: 1.2px;
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    padding: 7px 12px;
   }
 
-
-  .about-banner h1 {
-    font-size: 29px;
-
-    letter-spacing: -0.5px;
+  .about-banner-content h1 {
+    font-size: 30px;
   }
 
-
-  .about-banner p {
-    margin-top: 7px;
-
+  .about-banner-content p {
     font-size: 14px;
   }
 
 
   .about-container {
     width: calc(100% - 30px);
-
-    margin-top: 40px;
-    margin-bottom: 45px;
-
-    gap: 32px;
+    margin: 42px auto;
+    gap: 38px;
   }
 
 
   .about-image {
-    height: 320px;
-
-    border-radius: 19px;
+    max-width: 100%;
   }
 
+  .about-image img {
+    height: 300px;
+    border-radius: 18px;
+  }
+
+  .about-image::before {
+    top: 9px;
+    left: 9px;
+    border-radius: 18px;
+  }
 
   .about-image-badge {
-    left: 15px;
+    left: 10px;
     bottom: 15px;
 
-    padding: 9px 12px;
+    padding: 10px 14px;
+    gap: 8px;
 
-    border-radius: 12px;
+    border-radius: 11px;
   }
-
 
   .about-image-badge strong {
     width: 34px;
     height: 34px;
-
-    border-radius: 9px;
-
     font-size: 17px;
   }
 
-
   .about-image-badge span {
-    font-size: 11px;
+    font-size: 12px;
   }
 
+
+  .about-label {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+  }
 
   .about-content h2 {
     font-size: 29px;
-
-    line-height: 1.2;
+    margin-bottom: 17px;
   }
-
 
   .about-content p {
     font-size: 14px;
-
     line-height: 1.7;
-
-    margin-bottom: 13px;
+    margin-bottom: 12px;
   }
 
-
   .about-btn {
-    padding: 12px 18px;
-
+    padding: 12px 19px;
     font-size: 13px;
   }
 
@@ -700,37 +569,28 @@
     margin-bottom: 45px;
   }
 
-
   .box {
-    min-height: 145px;
-
-    padding: 22px 12px;
-
+    padding: 22px 10px;
     border-radius: 15px;
   }
 
-
   .box-icon {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
 
     margin-bottom: 9px;
 
-    font-size: 19px;
-
-    border-radius: 11px;
-  }
-
-
-  .box h3 {
+    border-radius: 12px;
     font-size: 21px;
   }
 
+  .box h3 {
+    font-size: 22px;
+  }
 
   .box p {
     font-size: 11px;
   }
-
 }
 
 
@@ -738,40 +598,25 @@
    SMALL MOBILE
 ========================================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 380px) {
 
-  .about-banner h1 {
-    font-size: 26px;
+  .about-banner-content h1 {
+    font-size: 27px;
   }
-
-
-  .about-image {
-    height: 285px;
-  }
-
 
   .about-content h2 {
     font-size: 26px;
   }
 
-
-  .about-content p {
-    font-size: 13px;
+  .about-image img {
+    height: 270px;
   }
-
 
   .features {
     gap: 10px;
   }
 
-
   .box {
-    min-height: 135px;
+    padding: 19px 7px;
   }
-
-
-  .box h3 {
-    font-size: 19px;
-  }
-
 }
