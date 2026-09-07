@@ -129,7 +129,7 @@ export default function Admindashboard() {
       <div className="admin-sidebar">
 
         <h2>
-          Food Coupon
+          CouponBite
         </h2>
 
         <p>

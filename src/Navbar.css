@@ -34,19 +34,13 @@
   display: flex;
   align-items: center;
   gap: 9px;
-
   min-width: 155px;
-
   text-decoration: none;
-
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 22px;
   font-weight: 800;
-
   letter-spacing: -0.7px;
-
   color: #171717;
-
   transition: 0.25s ease;
 }
 
@@ -321,6 +315,256 @@
   transform: translateY(-1px);
 }
 
+/* =====================================
+   NOTIFICATION
+===================================== */
+
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: #fff3ee;
+  color: #ff713d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.notification-btn:hover {
+  background: #ff713d;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -3px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+/* =====================================
+   NOTIFICATION DROPDOWN
+===================================== */
+
+.notification-dropdown {
+  position: absolute;
+  top: 52px;
+  right: -70px;
+  width: 360px;
+  max-height: 500px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+  border: 1px solid #f1f1f1;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 18px;
+  border-bottom: 1px solid #eeeeee;
+  background: #fffaf8;
+}
+
+.notification-header h3 {
+  margin: 0;
+  color: #222222;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.notification-header span {
+  display: block;
+  margin-top: 3px;
+  color: #888888;
+  font-size: 12px;
+}
+
+.notification-close {
+  border: none;
+  background: transparent;
+  color: #888888;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.notification-close:hover {
+  color: #ff713d;
+}
+
+/* =====================================
+   NOTIFICATION LIST
+===================================== */
+
+.notification-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 15px 18px;
+  border-bottom: 1px solid #f1f1f1;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.notification-item:hover {
+  background: #fff8f5;
+}
+
+.notification-item.unread {
+  background: #fffaf8;
+}
+
+.notification-item.read {
+  opacity: 0.75;
+}
+
+/* =====================================
+   ICON
+===================================== */
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  background: #fff0ea;
+}
+
+/* =====================================
+   CONTENT
+===================================== */
+
+.notification-content {
+  flex: 1;
+  padding-right: 10px;
+}
+
+.notification-content h4 {
+  margin: 0 0 5px;
+  color: #222222;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.notification-content p {
+  margin: 0 0 5px;
+  color: #666666;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.notification-content small {
+  color: #999999;
+  font-size: 10px;
+}
+
+/* =====================================
+   UNREAD DOT
+===================================== */
+
+.unread-dot {
+  position: absolute;
+  right: 15px;
+  top: 20px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff713d;
+}
+
+/* =====================================
+   MARK ALL
+===================================== */
+
+.mark-all-btn {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #eeeeee;
+  background: #ffffff;
+  color: #ff713d;
+  padding: 13px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mark-all-btn:hover {
+  background: #fff5f1;
+}
+
+/* =====================================
+   NO NOTIFICATIONS
+===================================== */
+
+.no-notifications {
+  padding: 45px 20px;
+  text-align: center;
+  color: #999999;
+}
+
+.no-notifications svg {
+  font-size: 30px;
+  color: #dddddd;
+  margin-bottom: 10px;
+}
+
+.no-notifications p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 768px) {
+  .notification-dropdown {
+    position: fixed;
+    top: 72px;
+    right: 15px;
+    left: 15px;
+    width: auto;
+    max-width: none;
+  }
+}
+
 
 /* =====================================================
    RESPONSIVE
@@ -346,124 +590,6 @@
 
   .nav-right {
     min-width: auto;
-  }
-
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 900px) {
-
-  .navbar {
-    height: auto;
-    min-height: 70px;
-
-    flex-wrap: wrap;
-
-    padding: 14px 4%;
-    gap: 14px;
-  }
-
-  .logo {
-    min-width: auto;
-  }
-
-  .nav-links {
-    order: 3;
-
-    width: 100%;
-
-    justify-content: center;
-
-    padding-top: 5px;
-
-    gap: 24px;
-  }
-
-  .nav-right {
-    margin-left: auto;
-  }
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-
-  .navbar {
-    padding: 13px 18px;
-
-    gap: 12px;
-  }
-
-  .logo {
-    font-size: 19px;
-  }
-
-  .logo svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .nav-links {
-    gap: 16px;
-
-    overflow-x: auto;
-    justify-content: flex-start;
-
-    padding-bottom: 3px;
-
-    scrollbar-width: none;
-  }
-
-  .nav-links::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-links a {
-    font-size: 12px;
-
-    white-space: nowrap;
-  }
-
-  .nav-right {
-    gap: 7px;
-  }
-
-  .cartbtn {
-    width: 42px;
-
-    padding: 0;
-
-    border-radius: 11px;
-  }
-
-  .cartbtn span {
-    display: none;
-  }
-
-  .loginbtn {
-    height: 40px;
-
-    padding: 0 14px;
-
-    font-size: 12px;
-  }
-
-  .user-name {
-    display: none;
-  }
-
-  .logoutbtn {
-    height: 40px;
-
-    padding: 0 11px;
   }
 
 }

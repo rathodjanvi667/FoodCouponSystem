@@ -8,6 +8,7 @@ const Food = require("./Models/Food");
 const Coupon = require("./Models/Coupon");
 const Order = require("./Models/Order");
 const Restaurant = require("./Models/Restaurant");
+const Notification = require("./Models/Notification");
 
 const app = express();
 
@@ -17,7 +18,6 @@ const app = express();
 // ============================================================
 
 app.use(cors());
-
 app.use(express.json());
 
 
@@ -26,13 +26,10 @@ app.use(express.json());
 // ============================================================
 
 const storage = multer.diskStorage({
-
   destination: function (req, file, cb) {
     cb(null, "uploads/");
   },
-
   filename: function (req, file, cb) {
-
     const uniqueName =
       Date.now() +
       "-" +
@@ -40,7 +37,6 @@ const storage = multer.diskStorage({
 
     cb(null, uniqueName);
   }
-
 });
 
 const upload = multer({
@@ -68,23 +64,16 @@ mongoose
   .connect(
     "mongodb://127.0.0.1:27017/FoodCouponSystem"
   )
-
   .then(() => {
-
     console.log(
       "MongoDB Connected Successfully"
     );
-
   })
-
   .catch((error) => {
-
     console.log(
       "MongoDB Connection Failed"
     );
-
     console.log(error);
-
   });
 
 
@@ -93,17 +82,10 @@ mongoose
 // ============================================================
 
 app.get("/", (req, res) => {
-
   res.send(
     "Food Coupon Backend is Running"
   );
-
 });
-
-
-// ============================================================
-//                    RESTAURANT APIs
-// ============================================================
 
 
 // ============================================================
@@ -113,9 +95,7 @@ app.get("/", (req, res) => {
 app.get(
   "/api/restaurants",
   async (req, res) => {
-
     try {
-
       const restaurants =
         await Restaurant
           .find()
@@ -124,23 +104,17 @@ app.get(
           });
 
       res.json(restaurants);
-
     } catch (error) {
-
       console.log(
         "GET RESTAURANTS ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get restaurants"
-
       });
-
     }
-
   }
 );
 
@@ -152,61 +126,42 @@ app.get(
 app.get(
   "/api/restaurants/:id",
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid restaurant ID"
-
         });
-
       }
-
 
       const restaurant =
         await Restaurant.findById(
           req.params.id
         );
 
-
       if (!restaurant) {
-
         return res.status(404).json({
-
           message:
             "Restaurant not found"
-
         });
-
       }
 
-
       res.json(restaurant);
-
     } catch (error) {
-
       console.log(
         "GET RESTAURANT ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get restaurant"
-
       });
-
     }
-
   }
 );
 
@@ -218,11 +173,8 @@ app.get(
 app.post(
   "/api/restaurants",
   upload.single("image"),
-
   async (req, res) => {
-
     try {
-
       console.log(
         "RESTAURANT BODY:",
         req.body
@@ -233,7 +185,6 @@ app.post(
         req.file
       );
 
-
       const {
         name,
         location,
@@ -241,7 +192,6 @@ app.post(
         description,
         status
       } = req.body;
-
 
       // ======================================================
       // VALIDATION
@@ -251,46 +201,31 @@ app.post(
         !name ||
         !name.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Restaurant name is required"
-
         });
-
       }
-
 
       if (
         !location ||
         !location.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Restaurant location is required"
-
         });
-
       }
-
 
       if (
         !category ||
         !category.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Restaurant category is required"
-
         });
-
       }
-
 
       // ======================================================
       // CHECK DUPLICATE RESTAURANT
@@ -298,27 +233,19 @@ app.post(
 
       const existingRestaurant =
         await Restaurant.findOne({
-
           name: {
             $regex:
               `^${name.trim()}$`,
             $options: "i"
           }
-
         });
-
 
       if (existingRestaurant) {
-
         return res.status(400).json({
-
           message:
             "Restaurant already exists"
-
         });
-
       }
-
 
       // ======================================================
       // CREATE RESTAURANT
@@ -326,7 +253,6 @@ app.post(
 
       const newRestaurant =
         new Restaurant({
-
           name:
             name.trim(),
 
@@ -348,9 +274,7 @@ app.post(
 
           status:
             status || "Active"
-
         });
-
 
       // ======================================================
       // SAVE RESTAURANT
@@ -359,34 +283,41 @@ app.post(
       const savedRestaurant =
         await newRestaurant.save();
 
-
       console.log(
         "Restaurant saved:",
         savedRestaurant
       );
 
+      // ======================================================
+      // CREATE NOTIFICATION
+      // ======================================================
+
+      await Notification.create({
+        title:
+          "New Restaurant Added 🏪",
+
+        message:
+          `${savedRestaurant.name} is now available.`,
+
+        type:
+          "restaurant"
+      });
 
       res.status(201).json(
         savedRestaurant
       );
 
-
     } catch (error) {
-
       console.log(
         "ADD RESTAURANT ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           error.message
-
       });
-
     }
-
   }
 );
 
@@ -398,26 +329,18 @@ app.post(
 app.put(
   "/api/restaurants/:id",
   upload.single("image"),
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid restaurant ID"
-
         });
-
       }
-
 
       const {
         name,
@@ -427,110 +350,76 @@ app.put(
         status
       } = req.body;
 
-
       const updateData = {};
 
-
       if (name && name.trim()) {
-
         updateData.name =
           name.trim();
-
       }
-
 
       if (
         location &&
         location.trim()
       ) {
-
         updateData.location =
           location.trim();
-
       }
-
 
       if (
         category &&
         category.trim()
       ) {
-
         updateData.category =
           category.trim();
-
       }
-
 
       updateData.description =
         description
           ? description.trim()
           : "";
 
-
       if (status) {
-
         updateData.status =
           status;
-
       }
-
 
       if (req.file) {
-
         updateData.image =
           `/uploads/${req.file.filename}`;
-
       }
-
 
       const updatedRestaurant =
         await Restaurant.findByIdAndUpdate(
-
           req.params.id,
-
           updateData,
-
           {
             new: true,
             runValidators: true
           }
-
         );
 
-
       if (!updatedRestaurant) {
-
         return res.status(404).json({
-
           message:
             "Restaurant not found"
-
         });
-
       }
-
 
       res.json(
         updatedRestaurant
       );
 
-
     } catch (error) {
-
       console.log(
         "UPDATE RESTAURANT ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to update restaurant"
-
       });
-
     }
-
   }
 );
 
@@ -541,81 +430,52 @@ app.put(
 
 app.delete(
   "/api/restaurants/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid restaurant ID"
-
         });
-
       }
-
 
       const deletedRestaurant =
         await Restaurant.findByIdAndDelete(
           req.params.id
         );
 
-
       if (!deletedRestaurant) {
-
         return res.status(404).json({
-
           message:
             "Restaurant not found"
-
         });
-
       }
 
-
-      // ======================================================
-      // DELETE FOODS BELONGING TO RESTAURANT
-      // ======================================================
-
       await Food.deleteMany({
-
         restaurantId:
           req.params.id
-
       });
-
 
       res.json({
-
         message:
           "Restaurant and its foods deleted successfully"
-
       });
 
-
     } catch (error) {
-
       console.log(
         "DELETE RESTAURANT ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to delete restaurant"
-
       });
-
     }
-
   }
 );
 
@@ -631,46 +491,29 @@ app.delete(
 
 app.get(
   "/api/foods",
-
   async (req, res) => {
-
     try {
-
       const {
         restaurantId
       } = req.query;
 
-
       let query = {};
 
-
-      // ======================================================
-      // FILTER BY RESTAURANT
-      // ======================================================
-
       if (restaurantId) {
-
         if (
           !mongoose.Types.ObjectId.isValid(
             restaurantId
           )
         ) {
-
           return res.status(400).json({
-
             message:
               "Invalid restaurant ID"
-
           });
-
         }
-
 
         query.restaurantId =
           restaurantId;
-
       }
-
 
       const foods =
         await Food
@@ -679,26 +522,19 @@ app.get(
             createdAt: -1
           });
 
-
       res.json(foods);
 
-
     } catch (error) {
-
       console.log(
         "GET FOOD ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get foods"
-
       });
-
     }
-
   }
 );
 
@@ -709,64 +545,44 @@ app.get(
 
 app.get(
   "/api/foods/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid food ID"
-
         });
-
       }
-
 
       const food =
         await Food.findById(
           req.params.id
         );
 
-
       if (!food) {
-
         return res.status(404).json({
-
           message:
             "Food not found"
-
         });
-
       }
-
 
       res.json(food);
 
-
     } catch (error) {
-
       console.log(
         "GET SINGLE FOOD ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get food"
-
       });
-
     }
-
   }
 );
 
@@ -778,11 +594,8 @@ app.get(
 app.post(
   "/api/foods",
   upload.single("image"),
-
   async (req, res) => {
-
     try {
-
       console.log(
         "FOOD BODY:",
         req.body
@@ -793,22 +606,16 @@ app.post(
         req.file
       );
 
-
       // ======================================================
       // IMAGE VALIDATION
       // ======================================================
 
       if (!req.file) {
-
         return res.status(400).json({
-
           message:
             "Image file not received"
-
         });
-
       }
-
 
       // ======================================================
       // RESTAURANT VALIDATION
@@ -817,16 +624,11 @@ app.post(
       if (
         !req.body.restaurantId
       ) {
-
         return res.status(400).json({
-
           message:
             "Restaurant is required"
-
         });
-
       }
-
 
       // ======================================================
       // VALID RESTAURANT ID
@@ -837,16 +639,11 @@ app.post(
           req.body.restaurantId
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid restaurant ID"
-
         });
-
       }
-
 
       // ======================================================
       // FOOD NAME VALIDATION
@@ -856,16 +653,11 @@ app.post(
         !req.body.name ||
         !req.body.name.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Food name is required"
-
         });
-
       }
-
 
       // ======================================================
       // CATEGORY VALIDATION
@@ -875,16 +667,11 @@ app.post(
         !req.body.category ||
         !req.body.category.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Food category is required"
-
         });
-
       }
-
 
       // ======================================================
       // PRICE VALIDATION
@@ -895,16 +682,11 @@ app.post(
         req.body.price === "" ||
         Number(req.body.price) <= 0
       ) {
-
         return res.status(400).json({
-
           message:
             "Valid food price is required"
-
         });
-
       }
-
 
       // ======================================================
       // CHECK RESTAURANT EXISTS
@@ -915,18 +697,12 @@ app.post(
           req.body.restaurantId
         );
 
-
       if (!restaurant) {
-
         return res.status(404).json({
-
           message:
             "Selected restaurant not found"
-
         });
-
       }
-
 
       // ======================================================
       // CHECK RESTAURANT STATUS
@@ -935,16 +711,11 @@ app.post(
       if (
         restaurant.status === "Inactive"
       ) {
-
         return res.status(400).json({
-
           message:
             "Selected restaurant is inactive"
-
         });
-
       }
-
 
       // ======================================================
       // CREATE FOOD
@@ -952,7 +723,6 @@ app.post(
 
       const newFood =
         new Food({
-
           name:
             req.body.name.trim(),
 
@@ -967,9 +737,7 @@ app.post(
 
           restaurantId:
             req.body.restaurantId
-
         });
-
 
       // ======================================================
       // SAVE FOOD
@@ -978,34 +746,41 @@ app.post(
       const savedFood =
         await newFood.save();
 
-
       console.log(
         "Food saved:",
         savedFood
       );
 
+      // ======================================================
+      // CREATE NOTIFICATION
+      // ======================================================
+
+      await Notification.create({
+        title:
+          "New Food Added 🍕",
+
+        message:
+          `${savedFood.name} is now available.`,
+
+        type:
+          "food"
+      });
 
       res.status(201).json(
         savedFood
       );
 
-
     } catch (error) {
-
       console.log(
         "ADD FOOD ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           error.message
-
       });
-
     }
-
   }
 );
 
@@ -1017,26 +792,18 @@ app.post(
 app.put(
   "/api/foods/:id",
   upload.single("image"),
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid food ID"
-
         });
-
       }
-
 
       const {
         name,
@@ -1045,154 +812,106 @@ app.put(
         restaurantId
       } = req.body;
 
-
       const updateData = {};
-
 
       if (
         name &&
         name.trim()
       ) {
-
         updateData.name =
           name.trim();
-
       }
-
 
       if (
         category &&
         category.trim()
       ) {
-
         updateData.category =
           category.trim();
-
       }
-
 
       if (
         price !== undefined &&
         price !== ""
       ) {
-
         if (
           Number(price) <= 0
         ) {
-
           return res.status(400).json({
-
             message:
               "Valid food price is required"
-
           });
-
         }
 
         updateData.price =
           Number(price);
-
       }
 
-
       if (restaurantId) {
-
         if (
           !mongoose.Types.ObjectId.isValid(
             restaurantId
           )
         ) {
-
           return res.status(400).json({
-
             message:
               "Invalid restaurant ID"
-
           });
-
         }
-
 
         const restaurant =
           await Restaurant.findById(
             restaurantId
           );
 
-
         if (!restaurant) {
-
           return res.status(404).json({
-
             message:
               "Selected restaurant not found"
-
           });
-
         }
-
 
         updateData.restaurantId =
           restaurantId;
-
       }
-
 
       if (req.file) {
-
         updateData.image =
           `/uploads/${req.file.filename}`;
-
       }
-
 
       const updatedFood =
         await Food.findByIdAndUpdate(
-
           req.params.id,
-
           updateData,
-
           {
             new: true,
             runValidators: true
           }
-
         );
 
-
       if (!updatedFood) {
-
         return res.status(404).json({
-
           message:
             "Food not found"
-
         });
-
       }
-
 
       res.json(
         updatedFood
       );
 
-
     } catch (error) {
-
       console.log(
         "UPDATE FOOD ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to update food"
-
       });
-
     }
-
   }
 );
 
@@ -1203,69 +922,47 @@ app.put(
 
 app.delete(
   "/api/foods/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid food ID"
-
         });
-
       }
-
 
       const deletedFood =
         await Food.findByIdAndDelete(
           req.params.id
         );
 
-
       if (!deletedFood) {
-
         return res.status(404).json({
-
           message:
             "Food not found"
-
         });
-
       }
 
-
       res.json({
-
         message:
           "Food deleted successfully"
-
       });
 
-
     } catch (error) {
-
       console.log(
         "DELETE FOOD ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to delete food"
-
       });
-
     }
-
   }
 );
 
@@ -1281,11 +978,8 @@ app.delete(
 
 app.get(
   "/api/coupons",
-
   async (req, res) => {
-
     try {
-
       const coupons =
         await Coupon
           .find()
@@ -1293,28 +987,21 @@ app.get(
             createdAt: -1
           });
 
-
       res.json(
         coupons
       );
 
-
     } catch (error) {
-
       console.log(
         "GET COUPON ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get coupons"
-
       });
-
     }
-
   }
 );
 
@@ -1325,64 +1012,44 @@ app.get(
 
 app.get(
   "/api/coupons/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid coupon ID"
-
         });
-
       }
-
 
       const coupon =
         await Coupon.findById(
           req.params.id
         );
 
-
       if (!coupon) {
-
         return res.status(404).json({
-
           message:
             "Coupon not found"
-
         });
-
       }
-
 
       res.json(coupon);
 
-
     } catch (error) {
-
       console.log(
         "GET SINGLE COUPON ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get coupon"
-
       });
-
     }
-
   }
 );
 
@@ -1393,16 +1060,12 @@ app.get(
 
 app.post(
   "/api/coupons",
-
   async (req, res) => {
-
     try {
-
       console.log(
         "COUPON DATA:",
         req.body
       );
-
 
       const {
         code,
@@ -1414,7 +1077,6 @@ app.post(
         description
       } = req.body;
 
-
       // ======================================================
       // VALIDATION
       // ======================================================
@@ -1423,44 +1085,29 @@ app.post(
         !code ||
         !code.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Coupon code is required"
-
         });
-
       }
-
 
       if (!store) {
-
         return res.status(400).json({
-
           message:
             "Store is required"
-
         });
-
       }
-
 
       if (
         discount === undefined ||
         Number(discount) < 1 ||
         Number(discount) > 100
       ) {
-
         return res.status(400).json({
-
           message:
             "Discount must be between 1 and 100"
-
         });
-
       }
-
 
       // ======================================================
       // CHECK DUPLICATE
@@ -1471,27 +1118,18 @@ app.post(
           .toUpperCase()
           .trim();
 
-
       const existingCoupon =
         await Coupon.findOne({
-
           code:
             couponCode
-
         });
-
 
       if (existingCoupon) {
-
         return res.status(400).json({
-
           message:
             "Coupon code already exists"
-
         });
-
       }
-
 
       // ======================================================
       // CREATE COUPON
@@ -1499,7 +1137,6 @@ app.post(
 
       const newCoupon =
         new Coupon({
-
           code:
             couponCode,
 
@@ -1529,41 +1166,46 @@ app.post(
 
           status:
             "generated"
-
         });
-
 
       const savedCoupon =
         await newCoupon.save();
-
 
       console.log(
         "Coupon saved:",
         savedCoupon
       );
 
+      // ======================================================
+      // CREATE NOTIFICATION
+      // ======================================================
+
+      await Notification.create({
+        title:
+          "New Coupon Available 🎟️",
+
+        message:
+          `${savedCoupon.code} coupon is now available. Get ${savedCoupon.discount}% OFF!`,
+
+        type:
+          "coupon"
+      });
 
       res.status(201).json(
         savedCoupon
       );
 
-
     } catch (error) {
-
       console.log(
         "ADD COUPON ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           error.message
-
       });
-
     }
-
   }
 );
 
@@ -1574,16 +1216,12 @@ app.post(
 
 app.post(
   "/api/coupons/generate",
-
   async (req, res) => {
-
     try {
-
       console.log(
         "GENERATE COUPON DATA:",
         req.body
       );
-
 
       const {
         items,
@@ -1594,7 +1232,6 @@ app.post(
         orderId
       } = req.body;
 
-
       // ======================================================
       // CART VALIDATION
       // ======================================================
@@ -1604,16 +1241,11 @@ app.post(
         !Array.isArray(items) ||
         items.length === 0
       ) {
-
         return res.status(400).json({
-
           message:
             "Cart is empty"
-
         });
-
       }
-
 
       // ======================================================
       // STORE
@@ -1623,40 +1255,30 @@ app.post(
         store ||
         "Smart Food Coupon";
 
-
       // ======================================================
       // GENERATE UNIQUE CODE
       // ======================================================
 
       let couponCode;
-
       let existingCoupon;
 
-
       do {
-
         const randomPart =
           Math.random()
             .toString(36)
             .substring(2, 8)
             .toUpperCase();
 
-
         couponCode =
           `SFC-${randomPart}`;
 
-
         existingCoupon =
           await Coupon.findOne({
-
             code:
               couponCode
-
           });
 
-
       } while (existingCoupon);
-
 
       // ======================================================
       // DISCOUNT
@@ -1665,14 +1287,12 @@ app.post(
       const discount =
         10;
 
-
       // ======================================================
       // VALID FROM
       // ======================================================
 
       const validFrom =
         new Date();
-
 
       // ======================================================
       // VALID UNTIL - 7 DAYS
@@ -1681,11 +1301,9 @@ app.post(
       const validUntil =
         new Date();
 
-
       validUntil.setDate(
         validUntil.getDate() + 7
       );
-
 
       // ======================================================
       // CREATE CUSTOMER COUPON
@@ -1693,7 +1311,6 @@ app.post(
 
       const generatedCoupon =
         new Coupon({
-
           code:
             couponCode,
 
@@ -1740,9 +1357,7 @@ app.post(
 
           totalAmount:
             Number(totalAmount) || 0
-
         });
-
 
       // ======================================================
       // SAVE COUPON
@@ -1751,47 +1366,37 @@ app.post(
       const savedCoupon =
         await generatedCoupon.save();
 
-
       console.log(
         "Generated Coupon Saved:",
         savedCoupon
       );
-
 
       // ======================================================
       // RESPONSE
       // ======================================================
 
       res.status(201).json({
-
         message:
           "Coupon generated successfully",
 
         coupon:
           savedCoupon
-
       });
 
-
     } catch (error) {
-
       console.log(
         "GENERATE COUPON ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to generate coupon",
 
         error:
           error.message
-
       });
-
     }
-
   }
 );
 
@@ -1802,69 +1407,47 @@ app.post(
 
 app.delete(
   "/api/coupons/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid coupon ID"
-
         });
-
       }
-
 
       const deletedCoupon =
         await Coupon.findByIdAndDelete(
           req.params.id
         );
 
-
       if (!deletedCoupon) {
-
         return res.status(404).json({
-
           message:
             "Coupon not found"
-
         });
-
       }
 
-
       res.json({
-
         message:
           "Coupon deleted successfully"
-
       });
 
-
     } catch (error) {
-
       console.log(
         "DELETE COUPON ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to delete coupon"
-
       });
-
     }
-
   }
 );
 
@@ -1880,11 +1463,8 @@ app.delete(
 
 app.get(
   "/api/orders",
-
   async (req, res) => {
-
     try {
-
       const orders =
         await Order
           .find()
@@ -1892,28 +1472,21 @@ app.get(
             createdAt: -1
           });
 
-
       res.json(
         orders
       );
 
-
     } catch (error) {
-
       console.log(
         "GET ORDERS ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get orders"
-
       });
-
     }
-
   }
 );
 
@@ -1924,66 +1497,46 @@ app.get(
 
 app.get(
   "/api/orders/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid order ID"
-
         });
-
       }
-
 
       const order =
         await Order.findById(
           req.params.id
         );
 
-
       if (!order) {
-
         return res.status(404).json({
-
           message:
             "Order not found"
-
         });
-
       }
-
 
       res.json(
         order
       );
 
-
     } catch (error) {
-
       console.log(
         "GET SINGLE ORDER ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to get order"
-
       });
-
     }
-
   }
 );
 
@@ -1994,16 +1547,12 @@ app.get(
 
 app.post(
   "/api/orders",
-
   async (req, res) => {
-
     try {
-
       console.log(
         "ORDER DATA:",
         req.body
       );
-
 
       const {
         customer,
@@ -2022,7 +1571,6 @@ app.post(
         couponCode
       } = req.body;
 
-
       // ======================================================
       // VALIDATION
       // ======================================================
@@ -2031,119 +1579,79 @@ app.post(
         !customer ||
         !customer.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Customer name is required"
-
         });
-
       }
-
 
       if (
         !mobile ||
         !mobile.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Mobile number is required"
-
         });
-
       }
-
 
       if (
         !address ||
         !address.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Address is required"
-
         });
-
       }
-
 
       if (
         !city ||
         !city.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "City is required"
-
         });
-
       }
-
 
       if (
         !state ||
         !state.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "State is required"
-
         });
-
       }
-
 
       if (
         !pincode ||
         !pincode.trim()
       ) {
-
         return res.status(400).json({
-
           message:
             "Pincode is required"
-
         });
-
       }
-
 
       if (
         !items ||
         !Array.isArray(items) ||
         items.length === 0
       ) {
-
         return res.status(400).json({
-
           message:
             "Order items are required"
-
         });
-
       }
-
 
       if (!paymentMethod) {
-
         return res.status(400).json({
-
           message:
             "Payment method is required"
-
         });
-
       }
-
 
       // ======================================================
       // GENERATE ORDER NUMBER
@@ -2152,14 +1660,12 @@ app.post(
       const orderNumber =
         `ORD-${Date.now()}`;
 
-
       // ======================================================
       // CREATE ORDER
       // ======================================================
 
       const newOrder =
         new Order({
-
           orderNumber:
             orderNumber,
 
@@ -2183,7 +1689,6 @@ app.post(
 
           items:
             items.map((item) => ({
-
               foodId:
                 item._id ||
                 item.id ||
@@ -2207,7 +1712,6 @@ app.post(
               image:
                 item.image ||
                 ""
-
             })),
 
           subtotal:
@@ -2239,9 +1743,7 @@ app.post(
           couponCode:
             couponCode ||
             ""
-
         });
-
 
       // ======================================================
       // SAVE ORDER
@@ -2250,47 +1752,37 @@ app.post(
       const savedOrder =
         await newOrder.save();
 
-
       console.log(
         "Order Saved:",
         savedOrder
       );
-
 
       // ======================================================
       // RESPONSE
       // ======================================================
 
       res.status(201).json({
-
         message:
           "Order placed successfully",
 
         order:
           savedOrder
-
       });
 
-
     } catch (error) {
-
       console.log(
         "CREATE ORDER ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to create order",
 
         error:
           error.message
-
       });
-
     }
-
   }
 );
 
@@ -2301,114 +1793,79 @@ app.post(
 
 app.patch(
   "/api/orders/:id/status",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid order ID"
-
         });
-
       }
-
 
       const {
         status
       } = req.body;
 
-
       const allowedStatuses = [
-
         "Pending",
         "Preparing",
         "Delivered",
         "Cancelled"
-
       ];
-
 
       if (
         !allowedStatuses.includes(
           status
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid order status"
-
         });
-
       }
-
 
       const updatedOrder =
         await Order.findByIdAndUpdate(
-
           req.params.id,
-
           {
             status:
               status
           },
-
           {
             new: true
           }
-
         );
 
-
       if (!updatedOrder) {
-
         return res.status(404).json({
-
           message:
             "Order not found"
-
         });
-
       }
 
-
       res.json({
-
         message:
           "Order status updated successfully",
 
         order:
           updatedOrder
-
       });
 
-
     } catch (error) {
-
       console.log(
         "UPDATE ORDER STATUS ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to update order status"
-
       });
-
     }
-
   }
 );
 
@@ -2419,69 +1876,151 @@ app.patch(
 
 app.delete(
   "/api/orders/:id",
-
   async (req, res) => {
-
     try {
-
       if (
         !mongoose.Types.ObjectId.isValid(
           req.params.id
         )
       ) {
-
         return res.status(400).json({
-
           message:
             "Invalid order ID"
-
         });
-
       }
-
 
       const deletedOrder =
         await Order.findByIdAndDelete(
           req.params.id
         );
 
-
       if (!deletedOrder) {
-
         return res.status(404).json({
-
           message:
             "Order not found"
-
         });
-
       }
 
-
       res.json({
-
         message:
           "Order deleted successfully"
-
       });
 
-
     } catch (error) {
-
       console.log(
         "DELETE ORDER ERROR:",
         error
       );
 
       res.status(500).json({
-
         message:
           "Failed to delete order"
+      });
+    }
+  }
+);
 
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+app.get(
+  "/api/notifications",
+  async (req, res) => {
+    try {
+      const notifications =
+        await Notification.find()
+          .sort({
+            createdAt: -1
+          })
+          .limit(20);
+
+      res.json(
+        notifications
+      );
+
+    } catch (error) {
+      console.error(
+        "Notification fetch error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Failed to fetch notifications"
+      });
+    }
+  }
+);
+
+
+app.put(
+  "/api/notifications/:id/read",
+  async (req, res) => {
+    try {
+      const notification =
+        await Notification.findByIdAndUpdate(
+          req.params.id,
+          {
+            isRead:
+              true
+          },
+          {
+            new: true
+          }
+        );
+
+      res.json(
+        notification
+      );
+
+    } catch (error) {
+      console.error(
+        "Notification read error:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Failed to update notification"
+      });
+    }
+  }
+);
+
+
+app.put(
+  "/api/notifications/read-all",
+  async (req, res) => {
+    try {
+      await Notification.updateMany(
+        {
+          isRead:
+            false
+        },
+        {
+          isRead:
+            true
+        }
+      );
+
+      res.json({
+        message:
+          "All notifications marked as read"
       });
 
-    }
+    } catch (error) {
+      console.error(
+        "Read all error:",
+        error
+      );
 
+      res.status(500).json({
+        message:
+          "Failed to update notifications"
+      });
+    }
   }
 );
 
@@ -2494,12 +2033,9 @@ const PORT = 5000;
 
 app.listen(
   PORT,
-
   () => {
-
     console.log(
       `Server running on http://localhost:${PORT}`
     );
-
   }
 );
