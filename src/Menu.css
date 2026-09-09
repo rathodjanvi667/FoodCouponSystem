@@ -959,7 +959,37 @@
 
   transform: translateY(-2px);
 }
+.food-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
 
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rating-star {
+  font-size: 14px;
+}
+
+.rating-star.filled {
+  color: #ffb400;
+}
+
+.rating-star.empty {
+  color: #d8d8d8;
+}
+
+.rating-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
 
 /* =========================================================
    TABLET

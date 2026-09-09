@@ -253,7 +253,37 @@
   line-height: 1;
 }
 
+.food-rating {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+  margin-bottom: 10px;
+}
 
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rating-star {
+  font-size: 13px;
+}
+
+.rating-star.filled {
+  color: #ffb400;
+}
+
+.rating-star.empty {
+  color: #d9d9d9;
+}
+
+.rating-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+}
 /* =========================================================
    BUY COUPON BUTTON
 ========================================================= */

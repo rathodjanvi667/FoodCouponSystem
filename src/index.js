@@ -15,6 +15,7 @@ import ManageFood from './Managefood';
 import Managecoupon from './Managecoupon';
 import Manageorder from './Manageorder';
 import ManageRestaurant from "./ManageRestaurant";
+import ManageContact from "./ManageContact";
 import ProtectedRoute from './ProtectedRoute';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -89,6 +90,11 @@ root.render(
         <Route
           path="/ManageRestaurant"
           element={<ManageRestaurant />}
+        />
+
+        <Route
+          path="/ManageContact"
+          element={<ManageContact></ManageContact>}
         />
 
       </Routes>

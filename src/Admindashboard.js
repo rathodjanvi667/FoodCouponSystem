@@ -158,6 +158,10 @@ export default function Admindashboard() {
             Restaurants
           </Link>
 
+          <Link to="/ManageContact">
+            FeedBack
+          </Link>
+
         </nav>
 
         {/* Logout */}
@@ -266,6 +270,10 @@ export default function Admindashboard() {
 
             <Link to="/ManageRestaurant">
               Restaurants
+            </Link>
+
+            <Link to="/ManageContact">
+              FeedBack
             </Link>
 
           </div>

@@ -1,7 +1,12 @@
 import React from "react";
 import "./PopularFoods.css";
 
-import { FaShoppingCart, FaTag } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaTag,
+  FaStar,
+  FaStarHalfAlt
+} from "react-icons/fa";
 
 import pizza1 from "./Images/Pizza1.jpg";
 import burger1 from "./Images/burger1.jpg";
@@ -18,45 +23,50 @@ export default function PopularFoods() {
       name: "Burger",
       price: 99,
       category: "Burger",
-      image: burger1
+      image: burger1,
+      rating: 4.5
     },
     {
       id: 2,
       name: "Pizza",
       price: 199,
       category: "Pizza",
-      image: pizza1
+      image: pizza1,
+      rating: 4.8
     },
     {
       id: 3,
       name: "Pasta",
       price: 149,
       category: "Pasta",
-      image: pasta1
+      image: pasta1,
+      rating: 4.4
     },
     {
       id: 4,
       name: "Sandwich",
       price: 89,
       category: "Sandwich",
-      image: sandwich1
+      image: sandwich1,
+      rating: 4.3
     },
     {
       id: 5,
       name: "Cake",
       price: 129,
       category: "Dessert",
-      image: dessert1
+      image: dessert1,
+      rating: 4.7
     },
     {
       id: 6,
       name: "Mango Shake",
       price: 79,
       category: "Drink",
-      image: drink1
+      image: drink1,
+      rating: 4.6
     }
   ];
-
 
   /* =========================================
      ADD TO CART
@@ -70,11 +80,9 @@ export default function PopularFoods() {
       ? JSON.parse(savedCart)
       : [];
 
-
     const existingItem = cart.find(
       (item) => item.id === food.id
     );
-
 
     if (existingItem) {
 
@@ -110,17 +118,54 @@ export default function PopularFoods() {
       );
     }
 
-
-    /* Update navbar cart count */
-
     window.dispatchEvent(
       new Event("cartUpdated")
     );
 
-
     alert(`${food.name} added to cart!`);
   };
 
+  /* =========================================
+     RATING STARS
+  ========================================= */
+
+  const renderStars = (rating) => {
+
+    const stars = [];
+
+    for (let i = 1; i <= 5; i++) {
+
+      if (rating >= i) {
+
+        stars.push(
+          <FaStar
+            key={i}
+            className="rating-star filled"
+          />
+        );
+
+      } else if (rating >= i - 0.5) {
+
+        stars.push(
+          <FaStarHalfAlt
+            key={i}
+            className="rating-star filled"
+          />
+        );
+
+      } else {
+
+        stars.push(
+          <FaStar
+            key={i}
+            className="rating-star empty"
+          />
+        );
+      }
+    }
+
+    return stars;
+  };
 
   return (
     <div className="foodcontainer">
@@ -150,7 +195,6 @@ export default function PopularFoods() {
 
           </div>
 
-
           {/* =================================
               FOOD CONTENT
           ================================= */}
@@ -165,16 +209,35 @@ export default function PopularFoods() {
               {food.name}
             </h3>
 
+            {/* =================================
+                FOOD RATING
+            ================================= */}
+
+            <div className="food-rating">
+
+              <div className="rating-stars">
+                {renderStars(food.rating)}
+              </div>
+
+              <span className="rating-number">
+                {food.rating}
+              </span>
+
+            </div>
 
             <div className="food-bottom">
 
               <div className="food-price">
-                <small>Coupon from</small>
+
+                <small>
+                  Coupon from
+                </small>
+
                 <strong>
                   ₹{food.price}
                 </strong>
-              </div>
 
+              </div>
 
               <button
                 onClick={() => addToCart(food)}

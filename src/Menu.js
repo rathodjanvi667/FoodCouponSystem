@@ -10,6 +10,8 @@ import {
   FaMapMarkerAlt,
   FaStore,
   FaFilter,
+  FaStar,
+  FaStarHalfAlt
 } from "react-icons/fa";
 
 const FOOD_API = "http://localhost:5000/api/foods";
@@ -18,35 +20,17 @@ const SERVER_URL = "http://localhost:5000";
 
 export default function Menu() {
 
-  // =====================================
-  // FOOD STATE
-  // =====================================
-
   const [foods, setFoods] = useState([]);
   const [loadingFoods, setLoadingFoods] = useState(true);
-
-  // =====================================
-  // RESTAURANT STATE
-  // =====================================
 
   const [restaurants, setRestaurants] = useState([]);
   const [loadingRestaurants, setLoadingRestaurants] = useState(true);
 
-  const [selectedRestaurant, setSelectedRestaurant] =
-    useState("All");
-
-  // =====================================
-  // SEARCH
-  // =====================================
+  const [selectedRestaurant, setSelectedRestaurant] = useState("All");
 
   const [search, setSearch] = useState("");
 
-  // =====================================
-  // CATEGORY
-  // =====================================
-
   const [category, setCategory] = useState("All");
-
 
   // =====================================
   // LOAD RESTAURANTS
@@ -92,7 +76,6 @@ export default function Menu() {
 
   };
 
-
   // =====================================
   // LOAD FOODS
   // =====================================
@@ -136,7 +119,6 @@ export default function Menu() {
 
   };
 
-
   // =====================================
   // LOAD DATA
   // =====================================
@@ -147,7 +129,6 @@ export default function Menu() {
     loadFoods();
 
   }, []);
-
 
   // =====================================
   // IMAGE URL
@@ -173,7 +154,6 @@ export default function Menu() {
     return SERVER_URL + "/" + image;
 
   };
-
 
   // =====================================
   // CLEAN PRICE
@@ -202,6 +182,65 @@ export default function Menu() {
 
   };
 
+  // =====================================
+  // FOOD RATING
+  // =====================================
+
+  const getRating = (rating) => {
+
+    const numberRating = Number(rating);
+
+    if (
+      Number.isNaN(numberRating) ||
+      numberRating < 0
+    ) {
+      return 4.5;
+    }
+
+    return Math.min(numberRating, 5);
+
+  };
+
+  const renderStars = (rating) => {
+
+    const stars = [];
+    const currentRating = getRating(rating);
+
+    for (let i = 1; i <= 5; i++) {
+
+      if (currentRating >= i) {
+
+        stars.push(
+          <FaStar
+            key={i}
+            className="rating-star filled"
+          />
+        );
+
+      } else if (currentRating >= i - 0.5) {
+
+        stars.push(
+          <FaStarHalfAlt
+            key={i}
+            className="rating-star filled"
+          />
+        );
+
+      } else {
+
+        stars.push(
+          <FaStar
+            key={i}
+            className="rating-star empty"
+          />
+        );
+
+      }
+
+    }
+
+    return stars;
+  };
 
   // =====================================
   // ADD TO CART
@@ -227,7 +266,6 @@ export default function Menu() {
 
       let updatedCart;
 
-
       // EXISTING FOOD
 
       if (existingFoodIndex !== -1) {
@@ -250,7 +288,6 @@ export default function Menu() {
         };
 
       }
-
 
       // NEW FOOD
 
@@ -282,7 +319,6 @@ export default function Menu() {
 
       }
 
-
       // SAVE CART
 
       localStorage.setItem(
@@ -312,7 +348,6 @@ export default function Menu() {
     }
 
   };
-
 
   // =====================================
   // FILTER FOODS
@@ -344,7 +379,6 @@ export default function Menu() {
 
   });
 
-
   // =====================================
   // SELECTED RESTAURANT
   // =====================================
@@ -356,13 +390,11 @@ export default function Menu() {
         String(selectedRestaurant)
     );
 
-
   return (
 
     <div className="menu-page">
 
       <Navbar />
-
 
       {/* =====================================
           MENU HERO
@@ -392,7 +424,6 @@ export default function Menu() {
 
       </section>
 
-
       {/* =====================================
           RESTAURANTS
       ===================================== */}
@@ -421,7 +452,6 @@ export default function Menu() {
 
         </div>
 
-
         <div className="restaurant-list">
 
           {/* ALL */}
@@ -447,7 +477,6 @@ export default function Menu() {
             </span>
 
           </button>
-
 
           {/* RESTAURANTS */}
 
@@ -510,7 +539,6 @@ export default function Menu() {
 
       </section>
 
-
       {/* =====================================
           SELECTED RESTAURANT
       ===================================== */}
@@ -544,7 +572,6 @@ export default function Menu() {
 
       )}
 
-
       {/* =====================================
           FILTER SECTION
       ===================================== */}
@@ -569,7 +596,6 @@ export default function Menu() {
             />
 
           </div>
-
 
           {/* CATEGORY */}
 
@@ -618,7 +644,6 @@ export default function Menu() {
 
         </div>
 
-
         {/* =====================================
             RESULT INFO
         ===================================== */}
@@ -657,7 +682,6 @@ export default function Menu() {
             </div>
 
           )}
-
 
         {/* =====================================
             LOADING
@@ -757,7 +781,6 @@ export default function Menu() {
 
                 </div>
 
-
                 {/* DETAILS */}
 
                 <div className="food-info">
@@ -770,6 +793,21 @@ export default function Menu() {
                     {food.name}
                   </h2>
 
+                  {/* =================================
+                      RATING
+                  ================================= */}
+
+                  <div className="food-rating">
+
+                    <div className="rating-stars">
+                      {renderStars(food.rating)}
+                    </div>
+
+                    <span className="rating-number">
+                      {getRating(food.rating).toFixed(1)}
+                    </span>
+
+                  </div>
 
                   <div className="food-bottom">
 
@@ -784,7 +822,6 @@ export default function Menu() {
                       </strong>
 
                     </div>
-
 
                     <button
                       type="button"
@@ -809,7 +846,6 @@ export default function Menu() {
         )}
 
       </section>
-
 
       <Footer />
 

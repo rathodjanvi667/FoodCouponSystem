@@ -3,6 +3,8 @@ import "./Contact.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
+const API_URL = "http://localhost:5000";
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,6 +14,7 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
 
   // =====================================
   // HANDLE INPUT CHANGE
@@ -28,7 +31,7 @@ export default function Contact() {
   // HANDLE FORM SUBMIT
   // =====================================
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -41,23 +44,63 @@ export default function Contact() {
       return;
     }
 
-    setSubmitted(true);
+    try {
+      setSending(true);
 
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+      const response = await fetch(
+        `${API_URL}/api/contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            subject: formData.subject.trim(),
+            message: formData.message.trim(),
+          }),
+        }
+      );
 
-    setTimeout(() => {
-      setSubmitted(false);
-    }, 4000);
+      const data = await response.json();
+
+      console.log("CONTACT RESPONSE:", data);
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to send message"
+        );
+      }
+
+      setSubmitted(true);
+
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 4000);
+    } catch (error) {
+      console.error(
+        "CONTACT FORM ERROR:",
+        error
+      );
+
+      alert(
+        `Failed to send message.\n\n${error.message}`
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <div className="contact-page-wrapper">
-
       <Navbar />
 
       <main className="contact">
@@ -67,9 +110,7 @@ export default function Contact() {
         ====================================== */}
 
         <section className="contact-banner">
-
           <div className="contact-banner-content">
-
             <span className="contact-banner-label">
               SMART FOOD COUPON
             </span>
@@ -79,11 +120,8 @@ export default function Contact() {
             <p>
               Have a question? We're here to help!
             </p>
-
           </div>
-
         </section>
-
 
         {/* =====================================
             CONTACT CONTENT
@@ -112,90 +150,64 @@ export default function Contact() {
               to help you.
             </p>
 
-
-            {/* =====================================
-                ONLINE PLATFORM
-            ====================================== */}
+            {/* ONLINE PLATFORM */}
 
             <div className="info-box">
-
               <div className="info-icon">
                 🌐
               </div>
 
               <div className="info-content">
-
                 <h3>Online Platform</h3>
 
                 <p>
                   Smart Food Coupon is an online platform
                   available for food lovers everywhere.
                 </p>
-
               </div>
-
             </div>
 
-
-            {/* =====================================
-                CUSTOMER SUPPORT
-            ====================================== */}
+            {/* CUSTOMER SUPPORT */}
 
             <div className="info-box">
-
               <div className="info-icon">
                 📞
               </div>
 
               <div className="info-content">
-
                 <h3>Customer Support</h3>
 
                 <p>
                   Get assistance with coupons, orders,
                   food items and other queries.
                 </p>
-
               </div>
-
             </div>
 
-
-            {/* =====================================
-                EMAIL
-            ====================================== */}
+            {/* EMAIL */}
 
             <div className="info-box">
-
               <div className="info-icon">
                 ✉️
               </div>
 
               <div className="info-content">
-
                 <h3>Email Support</h3>
 
                 <p>
                   support@foodcoupon.com
                 </p>
-
               </div>
-
             </div>
 
-
-            {/* =====================================
-                WORKING HOURS
-            ====================================== */}
+            {/* WORKING HOURS */}
 
             <div className="info-box">
-
               <div className="info-icon">
                 🕒
               </div>
 
               <div className="info-content">
-
                 <h3>Support Hours</h3>
 
                 <p>
@@ -203,13 +215,10 @@ export default function Contact() {
                   <br />
                   9:00 AM - 10:00 PM
                 </p>
-
               </div>
-
             </div>
 
           </div>
-
 
           {/* =====================================
               CONTACT FORM
@@ -218,7 +227,6 @@ export default function Contact() {
           <div className="contact-form">
 
             <div className="form-header">
-
               <span>
                 MESSAGE US
               </span>
@@ -231,21 +239,15 @@ export default function Contact() {
                 Fill out the form below and our team will
                 get back to you soon.
               </p>
-
             </div>
 
-
-            {/* =====================================
-                SUCCESS MESSAGE
-            ====================================== */}
+            {/* SUCCESS MESSAGE */}
 
             {submitted && (
               <div className="success-message">
-
                 <span>✓</span>
 
                 <div>
-
                   <strong>
                     Message Sent Successfully!
                   </strong>
@@ -253,16 +255,11 @@ export default function Contact() {
                   <p>
                     Thank you for contacting Smart Food Coupon.
                   </p>
-
                 </div>
-
               </div>
             )}
 
-
-            {/* =====================================
-                FORM
-            ====================================== */}
+            {/* FORM */}
 
             <form onSubmit={handleSubmit}>
 
@@ -271,7 +268,6 @@ export default function Contact() {
               <div className="form-row">
 
                 <div className="form-group">
-
                   <label>
                     Your Name
                   </label>
@@ -282,13 +278,11 @@ export default function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your name"
+                    disabled={sending}
                   />
-
                 </div>
 
-
                 <div className="form-group">
-
                   <label>
                     Email Address
                   </label>
@@ -299,17 +293,15 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email"
+                    disabled={sending}
                   />
-
                 </div>
 
               </div>
 
-
               {/* SUBJECT */}
 
               <div className="form-group">
-
                 <label>
                   Subject
                 </label>
@@ -320,15 +312,13 @@ export default function Contact() {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="What can we help you with?"
+                  disabled={sending}
                 />
-
               </div>
-
 
               {/* MESSAGE */}
 
               <div className="form-group">
-
                 <label>
                   Your Message
                 </label>
@@ -339,19 +329,24 @@ export default function Contact() {
                   onChange={handleChange}
                   rows="6"
                   placeholder="Write your message here..."
+                  disabled={sending}
                 ></textarea>
-
               </div>
-
 
               {/* SUBMIT */}
 
               <button
                 type="submit"
                 className="contact-submit-btn"
+                disabled={sending}
               >
-                Send Message
-                <span>→</span>
+                {sending
+                  ? "Sending..."
+                  : "Send Message"}
+
+                <span>
+                  {sending ? "..." : "→"}
+                </span>
               </button>
 
             </form>
@@ -359,7 +354,6 @@ export default function Contact() {
           </div>
 
         </section>
-
 
         {/* =====================================
             BOTTOM CTA
@@ -372,7 +366,6 @@ export default function Contact() {
           </div>
 
           <div>
-
             <h3>
               Need help with a food coupon?
             </h3>
@@ -381,7 +374,6 @@ export default function Contact() {
               We're here to help you discover better
               deals and save more on your favorite food.
             </p>
-
           </div>
 
         </section>
@@ -389,7 +381,6 @@ export default function Contact() {
       </main>
 
       <Footer />
-
     </div>
   );
 }
