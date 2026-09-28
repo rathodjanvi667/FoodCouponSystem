@@ -822,7 +822,6 @@ export default function Menu() {
                       </strong>
 
                     </div>
-
                     <button
                       type="button"
                       onClick={() =>
@@ -832,25 +831,14 @@ export default function Menu() {
                       <FaShoppingCart />
                       Add to Cart
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
-
         )}
-
       </section>
-
       <Footer />
-
     </div>
-
   );
-
 }

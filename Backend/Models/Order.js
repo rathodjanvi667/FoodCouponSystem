@@ -2,67 +2,37 @@ const mongoose = require("mongoose");
 
 const orderItemSchema = new mongoose.Schema(
   {
-    _id: {
-      type: String
-    },
-
-    id: {
-      type: String
-    },
-
-    name: {
-      type: String,
-      required: true
-    },
-
-    category: {
-      type: String,
-      default: ""
-    },
-
-    price: {
-      type: Number,
-      required: true
-    },
-
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1
-    },
-
-    image: {
-      type: String,
-      default: ""
-    }
+    _id: { type: String },
+    id: { type: String },
+    name: { type: String, required: true },
+    category: { type: String, default: "" },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true, min: 1 },
+    image: { type: String, default: "" }
   },
-  {
-    _id: false
-  }
+  { _id: false }
 );
-
 
 const orderSchema = new mongoose.Schema(
   {
-    // =====================================
-    // ORDER NUMBER
-    // =====================================
-
     orderNumber: {
       type: String,
       required: true,
       unique: true
     },
 
-
-    // =====================================
-    // CUSTOMER DETAILS
-    // =====================================
-
     customer: {
       type: String,
       required: true,
       trim: true
+    },
+
+    // Email of the user who placed the order
+    customerEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true
     },
 
     mobile: {
@@ -95,20 +65,10 @@ const orderSchema = new mongoose.Schema(
       trim: true
     },
 
-
-    // =====================================
-    // ORDER ITEMS
-    // =====================================
-
     items: {
       type: [orderItemSchema],
       required: true
     },
-
-
-    // =====================================
-    // BILL DETAILS
-    // =====================================
 
     subtotal: {
       type: Number,
@@ -137,52 +97,30 @@ const orderSchema = new mongoose.Schema(
       default: 0
     },
 
-
-    // =====================================
-    // PAYMENT
-    // =====================================
-
     paymentMethod: {
       type: String,
       required: true
     },
-
-
-    // =====================================
-    // COUPON
-    // =====================================
 
     couponCode: {
       type: String,
       default: ""
     },
 
-
-    // =====================================
-    // ORDER STATUS
-    // =====================================
-
     status: {
       type: String,
-
       enum: [
         "Pending",
         "Preparing",
         "Delivered",
         "Cancelled"
       ],
-
       default: "Pending"
     }
   },
-
   {
     timestamps: true
   }
 );
 
-
-module.exports = mongoose.model(
-  "Order",
-  orderSchema
-);
+module.exports = mongoose.model("Order", orderSchema);

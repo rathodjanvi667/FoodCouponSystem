@@ -36,8 +36,6 @@ export default function Order() {
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
 
-  
-
   // =====================================
   // SUCCESS POPUP
   // =====================================
@@ -132,6 +130,36 @@ export default function Order() {
       return;
     }
 
+    // =====================================
+    // GET LOGGED-IN USER
+    // =====================================
+
+    let loggedInUser = null;
+
+    try {
+      loggedInUser =
+        JSON.parse(
+          localStorage.getItem("foodCouponUser")
+        ) || null;
+    } catch (error) {
+      console.error(
+        "Error reading logged-in user:",
+        error
+      );
+    }
+
+    // User must be logged in
+    if (
+      !loggedInUser ||
+      !loggedInUser.email
+    ) {
+      alert(
+        "Please login before placing an order."
+      );
+
+      return;
+    }
+
     // Cart empty
     if (cart.length === 0) {
       alert("Your cart is empty!");
@@ -153,13 +181,19 @@ export default function Order() {
 
     // Mobile validation
     if (!/^[0-9]{10}$/.test(mobile.trim())) {
-      alert("Please enter a valid 10-digit mobile number.");
+      alert(
+        "Please enter a valid 10-digit mobile number."
+      );
+
       return;
     }
 
     // Pincode validation
     if (!/^[0-9]{6}$/.test(pincode.trim())) {
-      alert("Please enter a valid 6-digit pincode.");
+      alert(
+        "Please enter a valid 6-digit pincode."
+      );
+
       return;
     }
 
@@ -177,7 +211,7 @@ export default function Order() {
         category: item.category || "",
         price: cleanPrice(item.price),
         quantity: Number(item.quantity || 1),
-        image: item.image || "",
+        image: item.image || ""
       }));
 
       // =====================================
@@ -190,11 +224,17 @@ export default function Order() {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
 
           body: JSON.stringify({
             customer: name.trim(),
+
+            // NEW:
+            // Link order with logged-in user
+            customerEmail:
+              loggedInUser.email,
+
             mobile: mobile.trim(),
             address: address.trim(),
             city: city.trim(),
@@ -209,10 +249,11 @@ export default function Order() {
             discount,
             total,
 
-            paymentMethod: "Cash on Delivery",
+            paymentMethod:
+              "Cash on Delivery",
 
-            couponCode: "",
-          }),
+            couponCode: ""
+          })
         }
       );
 
@@ -220,7 +261,8 @@ export default function Order() {
       // ORDER RESPONSE
       // =====================================
 
-      const orderData = await orderResponse.json();
+      const orderData =
+        await orderResponse.json();
 
       if (!orderResponse.ok) {
         throw new Error(
@@ -234,7 +276,8 @@ export default function Order() {
       // =====================================
 
       const savedOrder =
-        orderData.order || orderData;
+        orderData.order ||
+        orderData;
 
       const orderId =
         savedOrder.orderNumber ||
@@ -251,7 +294,7 @@ export default function Order() {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
 
           body: JSON.stringify({
@@ -261,12 +304,20 @@ export default function Order() {
 
             store: "Smart Food Coupon",
 
-            customerName: name.trim(),
+            customerName:
+              name.trim(),
 
-            customerMobile: mobile.trim(),
+            customerMobile:
+              mobile.trim(),
 
-            orderId: orderId,
-          }),
+            // NEW:
+            // Link generated coupon
+            // with logged-in user
+            customerEmail:
+              loggedInUser.email,
+
+            orderId: orderId
+          })
         }
       );
 
@@ -287,7 +338,9 @@ export default function Order() {
           couponData
         );
 
-        localStorage.removeItem("foodCart");
+        localStorage.removeItem(
+          "foodCart"
+        );
 
         window.dispatchEvent(
           new Event("cartUpdated")
@@ -297,7 +350,8 @@ export default function Order() {
           "Order placed successfully, but coupon generation failed."
         );
 
-        window.location.href = "/Menu";
+        window.location.href =
+          "/Menu";
 
         return;
       }
@@ -307,9 +361,13 @@ export default function Order() {
       // =====================================
 
       const coupon =
-        couponData.coupon || couponData;
+        couponData.coupon ||
+        couponData;
 
-      if (!coupon || !coupon.code) {
+      if (
+        !coupon ||
+        !coupon.code
+      ) {
         throw new Error(
           "Coupon was generated but coupon data was not received."
         );
@@ -328,12 +386,14 @@ export default function Order() {
 
       const customerCoupons = [
         ...savedCustomerCoupons,
-        coupon,
+        coupon
       ];
 
       localStorage.setItem(
         "customerCoupons",
-        JSON.stringify(customerCoupons)
+        JSON.stringify(
+          customerCoupons
+        )
       );
 
       // =====================================
@@ -349,7 +409,9 @@ export default function Order() {
       // CLEAR CART
       // =====================================
 
-      localStorage.removeItem("foodCart");
+      localStorage.removeItem(
+        "foodCart"
+      );
 
       window.dispatchEvent(
         new Event("cartUpdated")
@@ -361,10 +423,15 @@ export default function Order() {
 
       setGeneratedCoupon(coupon);
 
-      setGeneratedOrderId(orderId);
+      setGeneratedOrderId(
+        orderId
+      );
 
       setGeneratedTotal(
-        Number(savedOrder.total || total)
+        Number(
+          savedOrder.total ||
+            total
+        )
       );
 
       // =====================================
@@ -532,7 +599,9 @@ export default function Order() {
                 placeholder="Enter your full name"
                 value={name}
                 onChange={(e) =>
-                  setName(e.target.value)
+                  setName(
+                    e.target.value
+                  )
                 }
               />
             </div>
@@ -547,7 +616,9 @@ export default function Order() {
                 placeholder="Enter 10-digit mobile number"
                 value={mobile}
                 onChange={(e) =>
-                  setMobile(e.target.value)
+                  setMobile(
+                    e.target.value
+                  )
                 }
                 maxLength="10"
               />
@@ -562,7 +633,9 @@ export default function Order() {
                 placeholder="Enter your delivery address"
                 value={address}
                 onChange={(e) =>
-                  setAddress(e.target.value)
+                  setAddress(
+                    e.target.value
+                  )
                 }
                 rows="3"
               />
@@ -579,7 +652,9 @@ export default function Order() {
                   placeholder="Enter city"
                   value={city}
                   onChange={(e) =>
-                    setCity(e.target.value)
+                    setCity(
+                      e.target.value
+                    )
                   }
                 />
               </div>
@@ -594,7 +669,9 @@ export default function Order() {
                   placeholder="Enter state"
                   value={state}
                   onChange={(e) =>
-                    setState(e.target.value)
+                    setState(
+                      e.target.value
+                    )
                   }
                 />
               </div>
@@ -610,7 +687,9 @@ export default function Order() {
                 placeholder="Enter 6-digit pincode"
                 value={pincode}
                 onChange={(e) =>
-                  setPincode(e.target.value)
+                  setPincode(
+                    e.target.value
+                  )
                 }
                 maxLength="6"
               />
@@ -744,7 +823,9 @@ export default function Order() {
 
               <button
                 className="success-close"
-                onClick={closeSuccessPopup}
+                onClick={
+                  closeSuccessPopup
+                }
               >
                 ×
               </button>
@@ -820,7 +901,9 @@ export default function Order() {
 
               <button
                 className="continue-btn"
-                onClick={closeSuccessPopup}
+                onClick={
+                  closeSuccessPopup
+                }
               >
                 Continue Shopping
               </button>

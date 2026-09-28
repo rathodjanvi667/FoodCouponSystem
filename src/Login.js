@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 
+const API_URL = "http://localhost:5000";
+
 export default function Login() {
   const navigate = useNavigate();
 
@@ -11,144 +13,113 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // =====================================
-  // LOAD REMEMBER ME DATA
-  // =====================================
   useEffect(() => {
-    const savedLogin =
-      localStorage.getItem("foodCouponLogin");
+    const savedLogin = localStorage.getItem("foodCouponLogin");
 
     if (savedLogin) {
       try {
-        const loginData =
-          JSON.parse(savedLogin);
+        const loginData = JSON.parse(savedLogin);
 
         setEmail(loginData.email || "");
         setRole(loginData.role || "customer");
         setRememberMe(true);
       } catch (error) {
-        console.error(
-          "Login data error:",
-          error
-        );
-
-        localStorage.removeItem(
-          "foodCouponLogin"
-        );
+        console.error("Login data error:", error);
+        localStorage.removeItem("foodCouponLogin");
       }
     }
   }, []);
 
-  // =====================================
-  // LOGIN
-  // =====================================
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Empty field validation
-    if (
-      email.trim() === "" ||
-      password.trim() === ""
-    ) {
-      alert(
-        "Please enter Email and Password"
-      );
+    if (email.trim() === "" || password.trim() === "") {
+      alert("Please enter Email and Password");
       return;
     }
 
-    // Email validation
-    const emailPattern =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(email)) {
-      alert(
-        "Please enter a valid email address"
-      );
+      alert("Please enter a valid email address");
       return;
     }
 
-    // Password validation
     if (password.length < 6) {
-      alert(
-        "Password must be at least 6 characters"
-      );
+      alert("Password must be at least 6 characters");
       return;
     }
 
     setLoading(true);
 
-    // =====================================
-    // FRONTEND DEMO LOGIN
-    // =====================================
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+          role: role
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid email or password");
+      }
+
+      const user = data.user;
+
       const userData = {
-        email: email.trim(),
-        role: role
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role
       };
 
-      // =====================================
-      // SAVE LOGGED-IN USER
-      // =====================================
       localStorage.setItem(
         "foodCouponUser",
         JSON.stringify(userData)
       );
 
-      // =====================================
-      // REMEMBER ME
-      // =====================================
       if (rememberMe) {
         localStorage.setItem(
           "foodCouponLogin",
           JSON.stringify({
-            email: email.trim(),
-            role: role
+            email: user.email,
+            role: user.role
           })
         );
       } else {
-        localStorage.removeItem(
-          "foodCouponLogin"
-        );
+        localStorage.removeItem("foodCouponLogin");
       }
 
-      // =====================================
-      // UPDATE NAVBAR
-      // =====================================
-      window.dispatchEvent(
-        new Event("userUpdated")
-      );
+      window.dispatchEvent(new Event("userUpdated"));
 
-      setLoading(false);
-
-      // =====================================
-      // ROLE BASED REDIRECT
-      // =====================================
-      if (role === "admin") {
-        alert(
-          "Admin Login Successful!"
-        );
-
+      if (user.role === "admin") {
+        alert("Admin Login Successful!");
         navigate("/Admindashboard");
       } else {
-        alert(
-          "Customer Login Successful!"
-        );
-
+        alert("Customer Login Successful!");
         navigate("/");
       }
-    }, 800);
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // =====================================
-  // FORGOT PASSWORD
-  // =====================================
   const handleForgotPassword = (e) => {
     e.preventDefault();
 
     if (email.trim() === "") {
-      alert(
-        "Please enter your email first."
-      );
+      alert("Please enter your email first.");
       return;
     }
 
@@ -157,135 +128,67 @@ export default function Login() {
     );
   };
 
-  // =====================================
-  // RETURN UI
-  // =====================================
   return (
     <div className="login-container">
+      <div className="food-sticker sticker-1">🍕</div>
+      <div className="food-sticker sticker-2">🍔</div>
+      <div className="food-sticker sticker-3">🥤</div>
+      <div className="food-sticker sticker-4">🍰</div>
+      <div className="food-sticker sticker-5">🍝</div>
 
-      {/* =================================
-          FOOD STICKERS
-      ================================= */}
-      <div className="food-sticker sticker-1">
-        🍕
-      </div>
-
-      <div className="food-sticker sticker-2">
-        🍔
-      </div>
-
-      <div className="food-sticker sticker-3">
-        🥤
-      </div>
-
-      <div className="food-sticker sticker-4">
-        🍰
-      </div>
-
-      <div className="food-sticker sticker-5">
-        🍝
-      </div>
-
-      {/* =================================
-          LOGIN BOX
-      ================================= */}
       <div className="login-box">
-
-        <h1>
-          Welcome Back 👋
-        </h1>
-
-        <p>
-          Login to continue your food journey
-        </p>
+        <h1>Welcome Back 👋</h1>
+        <p>Login to continue your food journey</p>
 
         <form onSubmit={handleLogin}>
-
-          {/* ROLE */}
           <select
             value={role}
-            onChange={(e) =>
-              setRole(e.target.value)
-            }
+            onChange={(e) => setRole(e.target.value)}
           >
-            <option value="customer">
-              Customer
-            </option>
-
-            <option value="admin">
-              Admin
-            </option>
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
           </select>
 
-          {/* EMAIL */}
           <input
             type="email"
             placeholder="Enter Email"
             value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
           />
 
-          {/* PASSWORD */}
           <input
             type="password"
             placeholder="Enter Password"
             value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
+            onChange={(e) => setPassword(e.target.value)}
           />
 
-          {/* LOGIN OPTIONS */}
           <div className="login-options">
-
             <label>
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) =>
-                  setRememberMe(
-                    e.target.checked
-                  )
+                  setRememberMe(e.target.checked)
                 }
               />
-
               Remember Me
             </label>
 
-            <a
-              href="/"
-              onClick={
-                handleForgotPassword
-              }
-            >
+            <a href="/" onClick={handleForgotPassword}>
               Forgot Password?
             </a>
-
           </div>
 
-          {/* LOGIN BUTTON */}
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Logging in..."
-              : "Login"}
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
 
-        {/* REGISTER */}
         <div className="register-link">
           Don't have an account?{" "}
-
-          <Link to="/Register">
-            Register
-          </Link>
+          <Link to="/Register">Register</Link>
         </div>
-
       </div>
     </div>
   );

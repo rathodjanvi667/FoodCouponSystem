@@ -5,6 +5,7 @@ import {
   FaTimes
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import logocouponbite from "./Images/logocouponbite.jpeg"
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -215,7 +216,11 @@ export default function Navbar() {
         to="/"
         className="logo"
       >
-        CouponBite
+        <img
+          src={logocouponbite}
+          alt="CouponBite"
+          className="logo-image"
+        />
       </Link>
 
       {/* NAVIGATION */}
@@ -304,11 +309,10 @@ export default function Navbar() {
                       notification => (
                         <div
                           key={notification._id}
-                          className={`notification-item ${
-                            notification.isRead
+                          className={`notification-item ${notification.isRead
                               ? "read"
                               : "unread"
-                          }`}
+                            }`}
                           onClick={() =>
                             markAsRead(
                               notification._id
@@ -387,12 +391,15 @@ export default function Navbar() {
         {user ? (
           <div className="user-section">
 
-            <span className="user-name">
-              {user.role === "admin"
-                ? "👨‍💼 Admin"
-                : "👤 Customer"}
-            </span>
+            {/* PROFILE */}
+            <Link
+              to="/Profile"
+              className="profile-link"
+            >
+              👤 Profile
+            </Link>
 
+            {/* LOGOUT */}
             <button
               className="logoutbtn"
               onClick={handleLogout}

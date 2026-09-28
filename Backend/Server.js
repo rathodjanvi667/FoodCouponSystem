@@ -10,6 +10,7 @@ const Order = require("./Models/Order");
 const Restaurant = require("./Models/Restaurant");
 const Notification = require("./Models/Notification");
 const Contact = require("./Models/Contact");
+const User = require("./Models/User");
 
 const app = express();
 
@@ -70,6 +71,267 @@ app.get("/", (req, res) => {
   res.json({
     message: "Food Coupon System Backend Running",
   });
+});
+
+// ============================================================
+// AUTHENTICATION APIs
+// ============================================================
+
+const ADMIN_EMAIL = "admin@gmail.com";
+const ADMIN_PASSWORD = "admin123";
+
+// CUSTOMER REGISTER
+
+app.post("/api/auth/register", async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      phone,
+      password
+    } = req.body;
+
+    const cleanName = name?.trim();
+    const cleanEmail = email?.trim().toLowerCase();
+    const cleanPhone = phone?.trim();
+
+    if (
+      !cleanName ||
+      !cleanEmail ||
+      !cleanPhone ||
+      !password
+    ) {
+      return res.status(400).json({
+        message: "Please fill all fields"
+      });
+    }
+
+    const existingUser = await User.findOne({
+      email: cleanEmail
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email is already registered"
+      });
+    }
+
+    if (cleanEmail === ADMIN_EMAIL) {
+      return res.status(400).json({
+        message: "This email cannot be registered"
+      });
+    }
+
+    const user = new User({
+      name: cleanName,
+      email: cleanEmail,
+      phone: cleanPhone,
+      password,
+      role: "customer"
+    });
+
+    const savedUser = await user.save();
+
+    res.status(201).json({
+      message: "Registration successful",
+      user: {
+        _id: savedUser._id,
+        name: savedUser.name,
+        email: savedUser.email,
+        phone: savedUser.phone,
+        role: savedUser.role
+      }
+    });
+  } catch (error) {
+    console.log("REGISTER ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to register",
+      error: error.message
+    });
+  }
+});
+
+// LOGIN
+
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const {
+      email,
+      password,
+      role
+    } = req.body;
+
+    const cleanEmail = email?.trim().toLowerCase();
+
+    if (!cleanEmail || !password || !role) {
+      return res.status(400).json({
+        message: "Email, password and role are required"
+      });
+    }
+
+    if (role === "admin") {
+      if (
+        cleanEmail !== ADMIN_EMAIL ||
+        password !== ADMIN_PASSWORD
+      ) {
+        return res.status(401).json({
+          message: "Invalid admin email or password"
+        });
+      }
+
+      return res.json({
+        message: "Admin login successful",
+        user: {
+          name: "Admin",
+          email: ADMIN_EMAIL,
+          phone: "",
+          role: "admin"
+        }
+      });
+    }
+
+    const user = await User.findOne({
+      email: cleanEmail,
+      role: "customer"
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Customer not registered"
+      });
+    }
+
+    if (user.password !== password) {
+      return res.status(401).json({
+        message: "Invalid password"
+      });
+    }
+
+    res.json({
+      message: "Customer login successful",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.log("LOGIN ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to login",
+      error: error.message
+    });
+  }
+});
+
+// GET USER PROFILE
+
+app.get("/api/users/profile/:email", async (req, res) => {
+  try {
+    const email = req.params.email.trim().toLowerCase();
+
+    const user = await User.findOne({
+      email
+    }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.log("GET PROFILE ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to get profile"
+    });
+  }
+});
+
+// UPDATE USER PROFILE
+
+app.put("/api/users/profile/:id", async (req, res) => {
+  try {
+    if (
+      !mongoose.Types.ObjectId.isValid(
+        req.params.id
+      )
+    ) {
+      return res.status(400).json({
+        message: "Invalid user ID"
+      });
+    }
+
+    const {
+      name,
+      email,
+      phone
+    } = req.body;
+
+    const cleanName = name?.trim();
+    const cleanEmail = email?.trim().toLowerCase();
+    const cleanPhone = phone?.trim();
+
+    if (
+      !cleanName ||
+      !cleanEmail ||
+      !cleanPhone
+    ) {
+      return res.status(400).json({
+        message: "Name, email and phone are required"
+      });
+    }
+
+    const existingUser = await User.findOne({
+      email: cleanEmail,
+      _id: {
+        $ne: req.params.id
+      }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email is already registered"
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: cleanName,
+        email: cleanEmail,
+        phone: cleanPhone
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.json({
+      message: "Profile updated successfully",
+      user
+    });
+  } catch (error) {
+    console.log("UPDATE PROFILE ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to update profile",
+      error: error.message
+    });
+  }
 });
 
 // ============================================================
@@ -383,7 +645,6 @@ app.delete(
     }
   }
 );
-
 // ============================================================
 // COUPON APIs
 // ============================================================
@@ -424,8 +685,7 @@ app.post("/api/coupons", async (req, res) => {
 
     if (!code || discount === undefined) {
       return res.status(400).json({
-        message:
-          "Coupon code and discount are required",
+        message: "Coupon code and discount are required",
       });
     }
 
@@ -434,15 +694,13 @@ app.post("/api/coupons", async (req, res) => {
       Number(discount) > 100
     ) {
       return res.status(400).json({
-        message:
-          "Discount must be between 1% and 100%",
+        message: "Discount must be between 1% and 100%",
       });
     }
 
-    const existingCoupon =
-      await Coupon.findOne({
-        code: code.toUpperCase(),
-      });
+    const existingCoupon = await Coupon.findOne({
+      code: code.toUpperCase(),
+    });
 
     if (existingCoupon) {
       return res.status(400).json({
@@ -453,14 +711,13 @@ app.post("/api/coupons", async (req, res) => {
     const coupon = new Coupon({
       code: code.toUpperCase(),
       discount: Number(discount),
-      minOrderAmount:
-        Number(minOrderAmount) || 0,
+      minOrderAmount: Number(minOrderAmount) || 0,
       validFrom,
       validUntil,
       store,
       description,
-      type,
-      status,
+      type: type || "admin",
+      status: status || "generated",
       isActive: true,
     });
 
@@ -471,10 +728,7 @@ app.post("/api/coupons", async (req, res) => {
       coupon: savedCoupon,
     });
   } catch (error) {
-    console.log(
-      "CREATE COUPON ERROR:",
-      error
-    );
+    console.log("CREATE COUPON ERROR:", error);
 
     res.status(500).json({
       message: "Failed to create coupon",
@@ -485,104 +739,130 @@ app.post("/api/coupons", async (req, res) => {
 
 // GENERATE CUSTOMER COUPON
 
-app.post(
-  "/api/coupons/generate",
-  async (req, res) => {
-    try {
-      const {
-        customerName,
-        customerMobile,
-        orderId,
-        items,
-        totalAmount,
-      } = req.body;
+app.get("/api/coupons/customer/:email", async (req, res) => {
+  try {
+    const email = req.params.email.trim().toLowerCase();
 
-      const randomNumber = Math.floor(
-        100000 + Math.random() * 900000
-      );
+    const coupons = await Coupon.find({
+      customerEmail: email,
+      type: "generated"
+    }).sort({
+      createdAt: -1
+    });
 
-      const couponCode =
-        `SFC-${randomNumber}`;
+    res.json(coupons);
+  } catch (error) {
+    console.log("GET CUSTOMER COUPONS ERROR:", error);
 
-      const validUntil = new Date();
+    res.status(500).json({
+      message: "Failed to get customer coupons"
+    });
+  }
+});
 
-      validUntil.setDate(
-        validUntil.getDate() + 7
-      );
+// GENERATE CUSTOMER COUPON
 
-      const coupon = new Coupon({
-        code: couponCode,
-        discount: 10,
-        minOrderAmount: 0,
-        validFrom: new Date(),
-        validUntil,
-        store: "All Restaurants",
-        description:
-          "Generated coupon after successful order",
-        isActive: true,
-        type: "Generated",
-        status: "Active",
-        customerName,
-        customerMobile,
-        orderId,
-        items,
-        totalAmount,
-      });
+app.post("/api/coupons/generate", async (req, res) => {
+  try {
+    const {
+      customerName,
+      customerMobile,
+      customerEmail,
+      orderId,
+      items,
+      totalAmount,
+    } = req.body;
 
-      const savedCoupon =
-        await coupon.save();
-
-      res.status(201).json({
-        message:
-          "Coupon generated successfully",
-        coupon: savedCoupon,
-      });
-    } catch (error) {
-      console.log(
-        "GENERATE COUPON ERROR:",
-        error
-      );
-
-      res.status(500).json({
-        message: "Failed to generate coupon",
-        error: error.message,
+    if (!customerEmail) {
+      return res.status(400).json({
+        message: "Customer email is required",
       });
     }
+
+    const randomNumber = Math.floor(
+      100000 + Math.random() * 900000
+    );
+
+    const couponCode = `SFC-${randomNumber}`;
+
+    const validUntil = new Date();
+
+    validUntil.setDate(
+      validUntil.getDate() + 7
+    );
+
+    const coupon = new Coupon({
+      code: couponCode,
+      discount: 10,
+      minOrderAmount: 0,
+      validFrom: new Date(),
+      validUntil,
+      store: "All Restaurants",
+      description:
+        "Generated coupon after successful order",
+      isActive: true,
+      type: "generated",
+      status: "generated",
+
+      customerName,
+      customerMobile,
+      customerEmail: customerEmail
+        .trim()
+        .toLowerCase(),
+
+      orderId,
+      items,
+      totalAmount:
+        Number(totalAmount) || 0,
+    });
+
+    const savedCoupon =
+      await coupon.save();
+
+    res.status(201).json({
+      message:
+        "Coupon generated successfully",
+      coupon: savedCoupon,
+    });
+  } catch (error) {
+    console.log(
+      "GENERATE COUPON ERROR:",
+      error
+    );
+
+    res.status(500).json({
+      message:
+        "Failed to generate coupon",
+      error: error.message,
+    });
   }
-);
+});
 
 // DELETE COUPON
 
-app.delete(
-  "/api/coupons/:id",
-  async (req, res) => {
-    try {
-      const coupon =
-        await Coupon.findByIdAndDelete(
-          req.params.id
-        );
+app.delete("/api/coupons/:id", async (req, res) => {
+  try {
+    const coupon = await Coupon.findByIdAndDelete(
+      req.params.id
+    );
 
-      if (!coupon) {
-        return res.status(404).json({
-          message: "Coupon not found",
-        });
-      }
-
-      res.json({
-        message: "Coupon deleted successfully",
-      });
-    } catch (error) {
-      console.log(
-        "DELETE COUPON ERROR:",
-        error
-      );
-
-      res.status(500).json({
-        message: "Failed to delete coupon",
+    if (!coupon) {
+      return res.status(404).json({
+        message: "Coupon not found",
       });
     }
+
+    res.json({
+      message: "Coupon deleted successfully",
+    });
+  } catch (error) {
+    console.log("DELETE COUPON ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to delete coupon",
+    });
   }
-);
+});
 
 // ============================================================
 // ORDER APIs
@@ -650,6 +930,8 @@ app.get(
 app.post("/api/orders", async (req, res) => {
   try {
     const {
+      customer,
+      customerEmail,
       name,
       mobile,
       address,
@@ -658,60 +940,107 @@ app.post("/api/orders", async (req, res) => {
       pincode,
       paymentMethod,
       items,
+      subtotal,
+      deliveryFee,
+      gst,
+      discount,
+      total,
       totalAmount,
+      couponCode
     } = req.body;
 
+    const customerName = customer || name;
+
+    const finalTotal =
+      total !== undefined
+        ? Number(total)
+        : Number(totalAmount);
+
     if (
-      !name ||
+      !customerName ||
+      !customerEmail ||
       !mobile ||
       !address ||
       !city ||
       !state ||
       !pincode ||
-      !paymentMethod
+      !paymentMethod ||
+      !items ||
+      !items.length ||
+      isNaN(finalTotal)
     ) {
       return res.status(400).json({
-        message:
-          "Please provide all required details",
+        message: "Please provide all required details"
       });
     }
 
-    const orderNumber =
-      `ORD-${Date.now()}`;
+    const orderNumber = `ORD-${Date.now()}`;
 
     const order = new Order({
       orderNumber,
-      name,
+      customer: customerName,
+      customerEmail: customerEmail.trim().toLowerCase(),
       mobile,
       address,
       city,
       state,
       pincode,
-      paymentMethod,
       items,
-      totalAmount,
-      status: "Pending",
+      subtotal: Number(subtotal) || 0,
+      deliveryFee: Number(deliveryFee) || 0,
+      gst: Number(gst) || 0,
+      discount: Number(discount) || 0,
+      total: finalTotal,
+      paymentMethod,
+      couponCode: couponCode || "",
+      status: "Pending"
     });
 
-    const savedOrder =
-      await order.save();
+    const savedOrder = await order.save();
 
     res.status(201).json({
       message: "Order placed successfully",
-      order: savedOrder,
+      order: savedOrder
     });
   } catch (error) {
-    console.log(
-      "CREATE ORDER ERROR:",
-      error
-    );
+    console.log("CREATE ORDER ERROR:", error);
 
     res.status(500).json({
       message: "Failed to place order",
-      error: error.message,
+      error: error.message
     });
   }
 });
+
+
+// GET ORDERS OF A CUSTOMER
+
+app.get(
+  "/api/orders/customer/:email",
+  async (req, res) => {
+    try {
+      const email =
+        req.params.email.trim().toLowerCase();
+
+      const orders = await Order.find({
+        customerEmail: email
+      }).sort({
+        createdAt: -1
+      });
+
+      res.json(orders);
+    } catch (error) {
+      console.log(
+        "GET CUSTOMER ORDERS ERROR:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Failed to get customer orders"
+      });
+    }
+  }
+);
 
 // UPDATE ORDER STATUS
 

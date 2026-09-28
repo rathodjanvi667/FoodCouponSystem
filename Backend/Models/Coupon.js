@@ -121,6 +121,15 @@ const couponSchema = new mongoose.Schema(
       default: ""
     },
 
+    // Customer email used to identify
+    // which user owns this coupon
+    customerEmail: {
+      type: String,
+      default: "",
+      lowercase: true,
+      trim: true
+    },
+
     // =====================================
     // ORDER ID
     // =====================================

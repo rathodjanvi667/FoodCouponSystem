@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import "./Coupon.css";
-
 import {
   FaTicketAlt,
   FaStore,
@@ -12,7 +11,7 @@ import {
   FaCheckCircle,
   FaClock,
   FaTimesCircle,
-  FaCopy,
+  FaCopy
 } from "react-icons/fa";
 
 const API_URL = "http://localhost:5000/api/coupons";
@@ -22,36 +21,88 @@ export default function Coupon() {
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // =====================================================
-  // LOAD COUPONS
-  // =====================================================
-
   const loadCoupons = async () => {
     try {
       setLoading(true);
 
-      // Coupons from database
       const response = await fetch(API_URL);
-      const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error("Failed to load coupons");
+      }
+
+      const data = await response.json();
       const databaseCoupons = Array.isArray(data) ? data : [];
 
-      // Customer generated coupons
-      const customerCoupons =
-        JSON.parse(localStorage.getItem("customerCoupons")) || [];
+      let customerCoupons = [];
 
-      // Latest generated coupon
+      try {
+        customerCoupons =
+          JSON.parse(
+            localStorage.getItem("customerCoupons")
+          ) || [];
+      } catch (error) {
+        customerCoupons = [];
+      }
+
       const latestCoupon =
-        JSON.parse(localStorage.getItem("latestCoupon")) || null;
+        JSON.parse(
+          localStorage.getItem("latestCoupon")
+        ) || null;
 
-      let allCoupons = [...databaseCoupons, ...customerCoupons];
+      let loggedInUser = null;
 
-      // Add latest generated coupon if it is not already present
+      try {
+        loggedInUser =
+          JSON.parse(
+            localStorage.getItem("foodCouponUser")
+          ) || null;
+      } catch (error) {
+        loggedInUser = null;
+      }
+
+      let userCoupons = [];
+
+      if (
+        loggedInUser &&
+        loggedInUser.role === "customer" &&
+        loggedInUser.email
+      ) {
+        try {
+          const customerResponse = await fetch(
+            `${API_URL}/customer/${encodeURIComponent(
+              loggedInUser.email
+            )}`
+          );
+
+          if (customerResponse.ok) {
+            const customerData =
+              await customerResponse.json();
+
+            userCoupons = Array.isArray(customerData)
+              ? customerData
+              : [];
+          }
+        } catch (error) {
+          console.error(
+            "Customer coupon loading error:",
+            error
+          );
+        }
+      }
+
+      let allCoupons = [
+        ...databaseCoupons,
+        ...userCoupons,
+        ...customerCoupons
+      ];
+
       if (latestCoupon) {
         const alreadyExists = allCoupons.some(
-          (coupon) =>
+          coupon =>
             (coupon.code || coupon.couponCode) ===
-            (latestCoupon.code || latestCoupon.couponCode)
+            (latestCoupon.code ||
+              latestCoupon.couponCode)
         );
 
         if (!alreadyExists) {
@@ -59,31 +110,35 @@ export default function Coupon() {
         }
       }
 
-      // Remove duplicate coupons
-      const uniqueCoupons = allCoupons.filter((coupon, index, array) => {
-        const couponId =
-          coupon.code ||
-          coupon.couponCode ||
-          coupon._id ||
-          coupon.id;
+      const uniqueCoupons = allCoupons.filter(
+        (coupon, index, array) => {
+          const couponId =
+            coupon.code ||
+            coupon.couponCode ||
+            coupon._id ||
+            coupon.id;
 
-        return (
-          index ===
-          array.findIndex((item) => {
-            const itemId =
-              item.code ||
-              item.couponCode ||
-              item._id ||
-              item.id;
+          return (
+            index ===
+            array.findIndex(item => {
+              const itemId =
+                item.code ||
+                item.couponCode ||
+                item._id ||
+                item.id;
 
-            return itemId === couponId;
-          })
-        );
-      });
+              return itemId === couponId;
+            })
+          );
+        }
+      );
 
       setCoupons(uniqueCoupons);
     } catch (error) {
-      console.error("Error loading coupons:", error);
+      console.error(
+        "Error loading coupons:",
+        error
+      );
       setCoupons([]);
     } finally {
       setLoading(false);
@@ -94,11 +149,7 @@ export default function Coupon() {
     loadCoupons();
   }, []);
 
-  // =====================================================
-  // FORMAT DATE
-  // =====================================================
-
-  const formatDate = (date) => {
+  const formatDate = date => {
     if (!date) return "Not specified";
 
     const parsedDate = new Date(date);
@@ -110,27 +161,17 @@ export default function Coupon() {
     return parsedDate.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
-      year: "numeric",
+      year: "numeric"
     });
   };
 
-  // =====================================================
-  // TODAY
-  // =====================================================
-
   const getToday = () => {
     const today = new Date();
-
     today.setHours(0, 0, 0, 0);
-
     return today;
   };
 
-  // =====================================================
-  // COUPON STATUS
-  // =====================================================
-
-  const getCouponStatus = (coupon) => {
+  const getCouponStatus = coupon => {
     if (!coupon.validFrom && !coupon.validUntil) {
       return "Valid";
     }
@@ -164,17 +205,17 @@ export default function Coupon() {
     return "Valid";
   };
 
-  // =====================================================
-  // DISCOUNT NUMBER
-  // =====================================================
-
-  const getDiscountNumber = (coupon) => {
-    if (coupon.discount !== undefined && coupon.discount !== null) {
+  const getDiscountNumber = coupon => {
+    if (
+      coupon.discount !== undefined &&
+      coupon.discount !== null
+    ) {
       return coupon.discount;
     }
 
     if (coupon.offer) {
-      const match = String(coupon.offer).match(/\d+/);
+      const match =
+        String(coupon.offer).match(/\d+/);
 
       if (match) {
         return match[0];
@@ -184,27 +225,22 @@ export default function Coupon() {
     return "—";
   };
 
-  // =====================================================
-  // DISCOUNT TEXT
-  // =====================================================
-
-  const getDiscountText = (coupon) => {
+  const getDiscountText = coupon => {
     if (coupon.offer) {
       return coupon.offer;
     }
 
-    if (coupon.discount !== undefined && coupon.discount !== null) {
+    if (
+      coupon.discount !== undefined &&
+      coupon.discount !== null
+    ) {
       return `${coupon.discount}% OFF`;
     }
 
     return "SPECIAL OFFER";
   };
 
-  // =====================================================
-  // STORE
-  // =====================================================
-
-  const getStore = (coupon) => {
+  const getStore = coupon => {
     return (
       coupon.store ||
       coupon.validAt ||
@@ -213,27 +249,23 @@ export default function Coupon() {
     );
   };
 
-  // =====================================================
-  // COUPON CODE
-  // =====================================================
-
-  const getCouponCode = (coupon) => {
-    return coupon.code || coupon.couponCode || "N/A";
+  const getCouponCode = coupon => {
+    return (
+      coupon.code ||
+      coupon.couponCode ||
+      "N/A"
+    );
   };
 
-  // =====================================================
-  // MINIMUM ORDER
-  // =====================================================
-
-  const getMinimumOrder = (coupon) => {
-    return coupon.minOrderAmount || coupon.minAmount || 0;
+  const getMinimumOrder = coupon => {
+    return (
+      coupon.minOrderAmount ||
+      coupon.minAmount ||
+      0
+    );
   };
 
-  // =====================================================
-  // COUPON IMAGE
-  // =====================================================
-
-  const getCouponImage = (coupon) => {
+  const getCouponImage = coupon => {
     const image =
       coupon.image ||
       coupon.imageUrl ||
@@ -248,14 +280,13 @@ export default function Coupon() {
       return image;
     }
 
-    return `${SERVER_URL}/${image.replace(/^\/+/, "")}`;
+    return `${SERVER_URL}/${image.replace(
+      /^\/+/,
+      ""
+    )}`;
   };
 
-  // =====================================================
-  // FOOD EMOJI
-  // =====================================================
-
-  const getFoodEmoji = (coupon) => {
+  const getFoodEmoji = coupon => {
     const text = `
       ${coupon.title || ""}
       ${coupon.name || ""}
@@ -275,27 +306,18 @@ export default function Coupon() {
     return "🍽️";
   };
 
-  // =====================================================
-  // COPY COUPON
-  // =====================================================
-
-  const copyCouponCode = async (coupon) => {
+  const copyCouponCode = async coupon => {
     const code = getCouponCode(coupon);
 
     try {
       await navigator.clipboard.writeText(code);
-
       alert(`Coupon code ${code} copied!`);
     } catch (error) {
       alert(`Coupon Code: ${code}`);
     }
   };
 
-  // =====================================================
-  // APPLY COUPON
-  // =====================================================
-
-  const applyCoupon = (coupon) => {
+  const applyCoupon = coupon => {
     const status = getCouponStatus(coupon);
 
     if (status !== "Valid") {
@@ -308,15 +330,13 @@ export default function Coupon() {
     );
 
     alert(
-      `Coupon ${getCouponCode(coupon)} applied successfully!`
+      `Coupon ${getCouponCode(
+        coupon
+      )} applied successfully!`
     );
   };
 
-  // =====================================================
-  // STATUS ICON
-  // =====================================================
-
-  const getStatusIcon = (status) => {
+  const getStatusIcon = status => {
     if (status === "Valid") {
       return <FaCheckCircle />;
     }
@@ -327,10 +347,6 @@ export default function Coupon() {
 
     return <FaTimesCircle />;
   };
-
-  // =====================================================
-  // LOADING
-  // =====================================================
 
   if (loading) {
     return (
@@ -352,21 +368,12 @@ export default function Coupon() {
     );
   }
 
-  // =====================================================
-  // PAGE
-  // =====================================================
-
   return (
     <div className="coupon-page">
       <Navbar />
 
-      {/* =================================================
-          HERO
-      ================================================= */}
-
       <section className="coupon-page-header">
         <div className="coupon-hero-content">
-
           <div className="coupon-hero-icon">
             <FaTicketAlt />
           </div>
@@ -383,18 +390,11 @@ export default function Coupon() {
               restaurant coupons.
             </p>
           </div>
-
         </div>
       </section>
 
-      {/* =================================================
-          COUPONS
-      ================================================= */}
-
       <section className="coupon-section">
-
         <div className="coupon-section-heading">
-
           <div className="coupon-section-label">
             EXCLUSIVE DEALS
           </div>
@@ -408,16 +408,10 @@ export default function Coupon() {
           <div className="coupon-count">
             {coupons.length} Coupons Available
           </div>
-
         </div>
-
-        {/* =================================================
-            NO COUPONS
-        ================================================= */}
 
         {coupons.length === 0 ? (
           <div className="no-coupons">
-
             <div className="no-coupon-icon">
               <FaTicketAlt />
             </div>
@@ -428,38 +422,39 @@ export default function Coupon() {
               There are currently no coupons available.
               Please check again later.
             </p>
-
           </div>
         ) : (
-
-          /* =================================================
-             COUPON GRID
-          ================================================= */
-
           <div className="coupon-grid">
-
             {coupons.map((coupon, index) => {
+              const status =
+                getCouponStatus(coupon);
 
-              const status = getCouponStatus(coupon);
               const discountNumber =
                 getDiscountNumber(coupon);
 
               const discountText =
                 getDiscountText(coupon);
 
-              const store = getStore(coupon);
-              const code = getCouponCode(coupon);
+              const store =
+                getStore(coupon);
+
+              const code =
+                getCouponCode(coupon);
 
               const minimumOrder =
                 getMinimumOrder(coupon);
 
-              const image = getCouponImage(coupon);
+              const image =
+                getCouponImage(coupon);
 
-              const emoji = getFoodEmoji(coupon);
+              const emoji =
+                getFoodEmoji(coupon);
 
               return (
                 <div
-                  className={`food-ticket ticket-${index % 5} ${status.toLowerCase()}`}
+                  className={`food-ticket ticket-${
+                    index % 5
+                  } ${status.toLowerCase()}`}
                   key={
                     coupon._id ||
                     coupon.id ||
@@ -468,13 +463,7 @@ export default function Coupon() {
                     index
                   }
                 >
-
-                  {/* =========================================
-                      DISCOUNT
-                  ========================================= */}
-
                   <div className="ticket-discount">
-
                     <div>
                       <strong>
                         {discountNumber}
@@ -487,28 +476,13 @@ export default function Coupon() {
                       </span>
                     </div>
 
-                    <code>
-                      {code}
-                    </code>
-
+                    <code>{code}</code>
                   </div>
-
-
-                  {/* =========================================
-                      PERFORATION
-                  ========================================= */}
 
                   <div className="ticket-perforation"></div>
 
-
-                  {/* =========================================
-                      CONTENT
-                  ========================================= */}
-
                   <div className="ticket-content">
-
                     <div className="ticket-status-row">
-
                       <div
                         className={`ticket-status ${status.toLowerCase()}`}
                       >
@@ -518,14 +492,11 @@ export default function Coupon() {
                           {status}
                         </span>
                       </div>
-
                     </div>
-
 
                     <h3>
                       {discountText}
                     </h3>
-
 
                     <div className="ticket-store">
                       <FaStore />
@@ -535,21 +506,13 @@ export default function Coupon() {
                       </span>
                     </div>
 
-
                     <p className="ticket-description">
                       {coupon.description ||
                         "Enjoy this exclusive food coupon and save on your order."}
                     </p>
 
-
-                    {/* =========================================
-                        INFO
-                    ========================================= */}
-
                     <div className="ticket-info-row">
-
                       <div className="ticket-info">
-
                         <small>
                           <FaMapMarkerAlt /> VALID AT
                         </small>
@@ -557,12 +520,9 @@ export default function Coupon() {
                         <span>
                           {store}
                         </span>
-
                       </div>
 
-
                       <div className="ticket-info">
-
                         <small>
                           <FaShoppingBag /> MIN ORDER
                         </small>
@@ -570,20 +530,11 @@ export default function Coupon() {
                         <span>
                           ₹{minimumOrder}
                         </span>
-
                       </div>
-
                     </div>
 
-
-                    {/* =========================================
-                        VALIDITY
-                    ========================================= */}
-
                     <div className="ticket-validity">
-
                       <div>
-
                         <small>
                           <FaCalendarAlt /> START DATE
                         </small>
@@ -593,12 +544,9 @@ export default function Coupon() {
                             coupon.validFrom
                           )}
                         </span>
-
                       </div>
 
-
                       <div>
-
                         <small>
                           <FaCalendarAlt /> END DATE
                         </small>
@@ -608,18 +556,10 @@ export default function Coupon() {
                             coupon.validUntil
                           )}
                         </span>
-
                       </div>
-
                     </div>
 
-
-                    {/* =========================================
-                        CODE
-                    ========================================= */}
-
                     <div className="ticket-code-row">
-
                       <div className="ticket-code-box">
                         {code}
                       </div>
@@ -633,20 +573,11 @@ export default function Coupon() {
                       >
                         <FaCopy />
                       </button>
-
                     </div>
-
                   </div>
 
-
-                  {/* =========================================
-                      FOOD / IMAGE
-                  ========================================= */}
-
                   <div className="ticket-food">
-
                     <div className="ticket-food-image">
-
                       {image ? (
                         <img
                           src={image}
@@ -657,11 +588,9 @@ export default function Coupon() {
                           {emoji}
                         </span>
                       )}
-
                     </div>
 
                     <div className="ticket-food-text">
-
                       <small>
                         SPECIAL OFFER
                       </small>
@@ -669,23 +598,17 @@ export default function Coupon() {
                       <strong>
                         {discountText}
                       </strong>
-
                     </div>
-
                   </div>
 
-
-                  {/* =========================================
-                      APPLY
-                  ========================================= */}
-
                   <div className="ticket-action">
-
                     <button
                       onClick={() =>
                         applyCoupon(coupon)
                       }
-                      disabled={status !== "Valid"}
+                      disabled={
+                        status !== "Valid"
+                      }
                     >
                       {status === "Valid"
                         ? "Apply Coupon"
@@ -693,16 +616,12 @@ export default function Coupon() {
                         ? "Coming Soon"
                         : "Coupon Expired"}
                     </button>
-
                   </div>
-
                 </div>
               );
             })}
-
           </div>
         )}
-
       </section>
 
       <Footer />

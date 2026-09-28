@@ -18,10 +18,12 @@ import ManageRestaurant from "./ManageRestaurant";
 import ManageContact from "./ManageContact";
 import ProtectedRoute from './ProtectedRoute';
 
+import Profile from './Profile';
+import Register from './Register';
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Cart from './Cart';
 import Checkout from './Checkout';
-import Register from './Register';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -41,6 +43,7 @@ root.render(
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Cart" element={<Cart></Cart>} />
         <Route path="/Checkout" element={<Checkout></Checkout>} />
+        <Route path="/Profile" element={<Profile />} />
 
         {/* Login */}
         <Route path="/Login" element={<Login />} />
